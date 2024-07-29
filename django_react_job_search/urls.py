@@ -15,14 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import path, re_path
 from job_search import views
 
-router = routers.DefaultRouter()
-router.register(r'job_search', views.EmailOpportunityView, 'job_search')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    re_path(r'^api/email_opportunity/$', views.email_opportunity_list),
+    re_path(r'^api/email_opportunity/([0-9])$', views.email_opportunity_detail),
 ]
