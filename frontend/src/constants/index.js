@@ -1,0 +1,1 @@
+export const JOB_OPPORTUNITY_API_URL = "http://localhost:8000/api/email_opportunity/";
