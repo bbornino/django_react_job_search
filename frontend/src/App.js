@@ -8,7 +8,7 @@ import {
   useNavigate,
   Outlet,
 } from "react-router-dom"
-import {Navbar} from 'reactstrap';
+import {Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink} from 'reactstrap';
 
 import OpportunityList from "./components/OpportunityList";
 import About from "./components/About";
@@ -30,19 +30,38 @@ const Home = () => {
 
 
 
-function App() {
-  return (
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
+  render() {
+    return (
       <Router>
-          <nav className="bg-white border-b border-gray-100">
-              <ul>
-                  <li><Link to="/">Home</Link></li>
-                  <li><Link to="/opportunities">Opportunities</Link></li>
-                  <li><Link to="/about">About</Link></li>
-                  <li><Link to="/release-history">Release History</Link></li>
-                  <li><Link to="/job-hunt-tips">Job Hunt Tips</Link></li>
-                  
-              </ul>
-          </nav>
+        <Navbar color="light" light expand="md">
+          <NavbarBrand href="/" >Job Search Tracker</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem><NavLink href="/">Home</NavLink></NavItem>
+              <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
+              <NavItem><NavLink href="/about">About</NavLink></NavItem>
+              <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
+              <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+
           <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/opportunities" element={<OpportunityList />} />
@@ -52,6 +71,8 @@ function App() {
           </Routes>
       </Router>
   );
+  }
+  
 }
 
-export default App;
+// export default App;
