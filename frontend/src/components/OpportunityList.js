@@ -51,8 +51,7 @@ class OpportunityList extends Component {
     };
 
     onRowClicked = (row, event) => { 
-        console.log("I clicked a row")
-        // window.location = route('opportunities.edit', row)
+        window.location = '/opportunity-details/' + row.id
     };
 
 
