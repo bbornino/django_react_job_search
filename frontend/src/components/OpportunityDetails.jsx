@@ -55,11 +55,11 @@ class OpportunityDetails extends Component {
             <Container className="flex">
                 <Card className="my-3">
                     <CardTitle>
-                        <Row className="my-2 mx-3">
-                            <Col sm="9">
+                        <Row className="my-3 mx-3">
+                            <Col md="6" sm="9" xs="6">
                                 <h3>Opportunity Details</h3>
                             </Col>
-                            <Col sm="3" className="pull-right">
+                            <Col md="6" sm="3" xs="6" className="pull-right">
                                 <Button color="danger" className="mx-2  pull-right" >
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                                 <Button color="primary" type="submit" className="mx-2 pull-right">
@@ -70,15 +70,54 @@ class OpportunityDetails extends Component {
                     </CardTitle>
                     <CardBody>
                         <Form onSubmit={this.props.opportunity ? this.editOpportunity : this.createOpportunity} >
-                            <FormGroup>
-                                <Label for="recruiter_name">Recruiter Name</Label>
-                                <Input
-                                    type="text"
-                                    name="recruiter_name"
-                                    onChange={this.onChange}
-                                    value={this.defaultIfEmpty(this.state.recruiter_name)}
-                                />
-                            </FormGroup>
+                            <Row>
+                                <Col md="6">
+                                    <FormGroup>
+                                        <Label for="recruiter_name">Recruiter Name</Label>
+                                        <Input
+                                            type="text"
+                                            name="recruiter_name"
+                                            onChange={this.onChange}
+                                            value={this.defaultIfEmpty(this.state.recruiter_name)}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col md="6">
+                                    <FormGroup>
+                                        <Label for="recruiter_company">Recruiter Company</Label>
+                                        <Input
+                                            type="text"
+                                            name="recruiter_company"
+                                            onChange={this.onChange}
+                                            value={this.defaultIfEmpty(this.state.recruiter_company)}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="6">
+                                    <FormGroup>
+                                        <Label for="job_title">Job Title</Label>
+                                        <Input
+                                            type="text"
+                                            name="job_title"
+                                            onChange={this.onChange}
+                                            value={this.defaultIfEmpty(this.state.job_title)}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col md="6">
+                                    <FormGroup>
+                                        <Label for="opportunity_status">Status</Label>
+                                        <Input
+                                            type="text"
+                                            name="opportunity_status"
+                                            onChange={this.onChange}
+                                            value={this.defaultIfEmpty(this.state.opportunity_status)}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
                         </Form>
                     </CardBody>
                 </Card>
