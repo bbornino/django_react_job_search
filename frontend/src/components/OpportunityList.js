@@ -1,15 +1,10 @@
 import {React, useForm, Component, setState} from "react";
+import { Link } from 'react-router-dom'
 import axios from "axios";
 import { JOB_OPPORTUNITY_API_URL } from "../constants";
 
 import DataTable from './DataTableBase';
 import {Button, Container, Row, Col, Form, Card} from 'reactstrap';
-// import Button from 'react-bootstrap/Button';
-// import Container from 'react-bootstrap/Container';
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
-// import Form from 'react-bootstrap/Form';
-// import Card from 'react-bootstrap/Card';
 
 class OpportunityList extends Component {
     state = {
@@ -60,14 +55,19 @@ class OpportunityList extends Component {
         // window.location = route('opportunities.edit', row)
     };
 
+
     render() {
         const { opportunities } = this.state;
         return (
             <div>
-                <h1>A list of opportunities!</h1>
                 <Container className="mt-2">
                 <Row className="m-4">
                     A bunch of recruiters think its okay to spam me just because I have my profile up.  Even when I remove myself from their list, they add me back on!
+                    <Link to='/opportunity-details'>
+                        <Button>
+                            Create Opportunity
+                        </Button>
+                    </Link>
                 </Row>
 
                
