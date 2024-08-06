@@ -69,36 +69,6 @@ class OpportunityList extends Component {
                     </Link>
                 </Row>
 
-               
-                {/* <Card>
-                    <Card.Header>Create Opportunity</Card.Header>
-                    <Form onSubmit={this.submit}>
-                        <Row className="m-2">
-                            <Col xl="3" lg="6">
-                                <Form.Group controlId="opportunityRecruiterName">
-                                    <Form.Label>Recruiter Name</Form.Label>
-                                    <Form.Control type="text" required 
-                                        value={this.recruiter_name}
-                                        onChange={e => setState('recruiter_name', e.target.value)}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId="opportunityJobTitle">
-                                    <Form.Label>Job Title</Form.Label>
-                                    <Form.Control type="text" required 
-                                        value={this.job_title}
-                                        onChange={e => setState('job_title', e.target.value)}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col className="d-flex align-items-center justify-content-center">
-                                <Button variant="primary" type="submit" className="d-flex align-items-center " >Save Opportunity</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Card> */}
-
                 <h1 className="mt-3">All Opportunities</h1>
                 
                 <DataTable columns={this.columns} data={opportunities} onRowClicked={this.onRowClicked} />
