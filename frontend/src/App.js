@@ -68,6 +68,7 @@ export default class App extends React.Component {
               <Route path="/" element={<Home />} />
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
+              <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />
               <Route path="/job-hunt-tips" element={<JobHuntTips />} />
               <Route path="/release-history" element={<ReleaseHistory />} />
               <Route path="/about" element={<About />} />
