@@ -9,8 +9,10 @@ import {
   Outlet,
 } from "react-router-dom"
 import {Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink} from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import OpportunityList from "./components/OpportunityList";
+import OpportunityDetails from "./components/OpportunityDetails";
 import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
@@ -65,6 +67,7 @@ export default class App extends React.Component {
           <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/opportunities" element={<OpportunityList />} />
+              <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/job-hunt-tips" element={<JobHuntTips />} />
               <Route path="/release-history" element={<ReleaseHistory />} />
               <Route path="/about" element={<About />} />
