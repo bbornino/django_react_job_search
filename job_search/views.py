@@ -22,14 +22,17 @@ def email_opportunity_list(request):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def email_opportunity_detail(request, pk):
     try:
         emailOpportunity = EmailOpportunity.objects.get(pk=pk)
     except EmailOpportunity.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
+    if request.method == 'GET':
+        serializer = EmailOpportunitySerializer(emailOpportunity, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'PUT':
         serializer = EmailOpportunitySerializer(emailOpportunity, data=request.data,context={'request': request})
         if serializer.is_valid():
             serializer.save()
