@@ -1,5 +1,4 @@
-import React, { Component, setState, getState} from "react";
-import {useParams , renderMatches} from "react-router-dom";
+import React, { Component} from "react";
 import axios from "axios";
 import { JOB_OPPORTUNITY_API_URL } from "../constants";
 import {Form, FormGroup, Input, Label, Button, ButtonGroup, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
@@ -8,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
-
+import Editor from "./Editor"
 
 class OpportunityDetails extends Component {
     state = {
@@ -26,7 +25,6 @@ class OpportunityDetails extends Component {
 
     getOpportunity = (opportunity_id) => {
         // console.log("getOpportunity received " + opportunity_id)
-        // axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => this.setState({ opportunity: res.data }));
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
             this.setState({recruiter_name: res.data.recruiter_name,
                 recruiter_company: res.data.recruiter_company,
@@ -34,7 +32,10 @@ class OpportunityDetails extends Component {
                 opportunity_status: res.data.opportunity_status,
                 job_description: res.data.job_description,
             })
-            // this.setState({ opportunity: res.data })
+            const collection = document.getElementsByClassName("ck-content")
+            if ( collection.length != 0) {
+                collection[0].ckeditorInstance.setData(res.data.job_description)
+            }
         });
     };
     
@@ -50,6 +51,12 @@ class OpportunityDetails extends Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
+
+    onEditorChange = e => {
+        const collection = document.getElementsByClassName("ck-content")
+        const newVal = collection[0].ckeditorInstance.getData()
+        this.setState({job_description: newVal})
+    }
 
     createOpportunity = e => {
         e.preventDefault();
@@ -72,6 +79,7 @@ class OpportunityDetails extends Component {
 
                     <CardBody>
                         <Form onSubmit={this.state.opportunity_id == 0 ? this.createOpportunity : this.editOpportunity} >
+                            
                             <Row className="my-3 mx-3">
                                 <Col md="6" sm="9" xs="6">
                                     <h3>Opportunity Details</h3>
@@ -135,13 +143,8 @@ class OpportunityDetails extends Component {
                             <Row>
                                 <Col md="12">
                                     <FormGroup>
-                                        <Label for="job_description">Job Description</Label>
-                                        <Input
-                                            type="text" required
-                                            name="job_description"
-                                            onChange={this.onChange}
-                                            value={this.state.job_description ?? ''}
-                                        />
+                                        <Label >Job Description</Label>
+                                        <Editor editorText={this.state.job_description} onEditorChange={this.onEditorChange} ></Editor>
                                     </FormGroup>
                                 </Col>
                             </Row>

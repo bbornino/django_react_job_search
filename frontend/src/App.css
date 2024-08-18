@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+/* Make sure all content containers are distinguishable on a web page even of not focused. */
+.ck.ck-content:not(:focus) {
+  border: 1px solid var(--ck-color-base-border);
+}
