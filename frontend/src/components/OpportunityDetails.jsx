@@ -93,7 +93,7 @@ class OpportunityDetails extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col md="6">
+                                <Col md="3">
                                     <FormGroup>
                                         <Label for="recruiter_name">Recruiter Name</Label>
                                         <Input
@@ -104,7 +104,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col md="6">
+                                <Col md="3">
                                     <FormGroup>
                                         <Label for="recruiter_company">Recruiter Company</Label>
                                         <Input
@@ -115,6 +115,22 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
+                                <Col md="3">
+                                    <FormGroup>
+                                        <Label for="opportunity_status">Status</Label>
+                                        <Input
+                                            type="select" required
+                                            name="opportunity_status"
+                                            onChange={this.onChange}
+                                            value={this.state.opportunity_status ?? ''} >
+                                                <option value="4 - No Response">4 - No Response</option>
+                                                <option value="3 - Rejected">3 - Rejected</option>
+                                                <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
+                                                <option value="1 - Actively Engaged">1 - Actively Engaged</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+
                             </Row>
                             <Row>
                                 <Col md="6">
@@ -128,17 +144,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col md="6">
-                                    <FormGroup>
-                                        <Label for="opportunity_status">Status</Label>
-                                        <Input
-                                            type="text" required
-                                            name="opportunity_status"
-                                            onChange={this.onChange}
-                                            value={this.state.opportunity_status ?? ''}
-                                        />
-                                    </FormGroup>
-                                </Col>
+
                             </Row>
                             <Row>
                                 <Col md="12">
