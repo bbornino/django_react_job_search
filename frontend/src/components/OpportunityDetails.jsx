@@ -17,6 +17,11 @@ class OpportunityDetails extends Component {
         opportunity_status: '4 - No Response',
         recruiter_company: '',
         job_description: '',
+        email_received_on: '',
+        employment_type: '',
+        job_duration: '',
+        location_type: '',
+        location_city: '',
     }
 
     constructor(props) {
@@ -93,7 +98,7 @@ class OpportunityDetails extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col md="3">
+                                <Col lg="3" md="6">
                                     <FormGroup>
                                         <Label for="recruiter_name">Recruiter Name</Label>
                                         <Input
@@ -104,7 +109,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col md="3">
+                                <Col lg="3" md="6">
                                     <FormGroup>
                                         <Label for="recruiter_company">Recruiter Company</Label>
                                         <Input
@@ -115,7 +120,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col md="3">
+                                <Col lg="3" md="6">
                                     <FormGroup>
                                         <Label for="opportunity_status">Status</Label>
                                         <Input
@@ -130,10 +135,18 @@ class OpportunityDetails extends Component {
                                         </Input>
                                     </FormGroup>
                                 </Col>
-
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="email_received_on">Email Received On</Label>
+                                        <Input type="datetime-local"
+                                            name="email_received_on"
+                                            onChange={this.onChange}
+                                            value={this.state.email_received_on ?? ''} />
+                                    </FormGroup>
+                                </Col>
                             </Row>
                             <Row>
-                                <Col md="6">
+                                <Col lg="6" md="12">
                                     <FormGroup>
                                         <Label for="job_title">Job Title</Label>
                                         <Input
@@ -144,7 +157,58 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="employment_type">Employment Type</Label>
+                                        <Input
+                                            type="select" required
+                                            name="employment_type"
+                                            onChange={this.onChange}
+                                            value={this.state.employment_type ?? ''} >
+                                                <option value="Contract">Contract</option>
+                                                <option value="Full-time">Full-time</option>
+                                                <option value="Freelance">Freelance</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="job_duration">Contract Duration</Label>
+                                        <Input
+                                            type="text" required
+                                            name="job_duration"
+                                            onChange={this.onChange}
+                                            value={this.state.job_duration ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                            <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="location_type">Location Type</Label>
+                                        <Input
+                                            type="select" required
+                                            name="location_type"
+                                            onChange={this.onChange}
+                                            value={this.state.location_type ?? ''} >
+                                                <option value="Contract">Contract</option>
+                                                <option value="Full-time">Full-time</option>
+                                                <option value="Freelance">Freelance</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="location_city">Location City</Label>
+                                        <Input
+                                            type="text" required
+                                            name="location_city"
+                                            onChange={this.onChange}
+                                            value={this.state.location_city ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
                             </Row>
                             <Row>
                                 <Col md="12">
