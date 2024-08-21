@@ -31,7 +31,6 @@ const Home = () => {
 }
 
 
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -55,17 +54,18 @@ export default class App extends React.Component {
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem><NavLink href="/">Home</NavLink></NavItem>
-              <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
+              {/* <NavItem><NavLink href="/">Home</NavLink></NavItem> */}
               <NavItem><NavLink href="/about">About</NavLink></NavItem>
-              <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
+              <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
               <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
+              <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
             </Nav>
           </Collapse>
         </Navbar>
 
           <Routes>
-              <Route path="/" element={<Home />} />
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<About />} />
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />

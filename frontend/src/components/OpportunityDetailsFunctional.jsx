@@ -1,5 +1,4 @@
-import React, { Component, setState, getState, useState, useEffect} from "react";
-import {useParams , renderMatches} from "react-router-dom";
+import React, { useState } from "react";
 import axios from "axios";
 import { JOB_OPPORTUNITY_API_URL } from "../constants";
 import {Form, FormGroup, Input, Label, Button, ButtonGroup, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
@@ -7,9 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
-
-import { createEditor } from 'slate'
-import { Slate, Editable, withReact } from 'slate-react'
 
 const OpportunityDetails = () => {
 

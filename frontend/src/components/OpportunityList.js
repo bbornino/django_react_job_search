@@ -1,10 +1,10 @@
-import {React, useForm, Component, setState} from "react";
+import {React, Component} from "react";
 import { Link } from 'react-router-dom'
 import axios from "axios";
 import { JOB_OPPORTUNITY_API_URL } from "../constants";
 
 import DataTable from './DataTableBase';
-import {Button, Container, Row, Col, Form, Card} from 'reactstrap';
+import {Button, Container, Row, Col} from 'reactstrap';
 
 class OpportunityList extends Component {
     state = {
