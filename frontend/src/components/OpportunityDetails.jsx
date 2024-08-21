@@ -35,10 +35,22 @@ class OpportunityDetails extends Component {
     getOpportunity = (opportunity_id) => {
         // console.log("getOpportunity received " + opportunity_id)
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
-            this.setState({recruiter_name: res.data.recruiter_name,
-                recruiter_company: res.data.recruiter_company,
+            var emailReceivedAtArr = res.data.email_received_at.split('T')
+            var emailReceivedTmArr = emailReceivedAtArr[1].split('-')
+            var emailReceivedDtTm = emailReceivedAtArr[0] + ' ' + emailReceivedTmArr[0]
+            this.setState({
                 job_title: res.data.job_title,
                 opportunity_status: res.data.opportunity_status,
+                recruiter_name: res.data.recruiter_name,
+                recruiter_company: res.data.recruiter_company,
+                
+                email_received_at: emailReceivedDtTm,
+                employment_type: res.data.employment_type,
+                job_duration: res.data.job_duration,
+                location_type: res.data.location_type,
+                location_city: res.data.location_city,
+
+                comments: res.data.comments,
                 job_description: res.data.job_description,
             })
             const collection = document.getElementsByClassName("ck-content")
@@ -74,7 +86,7 @@ class OpportunityDetails extends Component {
         })
     }
 
-     editOpportunity = e => {
+    editOpportunity = e => {
         e.preventDefault();
         axios.put(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state).then(() => {
             window.location = '/opportunities/'
@@ -85,10 +97,8 @@ class OpportunityDetails extends Component {
         return (
             <Container className="flex">
                 <Card className="my-3">
-
                     <CardBody>
                         <Form onSubmit={this.state.opportunity_id == 0 ? this.createOpportunity : this.editOpportunity} >
-                            
                             <Row className="my-3 mx-3">
                                 <Col md="6" sm="9" xs="6">
                                     <h3>Opportunity Details</h3>
@@ -101,8 +111,8 @@ class OpportunityDetails extends Component {
                                     
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col lg="3" md="6">
+                            <Row id="status_recruiter_row">
+                                <Col lg="3" md="6" id="recruiter_name_field">
                                     <FormGroup>
                                         <Label for="recruiter_name">Recruiter Name</Label>
                                         <Input
@@ -113,7 +123,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="3" md="6">
+                                <Col lg="3" md="6" id="recruiter_company_field">
                                     <FormGroup>
                                         <Label for="recruiter_company">Recruiter Company</Label>
                                         <Input
@@ -124,7 +134,7 @@ class OpportunityDetails extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="3" md="6">
+                                <Col lg="3" md="6" id="opportunity_status_field">
                                     <FormGroup>
                                         <Label for="opportunity_status">Status</Label>
                                         <Input
@@ -141,7 +151,7 @@ class OpportunityDetails extends Component {
                                 </Col>
                                 <Col lg="3" md="6">
                                     <FormGroup>
-                                        <Label for="email_received_at">Email Received On</Label>
+                                        <Label for="email_received_at">Email Received At</Label>
                                         <Input type="datetime-local"
                                             name="email_received_at"
                                             onChange={this.onChange}
@@ -196,9 +206,9 @@ class OpportunityDetails extends Component {
                                             name="location_type"
                                             onChange={this.onChange}
                                             value={this.state.location_type ?? ''} >
-                                                <option value="Contract">Contract</option>
-                                                <option value="Full-time">Full-time</option>
-                                                <option value="Freelance">Freelance</option>
+                                                <option value="On-Site">On-Site</option>
+                                                <option value="Hybrid">Hybrid</option>
+                                                <option value="Remote">Remote</option>
                                         </Input>
                                     </FormGroup>
                                 </Col>
