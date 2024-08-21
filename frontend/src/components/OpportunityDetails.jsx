@@ -12,16 +12,20 @@ import Editor from "./Editor"
 class OpportunityDetails extends Component {
     state = {
         opportunity_id: 0,
-        recruiter_name: '',
         job_title: '',
         opportunity_status: '4 - No Response',
+        recruiter_name: '',
         recruiter_company: '',
-        job_description: '',
-        email_received_on: '',
+        
+        email_received_at: '',
         employment_type: '',
         job_duration: '',
         location_type: '',
         location_city: '',
+
+        comments: '',
+        job_description: '',
+
     }
 
     constructor(props) {
@@ -137,11 +141,11 @@ class OpportunityDetails extends Component {
                                 </Col>
                                 <Col lg="3" md="6">
                                     <FormGroup>
-                                        <Label for="email_received_on">Email Received On</Label>
+                                        <Label for="email_received_at">Email Received On</Label>
                                         <Input type="datetime-local"
-                                            name="email_received_on"
+                                            name="email_received_at"
                                             onChange={this.onChange}
-                                            value={this.state.email_received_on ?? ''} />
+                                            value={this.state.email_received_at ?? ''} />
                                     </FormGroup>
                                 </Col>
                             </Row>

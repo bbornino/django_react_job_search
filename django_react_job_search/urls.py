@@ -24,4 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^api/email_opportunity/$', views.email_opportunity_list),
     re_path(r'^api/email_opportunity/([0-9])$', views.email_opportunity_detail),
+    re_path(r'^api/job_site/$', views.job_site_list),
+    re_path(r'^api/job_site/([0-9])$', views.job_site_detail),
+    re_path(r'^api/job_posting/$', views.job_site_list),
+    re_path(r'^api/job_posting/([0-9])$', views.job_site_detail),
 ]
