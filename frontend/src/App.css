@@ -41,3 +41,7 @@
 .ck.ck-content:not(:focus) {
   border: 1px solid var(--ck-color-base-border);
 }
+
+.input-error {
+  background-color: red;
+}

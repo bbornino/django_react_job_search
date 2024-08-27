@@ -1,13 +1,14 @@
 import React, { Component} from "react";
 import axios from "axios";
 import { JOB_OPPORTUNITY_API_URL } from "../constants";
-import {Form, FormGroup, Input, Label, Button, ButtonGroup, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
+import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./Editor"
+import Comments from "./Comments"
 
 class OpportunityDetails extends Component {
     state = {
@@ -18,18 +19,14 @@ class OpportunityDetails extends Component {
         recruiter_company: '',
         
         email_received_at: '',
-        employment_type: '',
+        employment_type: 'Contract',
         job_duration: '',
-        location_type: '',
+        location_type: 'On-Site',
         location_city: '',
 
-        comments: '',
+        comments: [],
         job_description: '',
 
-    }
-
-    constructor(props) {
-        super(props)
     }
 
     getOpportunity = (opportunity_id) => {
@@ -54,7 +51,7 @@ class OpportunityDetails extends Component {
                 job_description: res.data.job_description,
             })
             const collection = document.getElementsByClassName("ck-content")
-            if ( collection.length != 0) {
+            if ( collection.length !== 0) {
                 collection[0].ckeditorInstance.setData(res.data.job_description)
             }
         });
@@ -79,6 +76,7 @@ class OpportunityDetails extends Component {
         this.setState({job_description: newVal})
     }
 
+
     createOpportunity = e => {
         e.preventDefault();
         axios.post(JOB_OPPORTUNITY_API_URL, this.state).then(() => {
@@ -93,12 +91,17 @@ class OpportunityDetails extends Component {
         })
     }
 
+    setCommentsCallback = (updatedComments) => {
+        console.log("Opportunity Details Class received Call back to update master state")
+        this.setState({comments: updatedComments})
+    }
+
     render() {
         return (
             <Container className="flex">
                 <Card className="my-3">
                     <CardBody>
-                        <Form onSubmit={this.state.opportunity_id == 0 ? this.createOpportunity : this.editOpportunity} >
+                        <Form onSubmit={this.state.opportunity_id === 0 ? this.createOpportunity : this.editOpportunity} >
                             <Row className="my-3 mx-3">
                                 <Col md="6" sm="9" xs="6">
                                     <h3>Opportunity Details</h3>
@@ -108,7 +111,6 @@ class OpportunityDetails extends Component {
                                         <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                                     <Button color="primary" type="submit" className="mx-2 pull-right">
                                         <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save</Button>
-                                    
                                 </Col>
                             </Row>
                             <Row id="status_recruiter_row">
@@ -152,14 +154,14 @@ class OpportunityDetails extends Component {
                                 <Col lg="3" md="6">
                                     <FormGroup>
                                         <Label for="email_received_at">Email Received At</Label>
-                                        <Input type="datetime-local"
+                                        <Input type="datetime-local" required
                                             name="email_received_at"
                                             onChange={this.onChange}
                                             value={this.state.email_received_at ?? ''} />
                                     </FormGroup>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row id="title_empl_type_duriation_row">
                                 <Col lg="6" md="12">
                                     <FormGroup>
                                         <Label for="job_title">Job Title</Label>
@@ -178,7 +180,7 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="employment_type"
                                             onChange={this.onChange}
-                                            value={this.state.employment_type ?? ''} >
+                                            value={this.state.employment_type ?? 'Contract'} >
                                                 <option value="Contract">Contract</option>
                                                 <option value="Full-time">Full-time</option>
                                                 <option value="Freelance">Freelance</option>
@@ -197,15 +199,15 @@ class OpportunityDetails extends Component {
                                     </FormGroup>
                                 </Col>
                             </Row>
-                            <Row>
-                            <Col lg="3" md="6">
+                            <Row id="location_type_city">
+                                <Col lg="3" md="6">
                                     <FormGroup>
                                         <Label for="location_type">Location Type</Label>
                                         <Input
                                             type="select" required
                                             name="location_type"
                                             onChange={this.onChange}
-                                            value={this.state.location_type ?? ''} >
+                                            value={this.state.location_type ?? 'On-Site'} >
                                                 <option value="On-Site">On-Site</option>
                                                 <option value="Hybrid">Hybrid</option>
                                                 <option value="Remote">Remote</option>
@@ -224,11 +226,14 @@ class OpportunityDetails extends Component {
                                     </FormGroup>
                                 </Col>
                             </Row>
+                            <Comments itemComments={this.state.comments} 
+                                      onCommentsSave={this.setCommentsCallback} />
                             <Row>
                                 <Col md="12">
                                     <FormGroup>
                                         <Label >Job Description</Label>
-                                        <Editor editorText={this.state.job_description} onEditorChange={this.onEditorChange} ></Editor>
+                                        <Editor editorText={this.state.job_description} 
+                                                onEditorChange={this.onEditorChange} ></Editor>
                                     </FormGroup>
                                 </Col>
                             </Row>
