@@ -263,7 +263,8 @@ function Editor({editorText, onEditorChange}) {
 					classes: ['fancy-code', 'fancy-code-bright']
 				}
 			]
-		}
+		},
+		height: 500
 	};
 
 
