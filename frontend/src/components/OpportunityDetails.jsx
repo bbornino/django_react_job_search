@@ -99,20 +99,22 @@ class OpportunityDetails extends Component {
     render() {
         return (
             <Container className="flex">
-                <Card className="my-3">
-                    <CardBody>
-                        <Form onSubmit={this.state.opportunity_id === 0 ? this.createOpportunity : this.editOpportunity} >
-                            <Row className="my-3 mx-3">
-                                <Col md="6" sm="9" xs="6">
-                                    <h3>Opportunity Details</h3>
+                <Form onSubmit={this.state.opportunity_id === 0 ? this.createOpportunity : this.editOpportunity} >
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2" >
+                            <Row className="">
+                                <Col sm="9" xs="6">
+                                <strong>Details</strong>
                                 </Col>
-                                <Col md="6" sm="3" xs="6" className="pull-right">
+                                <Col sm="3" xs="6" className="pull-right">
                                     <Button color="danger" className="mx-2  pull-right" >
                                         <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                                     <Button color="primary" type="submit" className="mx-2 pull-right">
                                         <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save</Button>
                                 </Col>
-                            </Row>
+                            </Row>    
+                        </CardTitle>
+                        <CardBody className="bg-white">
                             <Row id="status_recruiter_row">
                                 <Col lg="3" md="6" id="recruiter_name_field">
                                     <FormGroup>
@@ -226,20 +228,25 @@ class OpportunityDetails extends Component {
                                     </FormGroup>
                                 </Col>
                             </Row>
+                        </CardBody>
+                    </Card>
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2" ><strong>Comments</strong></CardTitle>
+                        <CardBody className="bg-white">
                             <Comments itemComments={this.state.comments} 
                                       onCommentsSave={this.setCommentsCallback} />
-                            <Row>
-                                <Col md="12">
-                                    <FormGroup>
-                                        <Label >Job Description</Label>
-                                        <Editor editorText={this.state.job_description} 
-                                                onEditorChange={this.onEditorChange} ></Editor>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </CardBody>
-                </Card>
+                        </CardBody>
+                    </Card>
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2"><strong>Job Description</strong></CardTitle>
+                        <CardBody className="bg-white">
+                            <Editor editorText={this.state.job_description} 
+                                    onEditorChange={this.onEditorChange} ></Editor>
+                        </CardBody>
+                    </Card>
+                    
+                </Form>
+                    
             </Container>
         )
     }

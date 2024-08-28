@@ -37,6 +37,16 @@
   }
 }
 
+/* Customize the Bootstrap Cards */
+
+.card-title {
+  font-size: 1.3em;
+}
+
+.card-body {
+  background-color: bg-white;
+}
+
 /* Make sure all content containers are distinguishable on a web page even of not focused. */
 .ck.ck-content:not(:focus) {
   border: 1px solid var(--ck-color-base-border);
@@ -44,4 +54,8 @@
 
 .input-error {
   background-color: red;
+}
+
+.ck-editor__editable_inline {
+  min-height: 600px;
 }
