@@ -1,6 +1,6 @@
 // Comments section drawn by both Opportunitiy and Job Postings
 import React, {useState} from 'react';
-import {FormGroup, Input, Label, Button, Container, Row, Col} from 'reactstrap';
+import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
@@ -28,7 +28,7 @@ function Comments({itemComments, onCommentsSave}) {
         console.log(theComments)
         var validated = true;
 
-        if (commentType == '') {
+        if (commentType === '') {
             // If no type is selected, display error
             var commentTypeGroup = document.getElementById('comment_type_grp')
             commentTypeGroup.classList.add('input-error')
@@ -37,7 +37,7 @@ function Comments({itemComments, onCommentsSave}) {
             validated = false;
         }
 
-        if (commentDateTime == '') {
+        if (commentDateTime === '') {
             // If no DateTime was selected, display error
             var commentDateGroup = document.getElementById('comment_date_grp')
             commentDateGroup.classList.add('input-error')
@@ -66,7 +66,7 @@ function Comments({itemComments, onCommentsSave}) {
             console.log(updatedComments);
             setTheComments(updatedComments);
 
-        } else if (commentId == -1) {
+        } else if (commentId === -1) {
             comment.id = theComments.length
             updatedComments = theComments
             updatedComments.push(comment)
@@ -162,7 +162,9 @@ function Comments({itemComments, onCommentsSave}) {
             {theComments.map((comment_row) => (
                 <Row key={comment_row.id} className="my-3" >
                     <hr/>
-                    <Col md="3">{comment_row.commented_at}<br/>{comment_row.comment_type}<br/>
+                    <Col md="3">
+                        <strong>{comment_row.commented_at.replace('T', '  ')}</strong><br/>
+                        <strong>{comment_row.comment_type}</strong><br/>
                         <Button color="success" type="button" 
                             className="m-2" 
                             comment_id={comment_row.id}
