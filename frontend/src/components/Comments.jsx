@@ -96,7 +96,7 @@ function Comments({itemComments, onCommentsSave}) {
     }
 
     const showCommentsButton = 
-            <Button color="success" type="button" onClick={onShowEditComments}>Show Comments</Button>
+            <Button color="success" type="button" onClick={onShowEditComments}>Show Comments ({itemComments.length})</Button>
         
     const editCommentsContent = 
             <Row id="comment_row">
@@ -159,9 +159,9 @@ function Comments({itemComments, onCommentsSave}) {
     return (
         <div>
             {showComments ? editCommentsContent : showCommentsButton}
-            <hr/>
             {theComments.map((comment_row) => (
-                <Row key={comment_row.id}>
+                <Row key={comment_row.id} className="my-3" >
+                    <hr/>
                     <Col md="3">{comment_row.commented_at}<br/>{comment_row.comment_type}<br/>
                         <Button color="success" type="button" 
                             className="m-2" 
@@ -171,7 +171,7 @@ function Comments({itemComments, onCommentsSave}) {
                     </Col>
                     <Col md="9">{comment_row.comment_content}
                     </Col>
-                    <hr/>
+                    
                 </Row>
             ))}
 
