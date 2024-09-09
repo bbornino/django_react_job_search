@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
 function Comments({itemComments, onCommentsSave}) {
     const [commentId, setCommentId] = useState(-1);
@@ -11,6 +11,16 @@ function Comments({itemComments, onCommentsSave}) {
     const [commentContent, setCommentContent] = useState('');
     const [theComments, setTheComments] = useState(itemComments);   
     const [showComments, setShowComments] = useState(false);
+
+    const getCommentIdIndex = (elementId) => {
+        // the comment ID is not necessarily the same as the array index
+        for (let idIndex = 0; idIndex < theComments.length; idIndex++) {
+            if (theComments[idIndex].id == elementId) {
+                return idIndex;
+            }
+        }
+        return -1;
+    }
 
     const onEditButtonClick = (e) => {
         // Load the contents of the particular comment into the edit area
@@ -22,6 +32,17 @@ function Comments({itemComments, onCommentsSave}) {
         setCommentType(thisComment.comment_type)
         setCommentContent(thisComment.comment_content)
     };
+
+    const onDeleteComment = (e) => {
+        var deleteCommentId = e.target.attributes.comment_id.value;
+        let updatedComments = theComments;
+        let deleteIndex = getCommentIdIndex(deleteCommentId)
+
+        updatedComments.splice(deleteIndex, 1);    
+        setTheComments(updatedComments);
+        var commentRow = document.querySelector('[comment_row="'+deleteCommentId+'"]');
+        commentRow.style.display = "none"   // actual remove can cause problems
+    }
 
     const onCommentSave = () => {
         console.log("Comments function saving Comment Data")
@@ -85,9 +106,10 @@ function Comments({itemComments, onCommentsSave}) {
         }
 
         // Clear Data in form fields
-        setCommentDateTime('')
-        setCommentContent('')
-        setCommentType('')
+        setCommentDateTime('');
+        setCommentContent('');
+        setCommentType('');
+        setCommentId(-1);
     }
 
     const onShowEditComments = (e) => {
@@ -104,6 +126,7 @@ function Comments({itemComments, onCommentsSave}) {
                 <Button color="primary" type="button" className="mt-4" 
                     onClick={onCommentSave}>
                     <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save Comment</Button>
+                
                 <br/>
                 <FormGroup id="comment_date_grp" className="mt-3">
                     <Label for="commented_at">Comment Date</Label>
@@ -160,16 +183,20 @@ function Comments({itemComments, onCommentsSave}) {
         <div>
             {showComments ? editCommentsContent : showCommentsButton}
             {theComments.map((comment_row) => (
-                <Row key={comment_row.id} className="my-3" >
+                <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                     <hr/>
                     <Col md="3">
                         <strong>{comment_row.commented_at.replace('T', '  ')}</strong><br/>
                         <strong>{comment_row.comment_type}</strong><br/>
                         <Button color="success" type="button" 
-                            className="m-2" 
+                            className="m-2 btn-sm" 
                             comment_id={comment_row.id}
                             onClick={onEditButtonClick}>
                              <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit Comment</Button>
+                        <Button color="danger" type="button" className="m-1  btn-sm" 
+                            comment_id={comment_row.id}
+                            onClick={onDeleteComment}>
+                            <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete Comment</Button>
                     </Col>
                     <Col md="9">{comment_row.comment_content}
                     </Col>
