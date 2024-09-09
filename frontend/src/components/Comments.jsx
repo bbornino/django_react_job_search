@@ -12,14 +12,31 @@ function Comments({itemComments, onCommentsSave}) {
     const [theComments, setTheComments] = useState(itemComments);   
     const [showComments, setShowComments] = useState(false);
 
-    const getCommentIdIndex = (elementId) => {
+    const getCommentIdIndex = (commentId) => {
         // the comment ID is not necessarily the same as the array index
         for (let idIndex = 0; idIndex < theComments.length; idIndex++) {
-            if (theComments[idIndex].id == elementId) {
+            if (theComments[idIndex].id == commentId) {
                 return idIndex;
             }
         }
         return -1;
+    }
+
+    const formatDate = (rawDate) => {
+        // From a code perspective, I would love to live with the default:
+        // const theDate = new Date(rawDate).toLocaleString('en-US')
+        // 9/5/2024, 5:42:00 PM
+        // but... you can't turn off the seconds!
+        // return: Tuesday, Sep 10, 2024, 5:42 AM
+        const theDate = new Date(rawDate).toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour12:true,
+            hour:'numeric',
+            minute:'numeric'})
+        return theDate
     }
 
     const onEditButtonClick = (e) => {
@@ -186,17 +203,17 @@ function Comments({itemComments, onCommentsSave}) {
                 <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                     <hr/>
                     <Col md="3">
-                        <strong>{comment_row.commented_at.replace('T', '  ')}</strong><br/>
+                        <strong>{ formatDate(comment_row.commented_at)}</strong><br/>
                         <strong>{comment_row.comment_type}</strong><br/>
                         <Button color="success" type="button" 
                             className="m-2 btn-sm" 
                             comment_id={comment_row.id}
                             onClick={onEditButtonClick}>
-                             <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit Comment</Button>
+                             <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit</Button>
                         <Button color="danger" type="button" className="m-1  btn-sm" 
                             comment_id={comment_row.id}
                             onClick={onDeleteComment}>
-                            <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete Comment</Button>
+                            <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                     </Col>
                     <Col md="9">{comment_row.comment_content}
                     </Col>
