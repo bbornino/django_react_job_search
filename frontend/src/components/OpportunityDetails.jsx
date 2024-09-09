@@ -103,10 +103,10 @@ class OpportunityDetails extends Component {
                     <Card className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2" >
                             <Row className="">
-                                <Col lg="9" md="7" sm="5" xs="3">
+                                <Col xl="9" lg="8" md="7" sm="5" xs="3">
                                 <strong>Details</strong>
                                 </Col>
-                                <Col lg="3" md="5" sm="7" xs="9" className="pull-right">
+                                <Col xl="3" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                     <Button color="danger" className="mx-2  pull-right" >
                                         <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                                     <Button color="primary" type="submit" className="mx-2 pull-right">
