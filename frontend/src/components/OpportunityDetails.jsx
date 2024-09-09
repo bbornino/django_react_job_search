@@ -92,7 +92,6 @@ class OpportunityDetails extends Component {
     }
 
     setCommentsCallback = (updatedComments) => {
-        console.log("Opportunity Details Class received Call back to update master state")
         this.setState({comments: updatedComments})
     }
 

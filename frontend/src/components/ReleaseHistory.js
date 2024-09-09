@@ -4,9 +4,9 @@ class ReleaseHistory extends Component {
     render() {
         return (
             <div>
-                Release Hisotry
+                Release History
                 <ul>
-                    <li>Release 1: Today.  Initial Release</li>
+                    <li><strong>September 9, 2024 Release 1:</strong> Initial Release</li>
                 </ul>
             </div>
         )
