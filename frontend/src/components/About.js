@@ -20,7 +20,7 @@ class About extends Component {
                             </p>
                             <p>Some of the high level features of this application include:</p>
                             <ul>
-                                <li>Feature A</li>
+                                <li>Comments - Create, Read, Edit, and Delete</li>
                                 <li>Job Opportunity WYSIWYG Editor (CKEditor5)</li>
                             </ul>
                             <p>
