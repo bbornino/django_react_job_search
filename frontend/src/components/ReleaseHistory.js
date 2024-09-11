@@ -14,7 +14,7 @@ class ReleaseHistory extends Component {
                 <Row>
                     <Col>
                         <ul>
-                            <li><strong>September 9, 2024 Release 1:</strong> Initial Release</li>
+                            <li><strong>September 11, 2024 Release 1:</strong> Initial Release</li>
                         </ul>
                     </Col>
                 </Row>
