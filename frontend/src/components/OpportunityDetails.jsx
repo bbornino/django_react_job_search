@@ -30,7 +30,7 @@ class OpportunityDetails extends Component {
     }
 
     getOpportunity = (opportunity_id) => {
-        // console.log("getOpportunity received " + opportunity_id)
+        console.log("getOpportunity received " + opportunity_id)
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
             var emailReceivedAtArr = res.data.email_received_at.split('T')
             var emailReceivedTmArr = emailReceivedAtArr[1].split('-')
@@ -72,31 +72,32 @@ class OpportunityDetails extends Component {
 
     onEditorChange = e => {
         const collection = document.getElementsByClassName("ck-content")
-        const newVal = collection[0].ckeditorInstance.getData()
-        this.setState({job_description: newVal})
+        if (collection.length === 1) {
+            const newVal = collection[0].ckeditorInstance.getData()
+            this.setState({job_description: newVal})
+        }
     }
 
     onDeleteOpportunity = e => {
         console.log("Deleting Opportunity")
         axios.delete(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state).then(() => {
-            window.location = '/opportunities/'
+            window.location = '/opportunities'
         })
     }
 
     createOpportunity = e => {
         e.preventDefault();
         axios.post(JOB_OPPORTUNITY_API_URL, this.state).then(() => {
-            window.location = '/opportunities/'
+            window.location = '/opportunities'
         })
     }
 
     editOpportunity = e => {
         e.preventDefault();
         axios.put(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state).then(() => {
-            window.location = '/opportunities/'
+            window.location = '/opportunities'
         })
     }
-
     
     setCommentsCallback = (updatedComments) => {
         this.setState({comments: updatedComments})
@@ -110,7 +111,7 @@ class OpportunityDetails extends Component {
                         <CardTitle className="mx-4 my-2" >
                             <Row className="">
                                 <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
-                                    <strong>Details</strong>
+                                    <strong>Opportunity Details</strong>
                                 </Col>
                                 <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                     <Button color="danger" className="mx-2  pull-right" 
@@ -238,14 +239,14 @@ class OpportunityDetails extends Component {
                         </CardBody>
                     </Card>
                     <Card className="text-dark bg-light m-3">
-                        <CardTitle className="mx-4 my-2" ><strong>Comments</strong></CardTitle>
+                        <CardTitle className="mx-4 my-2" ><strong>Opportunity Comments</strong></CardTitle>
                         <CardBody className="bg-white">
                             <Comments itemComments={this.state.comments} 
                                       onCommentsSave={this.setCommentsCallback} />
                         </CardBody>
                     </Card>
                     <Card className="text-dark bg-light m-3">
-                        <CardTitle className="mx-4 my-2"><strong>Job Description</strong></CardTitle>
+                        <CardTitle className="mx-4 my-2"><strong>Opportunity Job Description</strong></CardTitle>
                         <CardBody className="bg-white">
                             <Editor editorText={this.state.job_description} 
                                     onEditorChange={this.onEditorChange} ></Editor>
