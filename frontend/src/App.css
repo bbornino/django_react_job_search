@@ -37,6 +37,24 @@
   }
 }
 
+/* Checklist Styles */
+ul li.check:before  {
+  content: '✓';
+  color: green;
+  position: absolute;
+  left: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.check {
+  margin-top: 10px;
+  position: relative;
+  padding-left: 1.5em;
+}
+
+
+
 /* Customize the Bootstrap Cards */
 
 .card-title {
