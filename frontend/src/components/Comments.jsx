@@ -1,6 +1,7 @@
 // Comments section drawn by both Opportunitiy and Job Postings
 import React, {useState} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
+import { formatDisplayDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
@@ -203,7 +204,7 @@ function Comments({itemComments, onCommentsSave}) {
                 <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                     <hr/>
                     <Col md="3">
-                        <strong>{ formatDate(comment_row.commented_at)}</strong><br/>
+                        <strong>{ formatDisplayDateTime(comment_row.commented_at)}</strong><br/>
                         <strong>{comment_row.comment_type}</strong><br/>
                         <Button color="success" type="button" 
                             className="m-2 btn-sm" 
