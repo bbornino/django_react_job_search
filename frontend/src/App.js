@@ -12,6 +12,8 @@ import {Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink} fro
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import JobSiteList from "./components/JobSiteList";
+import JobSiteView from "./components/JobSiteView";
+import JobSiteEdit from "./components/JobSiteEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
 import About from "./components/About";
@@ -69,8 +71,9 @@ export default class App extends React.Component {
               {/* <Route path="/" element={<Home />} /> */}
               <Route path="/" element={<About />} />
               <Route path="/job-sites" element={<JobSiteList />} />
-              <Route path="/job-site-details" element={<OpportunityDetails />} />
-              <Route path="/job-site-details/:id" element={<OpportunityDetails />} />
+              <Route path="/job-site-view/:id" element={<JobSiteView />} />
+              <Route path="/job-site-edit" element={<JobSiteEdit />} />  {/* Matches New */}
+              <Route path="/job-site-edit/:id" element={<JobSiteEdit />} />
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />

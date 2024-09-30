@@ -65,7 +65,7 @@ class JobSiteList extends Component {
                         <h1>All Job Sites</h1>
                     </Col>
                     <Col>
-                        <Link to='/job-site-details'>
+                        <Link to='/job-site-edit'>
                             <Button> Create Job Site</Button>
                         </Link>
                     </Col>

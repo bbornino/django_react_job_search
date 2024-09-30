@@ -80,7 +80,8 @@ class OpportunityDetails extends Component {
 
     onDeleteOpportunity = e => {
         console.log("Deleting Opportunity")
-        axios.delete(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state).then(() => {
+        axios.delete(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, 
+                    this.state).then(() => {
             window.location = '/opportunities'
         })
     }
@@ -129,6 +130,7 @@ class OpportunityDetails extends Component {
                                         <Label for="recruiter_name">Recruiter Name</Label>
                                         <Input
                                             type="text" required
+                                            id="recruiter_name"
                                             name="recruiter_name"
                                             onChange={this.onChange}
                                             value={this.state.recruiter_name ?? ''}
