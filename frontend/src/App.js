@@ -11,6 +11,7 @@ import {
 import {Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import JobSiteList from "./components/JobSiteList";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
 import About from "./components/About";
@@ -56,6 +57,7 @@ export default class App extends React.Component {
             <Nav className="ml-auto" navbar>
               {/* <NavItem><NavLink href="/">Home</NavLink></NavItem> */}
               <NavItem><NavLink href="/about">About</NavLink></NavItem>
+              <NavItem><NavLink href="/job-sites">Job Sites</NavLink></NavItem>
               <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
               <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
               <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
@@ -66,6 +68,9 @@ export default class App extends React.Component {
           <Routes>
               {/* <Route path="/" element={<Home />} /> */}
               <Route path="/" element={<About />} />
+              <Route path="/job-sites" element={<JobSiteList />} />
+              <Route path="/job-site-details" element={<OpportunityDetails />} />
+              <Route path="/job-site-details/:id" element={<OpportunityDetails />} />
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />
