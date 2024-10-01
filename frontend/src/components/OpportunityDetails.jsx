@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 import axios from "axios";
-import { JOB_OPPORTUNITY_API_URL } from "../constants";
+import { JOB_OPPORTUNITY_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -32,16 +32,14 @@ class OpportunityDetails extends Component {
     getOpportunity = (opportunity_id) => {
         console.log("getOpportunity received " + opportunity_id)
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
-            var emailReceivedAtArr = res.data.email_received_at.split('T')
-            var emailReceivedTmArr = emailReceivedAtArr[1].split('-')
-            var emailReceivedDtTm = emailReceivedAtArr[0] + ' ' + emailReceivedTmArr[0]
+            
             this.setState({
                 job_title: res.data.job_title,
                 opportunity_status: res.data.opportunity_status,
                 recruiter_name: res.data.recruiter_name,
                 recruiter_company: res.data.recruiter_company,
                 
-                email_received_at: emailReceivedDtTm,
+                email_received_at: formatInputFieldDateTime(res.data.email_received_at),
                 employment_type: res.data.employment_type,
                 job_duration: res.data.job_duration,
                 location_type: res.data.location_type,
