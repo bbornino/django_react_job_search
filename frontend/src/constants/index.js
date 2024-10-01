@@ -7,9 +7,9 @@ export const formatInputFieldDateTime = (originalDateTime) => {
     // The front end widget does not need a time zone, nor the 'T'.
     // From: 2024-09-02T14:19:00-07:00
     // To: 2024-09-02 14:19:00   (no time zones)
-    console.log("Stripping the Time Zone from " + originalDateTime);
+    // console.log("Stripping the Time Zone from " + originalDateTime);
     var originalDtArr = originalDateTime.split('T')
-    var originalDtTimeArr = originalDtArr[1].split
+    var originalDtTimeArr = originalDtArr[1].split('-')
     return originalDtArr[0] + ' ' + originalDtTimeArr[0]
 }
 
