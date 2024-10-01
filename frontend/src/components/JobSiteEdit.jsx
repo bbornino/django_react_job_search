@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 import axios from "axios";
-import { JOB_SITE_API_URL } from "../constants";
+import { JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -25,6 +25,17 @@ class JobSiteEdit extends Component {
 
     getJobSite = (job_site_id) => {
         console.log("getJobSite received " + job_site_id)
+        axios.get(JOB_SITE_API_URL + job_site_id).then(res => {
+            this.setState({
+                site_name: res.data.site_name,
+                site_url: res.data.site_url,
+                rating: res.data.rating,
+                last_visited_at: formatInputFieldDateTime(res.data.last_visited_at),
+                resume_updated_at: formatInputFieldDateTime(res.data.resume_updated_at),
+                headline: res.data.headline,
+                description: res.data.description,
+            })
+        })
     }
 
     componentDidMount() {
@@ -32,7 +43,7 @@ class JobSiteEdit extends Component {
         if (pathArr[2] !== undefined) {
             const job_site_id = pathArr[2]
             this.setState({job_site_id: pathArr[2]})
-            this.getOpportunity(job_site_id)
+            this.getJobSite(job_site_id)
         }
     }
 
@@ -59,7 +70,7 @@ class JobSiteEdit extends Component {
     createJobSite = e => {
         e.preventDefault();
         axios.post(JOB_SITE_API_URL, this.state).then(() => {
-            window.location = '/job-site-view'
+            window.location = '/job-site-view/' + this.state.job_site_id
         })
     }
 
@@ -67,7 +78,7 @@ class JobSiteEdit extends Component {
         e.preventDefault();
         axios.put(JOB_SITE_API_URL + this.state.job_site_id,
             this.state).then(() => {
-                window.location = '/job-site.view'
+                window.location = '/job-site-view/' + this.state.job_site_id
             })
     }
 
@@ -183,8 +194,13 @@ class JobSiteEdit extends Component {
                             </Row>
                             <Row id="description_row">
                                 <Col>
-                                    <Editor editorText={this.state.description}
-                                        onEditorChange={this.onEditorChange}></Editor>
+                                    <FormGroup>
+                                        <Label>Description</Label>
+                                        <Editor editorText={this.state.description}
+                                            onEditorChange={this.onEditorChange}></Editor>  
+                                    </FormGroup>
+
+                                    
                                 </Col>
                             </Row>
                         </CardBody>
