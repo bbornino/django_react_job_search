@@ -14,10 +14,13 @@ class JobSiteEdit extends Component {
         job_site_id: 0,
         site_name: '',
         site_url: '',
+        site_password: '',
         rating: '',
         last_visited_at: '',
         resume_updated_at: '',
         resume_format: 'Both',
+        github_field: '',
+        project_site_field: '',
         headline: '',
         description: 'TBD',
         
@@ -29,9 +32,13 @@ class JobSiteEdit extends Component {
             this.setState({
                 site_name: res.data.site_name,
                 site_url: res.data.site_url,
+                site_password: res.data.site_password,
                 rating: res.data.rating,
                 last_visited_at: formatInputFieldDateTime(res.data.last_visited_at),
                 resume_updated_at: formatInputFieldDateTime(res.data.resume_updated_at),
+                resume_format: res.data.resume_format,
+                github_field: res.data.github_field,
+                project_site_field: res.data.project_site_field,
                 headline: res.data.headline,
                 description: res.data.description,
             })
