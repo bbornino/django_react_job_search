@@ -1,7 +1,7 @@
 // Comments section drawn by both Opportunitiy and Job Postings
 import React, {useState} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
-import { formatDisplayDateTime } from "../constants";
+import { formatDisplayDateTime, formatInputFieldDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
@@ -23,22 +23,7 @@ function Comments({itemComments, onCommentsSave}) {
         return -1;
     }
 
-    const formatDate = (rawDate) => {
-        // From a code perspective, I would love to live with the default:
-        // const theDate = new Date(rawDate).toLocaleString('en-US')
-        // 9/5/2024, 5:42:00 PM
-        // but... you can't turn off the seconds!
-        // return: Tuesday, Sep 10, 2024, 5:42 AM
-        const theDate = new Date(rawDate).toLocaleString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour12:true,
-            hour:'numeric',
-            minute:'numeric'})
-        return theDate
-    }
+
 
     const onEditButtonClick = (e) => {
         // Load the contents of the particular comment into the edit area
