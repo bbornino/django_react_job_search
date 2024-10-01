@@ -52,6 +52,7 @@ class JobSiteView extends Component {
     }
 
     render() {
+
         return (
             <Container className="mt-2">
                 <Row className="m-4">
@@ -108,7 +109,7 @@ class JobSiteView extends Component {
                     <Col>
                         <dl>
                             <dt>Description</dt>
-                            <dd>{this.state.description}</dd>
+                            <dd><div dangerouslySetInnerHTML={{ __html: this.state.description }} /></dd>
                         </dl>
                     </Col>
                 </Row>
