@@ -7,11 +7,12 @@ import DataTableBase from './DataTableBase';
 import {Button, Container, Row, Col} from 'reactstrap';
 
 class JobSiteList extends Component {
+
     state = {
         jobSites: [],
     };
 
-    componentDidMout() {
+    componentDidMount() {
         this.resetState();
     };
 
@@ -53,7 +54,7 @@ class JobSiteList extends Component {
     ];
 
     onRowClicked = (row, event) => {
-        window.location = '/job-site-details/' + row.id
+        window.location = '/job-site-view/' + row.id
     };
 
     render() {
