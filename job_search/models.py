@@ -22,9 +22,12 @@ class EmailOpportunity(models.Model):
 class JobSite(models.Model):
     site_name = models.CharField(max_length=64, default='')
     site_url = models.CharField(max_length=64, default='')
+    site_password = models.CharField(max_length=64, default='')
     rating = models.IntegerField(default=1)
 
-    site_url = models.CharField(max_length=64, default='')
+    resume_format = models.CharField(max_length=32, default='')
+    github_field = models.BooleanField(default=False)
+    project_site_field = models.BooleanField(default=False)
     last_visited_at = models.DateTimeField(default=datetime.now, blank=True)
     resume_updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
@@ -38,10 +41,20 @@ class JobPosting(models.Model):
     job_site_id = models.ForeignKey(JobSite, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=64, default='')
     posting_title = models.CharField(max_length=128, default='')
+    posting_status = models.CharField(max_length=32, default='')
     posting_url = models.CharField(max_length=256, default='')
+    
     location_type = models.CharField(max_length=32, default='')
     location_city = models.CharField(max_length=64, default='')
+    employment_type = models.CharField(max_length=32, default='')
+    
+    pay_range = models.CharField(max_length=64, default='')
+    applied_at = models.DateTimeField(default=datetime.now, blank=True)
+    rejected_at = models.DateTimeField(default=datetime.now, blank=True)
+    interviewed_at = models.DateTimeField(default=datetime.now, blank=True)
 
+    technology_string = models.CharField(max_length=64, default='')
+    technology_stack = models.JSONField(default=list)
     comments = models.JSONField(default=list)
     job_description = models.TextField()
 
