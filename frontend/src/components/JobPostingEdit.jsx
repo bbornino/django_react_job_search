@@ -12,7 +12,7 @@ import Editor from "./Editor"
 class JobPostingEdit extends Component {
     state = {
         job_posting_id: 0,
-        job_site_id_id: 1,
+        job_site_id: 0,
         posting_title: '',
         company_name: '',
         posting_status: '4 - No Response',
@@ -49,7 +49,29 @@ class JobPostingEdit extends Component {
 
     componentDidMount() {
         console.log("Starting Mount")
-        // debugger
+        const pathArr = window.location.pathname.split('/')
+        
+        debugger
+        if (pathArr[1] == "job-posting-new") {
+            // Set the applied at date time to now, in correct format
+            var currentdate = new Date().toLocaleDateString('en-CA')
+            var currenttime = new Date().toLocaleTimeString('en-US', 
+                    { hour12: false, 
+                        hour: "numeric", 
+                        minute: "numeric"})
+
+            // use value to set the job_site_id
+            this.setState({job_site_id:pathArr[2], 
+                applied_at: currentdate + 'T' + currenttime,
+            })
+
+            
+        } else {
+            // NOT new.  Use as the posting id
+            this.setState({job_posting_id:pathArr[2]})
+        }
+        console.log("Hi")
+
     };
 
     onChange = e => {
@@ -123,13 +145,13 @@ class JobPostingEdit extends Component {
                                 </Col>
                                 <Col lg="3" md="6">
                                     <FormGroup>
-                                        <Label for="job_site_id_id">Posting Job Site Source</Label>
+                                        <Label for="job_site_id">Posting Job Site Source</Label>
                                         <Input
                                             type="select" required
-                                            id="job_site_id_id"
-                                            name="job_site_id_id"
+                                            id="job_site_id"
+                                            name="job_site_id"
                                             onChange={this.onChange}
-                                            value={this.state.job_site_id_id ?? ''}>
+                                            value={this.state.job_site_id ?? ''}>
                                                 <option value="1">LinkedIn</option>
                                                 <option value="2">Dice</option>
                                             </Input>
