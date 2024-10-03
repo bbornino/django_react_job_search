@@ -12,10 +12,10 @@ import Editor from "./Editor"
 class JobPostingEdit extends Component {
     state = {
         job_posting_id: 0,
-        job_site_id_id: 0,
+        job_site_id_id: 1,
         posting_title: '',
         company_name: '',
-        posting_status: '',
+        posting_status: '4 - No Response',
 
         posting_url_full: '',
         posting_url_domain: '',
@@ -24,12 +24,12 @@ class JobPostingEdit extends Component {
         pay_range: '',
         location_city: '',
         location_type: '',
-        employment_type: '',
+        employment_type: 'Full-time',
 
         applied_at: '',
-        interviewed_at: '',
-        rejected_at: '',
-        rejected_after_stage: '',
+        interviewed_at: null,
+        rejected_at: null,
+        rejected_after_stage: 'Application Submission',
 
         job_scan_info: '',
         outreach_info: '',
@@ -49,7 +49,7 @@ class JobPostingEdit extends Component {
 
     componentDidMount() {
         console.log("Starting Mount")
-        debugger
+        // debugger
     };
 
     onChange = e => {
@@ -60,7 +60,7 @@ class JobPostingEdit extends Component {
         const collection = document.getElementsByClassName("ck-content")
         if (collection.length === 1) {
             const newVal = collection[0].ckeditorInstance.getData()
-            this.setState({description: newVal})
+            this.setState({job_description: newVal})
         }
     };
 
@@ -91,7 +91,238 @@ class JobPostingEdit extends Component {
         const {jobPostings} = this.state;
         return (
             <Container>
-                Job Posting EDIT
+                <Form onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2">
+                            <Row className="">
+                                <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
+                                    Edit Job Posting
+                                </Col>
+                                <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
+                                    <Button color="danger" className="mx-2  pull-right" 
+                                        onClick={this.onDeleteJobPosting}>
+                                        <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
+                                    <Button color="primary" type="submit" className="mx-2 pull-right">
+                                        <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save</Button>
+                                </Col>
+                            </Row>
+                        </CardTitle>
+                        <CardBody className="bg-white">
+                            <Row id="title_source_status">
+                                <Col lg="6" md="12">
+                                    <FormGroup>
+                                        <Label for="posting_title">Posting Title</Label>
+                                        <Input
+                                            type="text" required
+                                            id="posting_title"
+                                            name="posting_title"
+                                            onChange={this.onChange}
+                                            value={this.state.posting_title ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="job_site_id_id">Posting Job Site Source</Label>
+                                        <Input
+                                            type="select" required
+                                            id="job_site_id_id"
+                                            name="job_site_id_id"
+                                            onChange={this.onChange}
+                                            value={this.state.job_site_id_id ?? ''}>
+                                                <option value="1">LinkedIn</option>
+                                                <option value="2">Dice</option>
+                                            </Input>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="posting_title">Posting Status</Label>
+                                        <Input
+                                            type="select" required
+                                            id="posting_status"
+                                            name="posting_status"
+                                            onChange={this.onChange}
+                                            value={this.state.posting_status ?? ''}>
+                                                <option value="4 - No Response">4 - No Response</option>
+                                                <option value="3 - Rejected">3 - Rejected</option>
+                                                <option value="3 - Rejected">2.5 - Post Interview Declined</option>
+                                                <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
+                                                <option value="1 - Actively Engaged">1 - Actively Engaged</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row id="company_url_password">
+                                <Col lg="6" md="12">
+                                    <FormGroup>
+                                        <Label for="company_name">Company Name</Label>
+                                        <Input
+                                            type="text" required
+                                            id="company_name"
+                                            name="company_name"
+                                            onChange={this.onChange}
+                                            value={this.state.company_name ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+
+                                <Col lg="4" md="6">
+                                    <FormGroup>
+                                        <Label for="posting_url_domain">Posting URL Domain</Label>
+                                        <Input
+                                            type="text" required
+                                            id="posting_url_domain"
+                                            name="posting_url_domain"
+                                            onChange={this.onChange}
+                                            value={this.state.posting_url_domain ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="2" md="6">
+                                    <FormGroup>
+                                        <Label for="posting_password">Posting Password</Label>
+                                        <Input
+                                            type="text"
+                                            id="posting_password"
+                                            name="posting_password"
+                                            onChange={this.onChange}
+                                            value={this.state.posting_password ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row id="full_url">
+                                <Col lg="12" md="12">
+                                    <FormGroup>
+                                        <Label for="posting_url_full">Posting Full URL</Label>
+                                        <Input
+                                            type="text" required
+                                            id="posting_url_full"
+                                            name="posting_url_full"
+                                            onChange={this.onChange}
+                                            value={this.state.posting_url_full ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row id="pay_location_type">
+                                <Col lg="4" md="8">
+                                    <FormGroup>
+                                        <Label for="pay_range">Pay Range</Label>
+                                        <Input
+                                            type="text" required
+                                            id="pay_range"
+                                            name="pay_range"
+                                            onChange={this.onChange}
+                                            value={this.state.pay_range ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="2" md="4">
+                                    <FormGroup>
+                                        <Label for="employment_type">Employment Type</Label>
+                                        <Input
+                                            type="select" required
+                                            id="employment_type"
+                                            name="employment_type"
+                                            onChange={this.onChange}
+                                            value={this.state.employment_type ?? ''} >
+                                                <option value="Full-time">Full-time</option>
+                                                <option value="Freelance">Freelance</option>
+                                                <option value="Contract">Contract</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="4" md="8">
+                                    <FormGroup>
+                                        <Label for="location_city">Location City</Label>
+                                        <Input
+                                            type="text" required
+                                            id="location_city"
+                                            name="location_city"
+                                            onChange={this.onChange}
+                                            value={this.state.location_city ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="2" md="4">
+                                    <FormGroup>
+                                        <Label for="location_type">Location Type</Label>
+                                        <Input
+                                            type="select" required
+                                            id="location_type"
+                                            name="location_type"
+                                            onChange={this.onChange}
+                                            value={this.state.location_type ?? ''}>
+                                                <option value="Remote">Remote</option>
+                                                <option value="Hybrid">Hybrid</option>
+                                                <option value="On-Site">On-Site</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row id="dates">
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="applied_at">Applied At</Label>
+                                        <Input
+                                            type="datetime-local" required
+                                            id="applied_at"
+                                            name="applied_at"
+                                            onChange={this.onChange}
+                                            value={this.state.applied_at ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="interviewed_at">Interviewed At</Label>
+                                        <Input
+                                            type="datetime-local"
+                                            id="interviewed_at"
+                                            name="interviewed_at"
+                                            onChange={this.onChange}
+                                            value={this.state.interviewed_at ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="rejected_at">Rejected At</Label>
+                                        <Input
+                                            type="datetime-local"
+                                            id="rejected_at"
+                                            name="rejected_at"
+                                            onChange={this.onChange}
+                                            value={this.state.rejected_at ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col lg="3" md="6">
+                                    <FormGroup>
+                                        <Label for="rejected_after_stage">Recruitment Stage</Label>
+                                        <Input
+                                            type="select"
+                                            id="rejected_after_stage"
+                                            name="rejected_after_stage"
+                                            onChange={this.onChange}
+                                            value={this.state.rejected_after_stage ?? ''}>
+                                                <option value="Application Submission">Application Submission</option>
+                                                <option value="Screening">Screening</option>
+                                                <option value="HR Interview">HR Interview</option>
+                                                <option value="Code Test">Code Test</option>
+                                                <option value="Hiring Manager Interview">Hiring Manager Interview</option>
+                                                <option value="Team Interview">Team Interview</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+
+                        </CardBody>
+                    </Card>
+                </Form>
+
             </Container>
         )
     }

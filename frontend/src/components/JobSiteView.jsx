@@ -52,7 +52,6 @@ class JobSiteView extends Component {
     }
 
     onNewPostingClicked = (r, e) => {
-        debugger
         window.location = '/job-posting-new/' + this.state.job_site_id
     }
 

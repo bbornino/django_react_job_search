@@ -45,25 +45,25 @@ class JobPosting(models.Model):
     
     posting_url_full = models.CharField(max_length=256, default='')
     posting_url_domain = models.CharField(max_length=32, default='')
-    posting_password = models.CharField(max_length=32, default='')
+    posting_password = models.CharField(max_length=32, default='', blank=True)
     
     pay_range = models.CharField(max_length=64, default='')
     location_type = models.CharField(max_length=32, default='')
     location_city = models.CharField(max_length=64, default='')
     employment_type = models.CharField(max_length=32, default='')
     
-    applied_at = models.DateTimeField(default=datetime.now, blank=True)
-    interviewed_at = models.DateTimeField(default=datetime.now, blank=True)
-    rejected_at = models.DateTimeField(default=datetime.now, blank=True)
+    applied_at = models.DateTimeField(default=datetime.now)
+    interviewed_at = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    rejected_at = models.DateTimeField(default=datetime.now, blank=True, null=True)
     rejected_after_stage = models.CharField(max_length=32, default='')
 
-    job_scan_info = models.CharField(max_length=64, default='')
-    outreach_info = models.CharField(max_length=64, default='')
+    job_scan_info = models.CharField(max_length=64, default='', blank=True)
+    outreach_info = models.CharField(max_length=64, default='', blank=True)
 
-    technology_string = models.CharField(max_length=64, default='')
-    technology_stack = models.JSONField(default=list)
-    comments = models.JSONField(default=list)
-    posting_application_questions = models.JSONField(default=list)
+    technology_string = models.CharField(max_length=64, default='', blank=True)
+    technology_stack = models.JSONField(default=list, blank=True)
+    comments = models.JSONField(default=list, blank=True)
+    posting_application_questions = models.JSONField(default=list, blank=True)
     job_description = models.TextField()
 
     def _str_(self):
