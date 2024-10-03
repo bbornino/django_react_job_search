@@ -93,7 +93,8 @@ class OpportunityDetails extends Component {
 
     editOpportunity = e => {
         e.preventDefault();
-        axios.put(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state).then(() => {
+        axios.put(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state)
+            .then(() => {
             window.location = '/opportunities'
         })
     }

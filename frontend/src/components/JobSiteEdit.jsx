@@ -36,7 +36,7 @@ class JobSiteEdit extends Component {
                 rating: res.data.rating,
                 last_visited_at: formatInputFieldDateTime(res.data.last_visited_at),
                 resume_updated_at: formatInputFieldDateTime(res.data.resume_updated_at),
-                resume_format: res.data.resume_format,
+                resume_format: res.data.resume_format === '' ? 'Both' : res.data.resume_format ,
                 github_field: res.data.github_field,
                 project_site_field: res.data.project_site_field,
                 headline: res.data.headline,
@@ -83,8 +83,8 @@ class JobSiteEdit extends Component {
 
     editJobSite = e => {
         e.preventDefault();
-        axios.put(JOB_SITE_API_URL + this.state.job_site_id,
-            this.state).then(() => {
+        axios.put(JOB_SITE_API_URL + this.state.job_site_id, this.state)
+            .then(() => {
                 window.location = '/job-site-view/' + this.state.job_site_id
             })
     }
