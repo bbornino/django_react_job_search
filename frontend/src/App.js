@@ -14,6 +14,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import JobSiteList from "./components/JobSiteList";
 import JobSiteView from "./components/JobSiteView";
 import JobSiteEdit from "./components/JobSiteEdit";
+import JobPostingList from "./components/JobPostingList";
+// import JobSiteView from "./components/JobSiteView";
+import JobPostingEdit from "./components/JobPostingEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
 import About from "./components/About";
@@ -60,6 +63,7 @@ export default class App extends React.Component {
               {/* <NavItem><NavLink href="/">Home</NavLink></NavItem> */}
               <NavItem><NavLink href="/about">About</NavLink></NavItem>
               <NavItem><NavLink href="/job-sites">Job Sites</NavLink></NavItem>
+              <NavItem><NavLink href="/job-postings">Job Postings</NavLink></NavItem>
               <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
               <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
               <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
@@ -74,6 +78,9 @@ export default class App extends React.Component {
               <Route path="/job-site-view/:id" element={<JobSiteView />} />
               <Route path="/job-site-edit" element={<JobSiteEdit />} />  {/* Matches New */}
               <Route path="/job-site-edit/:id" element={<JobSiteEdit />} />
+              <Route path="/job-postings" element={<JobPostingList />} />
+              <Route path="/job-posting-new/:id" element={<JobPostingEdit />} />
+              <Route path="/job-posting-edit/:id" element={<JobPostingEdit />} />
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />
