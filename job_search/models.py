@@ -22,7 +22,7 @@ class EmailOpportunity(models.Model):
 class JobSite(models.Model):
     site_name = models.CharField(max_length=64, default='')
     site_url = models.CharField(max_length=64, default='')
-    site_password = models.CharField(max_length=64, default='')
+    site_password = models.CharField(max_length=64, default='', blank=True)
     rating = models.IntegerField(default=1)
 
     resume_format = models.CharField(max_length=32, default='')
