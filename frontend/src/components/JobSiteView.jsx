@@ -1,10 +1,11 @@
 import React, { Component} from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { JOB_SITE_API_URL, formatDisplayDateTime } from "../constants";
+import { JOB_SITE_API_URL, JOB_SITE_POSTINGS_API_URL, formatDisplayDateTime } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import DataTableBase from './DataTableBase';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 
@@ -18,14 +19,16 @@ class JobSiteView extends Component {
         resume_updated_at: '',
         site_name: '',
         site_url: '',
+        postings: [],
     };
 
     componentDidMount() {
         const pathArr = window.location.pathname.split('/')
         if (pathArr[2] !== undefined) {
-            const jobSiteId = pathArr[2]
-            this.setState({job_site_id: pathArr[2]})
-            this.getJobSite(jobSiteId)
+            const jobSiteId = pathArr[2];
+            this.setState({job_site_id: pathArr[2]});
+            this.getJobSite(jobSiteId);
+            this.getJobSitePostings(jobSiteId);
         }
     };
 
@@ -47,6 +50,46 @@ class JobSiteView extends Component {
         })
     }
 
+    getJobSitePostings = (JobSiteId) => {
+        console.log("getJobSitePOSTINGS for job site id " + JobSiteId);
+        axios.get(JOB_SITE_POSTINGS_API_URL + JobSiteId).then(res => {
+            
+            console.log(res)
+            this.setState({
+                postings: res.data,
+            })
+            console.log(this.state)
+        });
+    }
+
+    columns = [
+        {
+            name: 'Company Name',
+            selector: row => row.company_name,
+            sortable: true,
+        },
+        {
+            name: 'Posting Title',
+            selector: row => row.posting_title,
+            sortable: true,
+        },
+        {
+            name: 'Posting Status',
+            selector: row => row.posting_status,
+            sortable: true,
+        },
+        {
+            name: 'Applied At',
+            selector: row => formatDisplayDateTime(row.applied_at),
+            sortable: true,
+            sortField: 'applied_at'
+        },
+    ]
+
+    onRowClicked = (row, event) => {
+        window.location = '/job-posting-edit/' + row.id
+    };
+
     onEditClicked = (r,e) => {
         window.location = '/job-site-edit/' + this.state.job_site_id
     }
@@ -56,7 +99,6 @@ class JobSiteView extends Component {
     }
 
     render() {
-
         return (
             <Container className="mt-2">
                 <Card className="text-dark bg-light m-3">
@@ -142,7 +184,9 @@ class JobSiteView extends Component {
                     <CardBody className="bg-white">
                         <Row>
                             <Col>
-                                Table Here!
+                                <DataTableBase  columns={this.columns}
+                                    data={this.state.postings}
+                                    onRowClicked={this.onRowClicked} />
                             </Col>
                         </Row>
                     </CardBody>

@@ -84,6 +84,14 @@ def job_site_detail(request, pk):
         job_site.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+def job_site_postings(request, job_site_id):
+    """ Define the listing of all Job Postings for REST API """
+    if request.method == 'GET':
+        data = JobPosting.objects.filter(job_site_id=job_site_id).values('id', 'company_name', 'posting_title', 'posting_status', 'applied_at')
+        serializer = JobSitePostingsSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def job_posting_list(request):

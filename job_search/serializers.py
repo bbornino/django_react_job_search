@@ -11,6 +11,11 @@ class JobSiteSerializer(serializers.ModelSerializer):
         model = JobSite
         fields = '__all__'
 
+class JobSitePostingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobPosting
+        fields = ('id', 'company_name', 'posting_title', 'posting_status', 'applied_at')
+
 class JobPostingSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPosting

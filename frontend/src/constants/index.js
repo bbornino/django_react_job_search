@@ -1,6 +1,9 @@
+const BASE_API_URL = "http://localhost:8000/api/";
+
 export const JOB_OPPORTUNITY_API_URL = "http://localhost:8000/api/email_opportunity/";
 export const JOB_SITE_API_URL = "http://localhost:8000/api/job_site/";
 export const JOB_POSTING_API_URL = "http://localhost:8000/api/job_posting/";
+export const JOB_SITE_POSTINGS_API_URL = BASE_API_URL + 'job_site_postings/';
 
 export const formatInputFieldDateTime = (originalDateTime) => {
     // Properly format date-time
