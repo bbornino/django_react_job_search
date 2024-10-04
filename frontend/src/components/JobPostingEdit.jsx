@@ -24,7 +24,7 @@ class JobPostingEdit extends Component {
         pay_range: '',
         location_city: '',
         location_type: '',
-        employment_type: 'Full-time',
+        employment_type: '',
 
         applied_at: '',
         interviewed_at: null,
@@ -250,6 +250,7 @@ class JobPostingEdit extends Component {
                                             name="employment_type"
                                             onChange={this.onChange}
                                             value={this.state.employment_type ?? ''} >
+                                                <option value="">Select Type</option>
                                                 <option value="Full-time">Full-time</option>
                                                 <option value="Freelance">Freelance</option>
                                                 <option value="Contract">Contract</option>
@@ -277,6 +278,7 @@ class JobPostingEdit extends Component {
                                             name="location_type"
                                             onChange={this.onChange}
                                             value={this.state.location_type ?? ''}>
+                                                <option value="">Select Type</option>
                                                 <option value="Remote">Remote</option>
                                                 <option value="Hybrid">Hybrid</option>
                                                 <option value="On-Site">On-Site</option>

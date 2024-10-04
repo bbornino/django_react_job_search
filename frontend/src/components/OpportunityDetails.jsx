@@ -19,7 +19,7 @@ class OpportunityDetails extends Component {
         recruiter_company: '',
         
         email_received_at: '',
-        employment_type: 'Contract',
+        employment_type: '',
         job_duration: '',
         location_type: 'On-Site',
         location_city: '',
@@ -191,7 +191,8 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="employment_type"
                                             onChange={this.onChange}
-                                            value={this.state.employment_type ?? 'Contract'} >
+                                            value={this.state.employment_type ?? ''} >
+                                                <option value="">Select Type</option>
                                                 <option value="Contract">Contract</option>
                                                 <option value="Full-time">Full-time</option>
                                                 <option value="Freelance">Freelance</option>
@@ -218,7 +219,8 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="location_type"
                                             onChange={this.onChange}
-                                            value={this.state.location_type ?? 'On-Site'} >
+                                            value={this.state.location_type ?? ''} >
+                                                <option value="">Select Type</option>
                                                 <option value="On-Site">On-Site</option>
                                                 <option value="Hybrid">Hybrid</option>
                                                 <option value="Remote">Remote</option>
