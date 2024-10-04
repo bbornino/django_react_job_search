@@ -6,6 +6,7 @@ export const JOB_POSTING_API_URL = "http://localhost:8000/api/job_posting/";
 export const JOB_SITE_POSTINGS_API_URL = BASE_API_URL + 'job_site_postings/';
 
 export const formatInputFieldDateTime = (originalDateTime) => {
+    if (originalDateTime === null) return null;
     // Properly format date-time
     // Going into the database, the time zone is saved.
     // The front end widget does not need a time zone, nor the 'T'.
@@ -18,6 +19,7 @@ export const formatInputFieldDateTime = (originalDateTime) => {
 }
 
 export const formatDisplayDateTime = (rawDate) => {
+    if (rawDate === null) return null;
     // From a code perspective, I would love to live with the default:
     // const theDate = new Date(rawDate).toLocaleString('en-US')
     // 9/5/2024, 5:42:00 PM

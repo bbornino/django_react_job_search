@@ -41,17 +41,39 @@ class JobPostingEdit extends Component {
         job_description: 'TBD',
     }
 
-    getJobPosting = (job_posting_id) => {
+    getJobPosting = (jobPostingId) => {
         console.log("getJobPosting")
-        debugger
-        // const {posting_id, location} = this.props;
+        axios.get(JOB_POSTING_API_URL + jobPostingId).then(res => {
+            this.setState({
+                job_site_id: res.data.job_site_id,
+                posting_title: res.data.posting_title,
+                company_name: res.data.company_name,
+                posting_status: res.data.posting_status,
+                posting_url_full: res.data.posting_url_full,
+                posting_url_domain: res.data.posting_url_domain,
+                posting_password: res.data.posting_password,
+                pay_range: res.data.pay_range,
+                location_city: res.data.location_city,
+                location_type: res.data.location_type,
+                employment_type: res.data.employment_type,
+                applied_at: formatInputFieldDateTime(res.data.applied_at),
+                interviewed_at:  formatInputFieldDateTime(res.data.interviewed_at),
+                rejected_at: formatInputFieldDateTime(res.data.rejected_at),
+                job_scan_info: res.data.job_scan_info,
+                outreach_info: res.data.outreach_info,
+                technology_string: res.data.technology_string,
+                technology_stack: res.data.technology_stack,
+                comments: res.data.comments,
+                posting_application_questions: res.data.posting_application_questions,
+                job_description: res.data.job_description,
+            })
+        })
     }
 
     componentDidMount() {
         console.log("Starting Mount")
         const pathArr = window.location.pathname.split('/')
         
-        debugger
         if (pathArr[1] == "job-posting-new") {
             // Set the applied at date time to now, in correct format
             var currentdate = new Date().toLocaleDateString('en-CA')
@@ -64,14 +86,12 @@ class JobPostingEdit extends Component {
             this.setState({job_site_id:pathArr[2], 
                 applied_at: currentdate + 'T' + currenttime,
             })
-
             
         } else {
             // NOT new.  Use as the posting id
-            this.setState({job_posting_id:pathArr[2]})
+            this.setState({job_posting_id:pathArr[2]});
+            this.getJobPosting(pathArr[2]);
         }
-        console.log("Hi")
-
     };
 
     onChange = e => {
@@ -97,7 +117,8 @@ class JobPostingEdit extends Component {
     createJobPosting = e => {
         e.preventDefault();
         axios.post(JOB_POSTING_API_URL, this.state).then(() => {
-            window.location = '/job-posting-view/' + this.state.job_posting_id
+            // Create always comes from the Job Site page
+            window.location = '/job-site-view/' + this.state.job_site_id
         })
     }
 
@@ -105,6 +126,8 @@ class JobPostingEdit extends Component {
         e.preventDefault();
         axios.put(JOB_POSTING_API_URL + this.state.job_posting_id,
             this.state).then(() => {
+                debugger;
+                var referrerUrlArr = document.referrer.split('/');
                 window.location = '/job-posting-view/' + this.state.job_posting_id
             })
     }
