@@ -126,9 +126,8 @@ class JobPostingEdit extends Component {
         e.preventDefault();
         axios.put(JOB_POSTING_API_URL + this.state.job_posting_id,
             this.state).then(() => {
-                debugger;
-                var referrerUrlArr = document.referrer.split('/');
-                window.location = '/job-posting-view/' + this.state.job_posting_id
+                // Once Saved, function like a back button!
+                window.location = document.referrer
             })
     }
 
