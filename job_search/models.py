@@ -19,6 +19,8 @@ class EmailOpportunity(models.Model):
     def _str_(self):
         return self.job_title
 
+
+
 class JobSite(models.Model):
     site_name = models.CharField(max_length=64, default='')
     site_url = models.CharField(max_length=64, default='')
@@ -59,6 +61,7 @@ class JobPosting(models.Model):
 
     job_scan_info = models.CharField(max_length=64, default='', blank=True)
     outreach_info = models.CharField(max_length=64, default='', blank=True)
+    time_spent = models.IntegerField(default=1)
 
     technology_string = models.CharField(max_length=64, default='', blank=True)
     technology_stack = models.JSONField(default=list, blank=True)
@@ -68,3 +71,9 @@ class JobPosting(models.Model):
 
     def _str_(self):
         return self.posting_title
+
+class UserSettings(models.Model):
+    user_greeting = models.CharField(max_length=24)
+    color_mode = models.CharField(max_length=24)
+    dashboard_first_date = models.DateTimeField(default=datetime.now, blank=True)
+    dashboard_second_date = models.DateTimeField(default=datetime.now, blank=True)
