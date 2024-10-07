@@ -76,6 +76,11 @@ class JobPostingEdit extends Component {
                 posting_application_questions: res.data.posting_application_questions,
                 job_description: res.data.job_description,
             })
+
+            const collection = document.getElementsByClassName("ck-content")
+            if ( collection.length !== 0) {
+                collection[0].ckeditorInstance.setData(res.data.job_description)
+            }
         })
     }
 
@@ -152,7 +157,7 @@ class JobPostingEdit extends Component {
                         <CardTitle className="mx-4 my-2">
                             <Row className="">
                                 <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
-                                    {this.state.job_posting_id === 0 ? 'Create' : 'Edit'} Edit Job Posting
+                                    {this.state.job_posting_id === 0 ? 'Create' : 'Edit'} Job Posting
                                 </Col>
                                 <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                     <Button color="danger" className="mx-2  pull-right" 
@@ -380,6 +385,13 @@ class JobPostingEdit extends Component {
                                 </Col>
                             </Row>
 
+                        </CardBody>
+                    </Card>
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2"><strong>Job Posting Description</strong></CardTitle>
+                        <CardBody className="bg-white">
+                            <Editor editorText={this.state.job_description} 
+                                    onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
                     </Card>
                 </Form>
