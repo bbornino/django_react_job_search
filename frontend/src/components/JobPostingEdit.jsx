@@ -240,12 +240,22 @@ class JobPostingEdit extends Component {
                                     <FormGroup>
                                         <Label for="posting_url_domain">Posting URL Domain</Label>
                                         <Input
-                                            type="text" required
+                                            type="select" required
                                             id="posting_url_domain"
                                             name="posting_url_domain"
                                             onChange={this.onChange}
-                                            value={this.state.posting_url_domain ?? ''}
-                                        />
+                                            value={this.state.posting_url_domain ?? ''}>
+                                                <option value="">Select Posting Domain</option>
+                                                <option value="LinkedIn Easy Apply ">LinkedIn Easy Apply </option>
+                                                <option value="Greenhouse">Greenhouse</option>
+                                                <option value="Workday Jobs">Workday Jobs</option>
+                                                <option value="Lever">Lever</option>
+                                                <option value="JobVite">JobVite</option>
+                                                <option value="Bamboo HR">Bamboo HR</option>
+                                                <option value="Custom / In House">Custom / In House</option>
+                                                <option value="Other">Other</option>
+                                        </Input>
+                                        
                                     </FormGroup>
                                 </Col>
                                 <Col lg="2" md="6">
