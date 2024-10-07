@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./Editor"
+import Comments from "./Comments"
 
 class JobPostingEdit extends Component {
     state = {
@@ -121,6 +122,10 @@ class JobPostingEdit extends Component {
             this.setState({job_description: newVal})
         }
     };
+
+    setCommentsCallback = (updatedComments) => {
+        this.setState({comments: updatedComments})
+    }
 
     onDeleteJobPosting = e => {
         console.log("Deleting Job Posting")
@@ -385,6 +390,13 @@ class JobPostingEdit extends Component {
                                 </Col>
                             </Row>
 
+                        </CardBody>
+                    </Card>
+                    <Card className="text-dark bg-light m-3">
+                        <CardTitle className="mx-4 my-2" ><strong>Job Posting Comments</strong></CardTitle>
+                        <CardBody className="bg-white">
+                            <Comments itemComments={this.state.comments} 
+                                      onCommentsSave={this.setCommentsCallback} />
                         </CardBody>
                     </Card>
                     <Card className="text-dark bg-light m-3">
