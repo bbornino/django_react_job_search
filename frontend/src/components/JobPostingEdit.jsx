@@ -98,10 +98,13 @@ class JobPostingEdit extends Component {
                         hour: "numeric", 
                         minute: "numeric"})
 
-            // use value to set the job_site_id
-            this.setState({job_site_id:pathArr[2], 
-                applied_at: currentdate + 'T' + currenttime,
-            })
+            // use value to set the job_site_id IF recieved a job_site_id
+            if(pathArr[2]) {
+                this.setState({job_site_id:pathArr[2], 
+                    applied_at: currentdate + 'T' + currenttime,
+                })
+            }
+            
             
         } else {
             // NOT new.  Use as the posting id
@@ -197,6 +200,7 @@ class JobPostingEdit extends Component {
                                             name="job_site_id"
                                             onChange={this.onChange}
                                             value={this.state.job_site_id ?? ''}>
+                                                <option value="">Select Job Site</option>
                                                 {this.state.job_sites.map((option) => (
                                                     <option key={option.id} value={option.id}>
                                                         {option.site_name}

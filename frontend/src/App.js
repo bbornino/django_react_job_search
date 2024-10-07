@@ -79,6 +79,7 @@ export default class App extends React.Component {
               <Route path="/job-site-edit" element={<JobSiteEdit />} />  {/* Matches New */}
               <Route path="/job-site-edit/:id" element={<JobSiteEdit />} />
               <Route path="/job-postings" element={<JobPostingList />} />
+              <Route path="/job-posting-new/" element={<JobPostingEdit />} />
               <Route path="/job-posting-new/:id" element={<JobPostingEdit />} />
               <Route path="/job-posting-edit/:id" element={<JobPostingEdit />} />
               <Route path="/opportunities" element={<OpportunityList />} />
