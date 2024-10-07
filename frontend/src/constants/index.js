@@ -35,3 +35,18 @@ export const formatDisplayDateTime = (rawDate) => {
         minute:'numeric'})
     return theDate
 }
+
+export const formatDisplayDate = (rawDate) => {
+    if (rawDate === null) return null;
+    // From a code perspective, I would love to live with the default:
+    // const theDate = new Date(rawDate).toLocaleString('en-US')
+    // 9/5/2024, 5:42:00 PM
+    // but... you can't turn off the seconds!
+    // return: Tuesday, Sep 10, 2024, 5:42 AM
+    const theDate = new Date(rawDate).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'})
+    return theDate
+}
