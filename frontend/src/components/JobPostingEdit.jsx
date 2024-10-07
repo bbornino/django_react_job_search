@@ -71,6 +71,7 @@ class JobPostingEdit extends Component {
                 rejected_at: formatInputFieldDateTime(res.data.rejected_at),
                 job_scan_info: res.data.job_scan_info,
                 outreach_info: res.data.outreach_info,
+                time_spent: (res.data.time_spent && res.data.time_spent !== 1) ?? '',
                 technology_string: res.data.technology_string,
                 technology_stack: res.data.technology_stack,
                 comments: res.data.comments,
@@ -286,7 +287,7 @@ class JobPostingEdit extends Component {
                                 </Col>
                             </Row>
                             <Row id="pay_location_type">
-                                <Col lg="4" md="8">
+                                <Col xl="4" lg="3" md="8">
                                     <FormGroup>
                                         <Label for="pay_range">Pay Range</Label>
                                         <Input
@@ -298,7 +299,7 @@ class JobPostingEdit extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="2" md="4">
+                                <Col xl="2" lg="3" md="4">
                                     <FormGroup>
                                         <Label for="employment_type">Employment Type</Label>
                                         <Input
@@ -399,17 +400,66 @@ class JobPostingEdit extends Component {
                                     </FormGroup>
                                 </Col>
                             </Row>
-
+                            <Row>
+                                <Col lg="6" md="12">
+                                    <FormGroup>
+                                        <Label for="outreach_info">Outreach Names</Label>
+                                        <Input
+                                            type="text" required
+                                            id="outreach_info"
+                                            name="outreach_info"
+                                            onChange={this.onChange}
+                                            value={this.state.outreach_info ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col xl="4" lg="3" md="8">
+                                    <FormGroup>
+                                        <Label for="job_scan_info">Job Scan Percent</Label>
+                                        <Input
+                                            type="text" required
+                                            id="job_scan_info"
+                                            name="job_scan_info"
+                                            onChange={this.onChange}
+                                            value={this.state.job_scan_info ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col xl="2" lg="3" md="4">
+                                    <FormGroup>
+                                        <Label for="time_spent">Time Spent (minutes)</Label>
+                                        <Input  type="number" required
+                                                name="time_spent" id="time_spent"
+                                                onChange={this.onChange}
+                                                value={this.state.time_spent ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row id="technology_string_row">
+                                <Col lg="12" md="12">
+                                    <FormGroup>
+                                        <Label for="technology_string">Technology</Label>
+                                        <Input
+                                            type="text" required
+                                            id="technology_string"
+                                            name="technology_string"
+                                            onChange={this.onChange}
+                                            value={this.state.technology_string ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
                         </CardBody>
                     </Card>
-                    <Card className="text-dark bg-light m-3">
+                    <Card id="comments_card" className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2" ><strong>Job Posting Comments</strong></CardTitle>
                         <CardBody className="bg-white">
                             <Comments itemComments={this.state.comments} 
                                       onCommentsSave={this.setCommentsCallback} />
                         </CardBody>
                     </Card>
-                    <Card className="text-dark bg-light m-3">
+                    <Card id="description_card" className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2"><strong>Job Posting Description</strong></CardTitle>
                         <CardBody className="bg-white">
                             <Editor editorText={this.state.job_description} 
