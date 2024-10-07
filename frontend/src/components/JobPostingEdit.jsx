@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 import axios from "axios";
-import { JOB_POSTING_API_URL, formatInputFieldDateTime } from "../constants";
+import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -39,6 +39,15 @@ class JobPostingEdit extends Component {
         comments: [],
         posting_application_questions: [],
         job_description: 'TBD',
+
+        job_sites: [],
+    }
+
+    getJobSites = e => {
+        console.log("getJobSites");
+        axios.get(JOB_SITE_API_URL).then( res => {
+            this.setState({job_sites:res.data})
+        });
     }
 
     getJobPosting = (jobPostingId) => {
@@ -92,6 +101,8 @@ class JobPostingEdit extends Component {
             this.setState({job_posting_id:pathArr[2]});
             this.getJobPosting(pathArr[2]);
         }
+
+        this.getJobSites();
     };
 
     onChange = e => {
@@ -118,7 +129,7 @@ class JobPostingEdit extends Component {
         e.preventDefault();
         axios.post(JOB_POSTING_API_URL, this.state).then(() => {
             // Create always comes from the Job Site page
-            window.location = '/job-site-view/' + this.state.job_site_id
+            window.location = document.referrer
         })
     }
 
@@ -133,6 +144,7 @@ class JobPostingEdit extends Component {
 
     render() {
         const {jobPostings} = this.state;
+        
         return (
             <Container>
                 <Form onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
@@ -140,7 +152,7 @@ class JobPostingEdit extends Component {
                         <CardTitle className="mx-4 my-2">
                             <Row className="">
                                 <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
-                                    Edit Job Posting
+                                    {this.state.job_posting_id === 0 ? 'Create' : 'Edit'} Edit Job Posting
                                 </Col>
                                 <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                     <Button color="danger" className="mx-2  pull-right" 
@@ -174,9 +186,12 @@ class JobPostingEdit extends Component {
                                             name="job_site_id"
                                             onChange={this.onChange}
                                             value={this.state.job_site_id ?? ''}>
-                                                <option value="1">LinkedIn</option>
-                                                <option value="2">Dice</option>
-                                            </Input>
+                                                {this.state.job_sites.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {option.site_name}
+                                                    </option>
+                                                    ))}
+                                        </Input>
                                     </FormGroup>
                                 </Col>
                                 <Col lg="3" md="6">
