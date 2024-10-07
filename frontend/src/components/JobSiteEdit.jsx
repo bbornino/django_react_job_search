@@ -19,8 +19,8 @@ class JobSiteEdit extends Component {
         last_visited_at: '',
         resume_updated_at: '',
         resume_format: 'Both',
-        github_field: '',
-        project_site_field: '',
+        github_field: false,
+        project_site_field: false,
         headline: '',
         description: 'TBD',
         
@@ -97,7 +97,9 @@ class JobSiteEdit extends Component {
                         <CardTitle className="mx-4 my-2">
                             <Row>
                                 <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
-                                    <strong>Edit Job Site</strong>
+                                    <strong>
+                                        {this.state.job_site_id === 0 ? 'Create ' : 'Edit '}
+                                         Job Site</strong>
                                 </Col>
                                 <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                     <Button color="danger" className="mx-2 pull-right" 
