@@ -21,3 +21,15 @@ class JobPostingSerializer(serializers.ModelSerializer):
         model = JobPosting
         fields = '__all__'
 
+class ReportJobPostingSerializer(serializers.Serializer):
+    report_name = serializers.CharField(max_length=255)
+    report_fields = serializers.ListField(
+        child=serializers.DictField(
+            child=serializers.CharField(max_length=255)
+        )
+    )
+    report_data = serializers.ListField(
+        child=serializers.DictField(
+            child=serializers.CharField(max_length=255)
+        )
+    )

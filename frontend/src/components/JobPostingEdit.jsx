@@ -90,7 +90,7 @@ class JobPostingEdit extends Component {
         console.log("Starting Mount")
         const pathArr = window.location.pathname.split('/')
         
-        if (pathArr[1] == "job-posting-new") {
+        if (pathArr[1] === "job-posting-new") {
             // Set the applied at date time to now, in correct format
             var currentdate = new Date().toLocaleDateString('en-CA')
             var currenttime = new Date().toLocaleTimeString('en-US', 
@@ -157,8 +157,6 @@ class JobPostingEdit extends Component {
     }
 
     render() {
-        const {jobPostings} = this.state;
-        
         return (
             <Container>
                 <Form onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>

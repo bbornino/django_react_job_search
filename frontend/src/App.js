@@ -6,9 +6,8 @@ import {
   Route,
   Link,
   useNavigate,
-  Outlet,
 } from "react-router-dom"
-import {Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink} from 'reactstrap';
+import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import JobSiteList from "./components/JobSiteList";
@@ -19,6 +18,7 @@ import JobPostingList from "./components/JobPostingList";
 import JobPostingEdit from "./components/JobPostingEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
+import Reports from "./components/Reports";
 import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
@@ -67,6 +67,25 @@ export default class App extends React.Component {
               <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
               <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
               <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
+
+              {/* Reports Submenu */}
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Reports
+                </DropdownToggle>
+                <DropdownMenu end>
+                  <DropdownItem tag={Link} to="/reports/postingsAppliedSince">
+                    Postings Applied
+                  </DropdownItem>
+                  <DropdownItem tag={Link} to="/reports/perSite">
+                    Per Site
+                  </DropdownItem>
+                  <DropdownItem tag={Link} to="/reports/perWeek">
+                    Per Week
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+
             </Nav>
           </Collapse>
         </Navbar>
@@ -85,6 +104,7 @@ export default class App extends React.Component {
               <Route path="/opportunities" element={<OpportunityList />} />
               <Route path="/opportunity-details" element={<OpportunityDetails />} />
               <Route path="/opportunity-details/:id" element={<OpportunityDetails />} />
+              <Route path="/reports/:reportType/:referenceDate?" element={<Reports />} />
               <Route path="/job-hunt-tips" element={<JobHuntTips />} />
               <Route path="/release-history" element={<ReleaseHistory />} />
               <Route path="/about" element={<About />} />

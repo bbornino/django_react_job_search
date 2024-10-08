@@ -4,6 +4,7 @@ export const JOB_OPPORTUNITY_API_URL = "http://localhost:8000/api/email_opportun
 export const JOB_SITE_API_URL = "http://localhost:8000/api/job_site/";
 export const JOB_POSTING_API_URL = "http://localhost:8000/api/job_posting/";
 export const JOB_SITE_POSTINGS_API_URL = BASE_API_URL + 'job_site_postings/';
+export const REPORT_API_URL = BASE_API_URL + 'report/';
 
 export const formatInputFieldDateTime = (originalDateTime) => {
     if (originalDateTime === null) return null;
