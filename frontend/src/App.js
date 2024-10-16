@@ -22,6 +22,7 @@ import Reports from "./components/Reports";
 import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
+import Dashboard from "./components/Dashboard";
 
 const Home = () => {
   const  navigate = useNavigate();
@@ -60,13 +61,28 @@ export default class App extends React.Component {
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              {/* <NavItem><NavLink href="/">Home</NavLink></NavItem> */}
-              <NavItem><NavLink href="/about">About</NavLink></NavItem>
+              <NavItem><NavLink href="/">Dashboard</NavLink></NavItem>
+
+              {/* Static Pages Submenu */}
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Information
+                </DropdownToggle>
+                <DropdownMenu end>
+                  <DropdownItem tag={Link} to="/about">About</DropdownItem>
+                  <DropdownItem tag={Link} to="/about">User Guide</DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem tag={Link} to="/job-hunt-tips">Job Hunt Tips</DropdownItem>
+                  <DropdownItem tag={Link} to="/about">Boolean Search</DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem tag={Link} to="/release-history">Release History</DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+
+
               <NavItem><NavLink href="/job-sites">Job Sites</NavLink></NavItem>
               <NavItem><NavLink href="/job-postings">Job Postings</NavLink></NavItem>
               <NavItem><NavLink href="/opportunities">Opportunities</NavLink></NavItem>
-              <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
-              <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
 
               {/* Reports Submenu */}
               <UncontrolledDropdown nav inNavbar>
@@ -74,25 +90,20 @@ export default class App extends React.Component {
                   Reports
                 </DropdownToggle>
                 <DropdownMenu end>
-                  <DropdownItem tag={Link} to="/reports/postingsAppliedSince">
-                    Postings Applied
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/reports/perSite">
-                    Per Site
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/reports/perWeek">
-                    Per Week
-                  </DropdownItem>
+                  <DropdownItem tag={Link} to="/reports/postingsAppliedSince">Postings Applied</DropdownItem>
+                  <DropdownItem tag={Link} to="/reports/perSite">Per Site</DropdownItem>
+                  <DropdownItem tag={Link} to="/reports/perWeek">Per Week</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
 
+              
             </Nav>
           </Collapse>
         </Navbar>
 
           <Routes>
-              {/* <Route path="/" element={<Home />} /> */}
-              <Route path="/" element={<About />} />
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/job-sites" element={<JobSiteList />} />
               <Route path="/job-site-view/:id" element={<JobSiteView />} />
               <Route path="/job-site-edit" element={<JobSiteEdit />} />  {/* Matches New */}
