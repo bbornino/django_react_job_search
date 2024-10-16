@@ -5,9 +5,9 @@ import {
   Routes,
   Route,
   Link,
-  useNavigate,
 } from "react-router-dom"
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, 
+          UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import JobSiteList from "./components/JobSiteList";
@@ -23,19 +23,6 @@ import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
 import Dashboard from "./components/Dashboard";
-
-const Home = () => {
-  const  navigate = useNavigate();
-
-  return (
-    <div>
-      <h2>Home Page</h2>
-      <p>content: To be Determined...</p>
-      <button onClick={() =>
-        navigate("/contact")}>Go to Contact</button>
-    </div>
-  );
-}
 
 
 export default class App extends React.Component {
