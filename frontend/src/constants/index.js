@@ -46,7 +46,7 @@ export const formatDisplayDate = (rawDate) => {
     // but... you can't turn off the seconds!
     // return: Tuesday, Sep 10, 2024, 5:42 AM
     const theDate = new Date(rawDate).toLocaleString('en-US', {
-        weekday: 'long',
+        // weekday: 'long',
         year: 'numeric',
         month: 'short',
         day: 'numeric'})
