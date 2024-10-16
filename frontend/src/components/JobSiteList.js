@@ -1,7 +1,7 @@
 import {React, Component} from "react";
 import { Link } from 'react-router-dom'
 import axios from "axios";
-import { JOB_SITE_API_URL } from "../constants";
+import { JOB_SITE_API_URL, formatDisplayDate  } from "../constants";
 
 import DataTableBase from './DataTableBase';
 import {Button, Container, Row, Col} from 'reactstrap';
@@ -30,27 +30,37 @@ class JobSiteList extends Component {
             name: 'Site Name',
             selector: row => row.site_name,
             sortable: true,
+            maxWidth: "200px",
         },
         {
             name: 'Site URL',
             selector: row => row.site_url,
             sortable: true,
+            maxWidth: "300px",
         },
         {
             name: 'Rating',
             selector: row => row.rating,
             sortable: true,
+            id: 'rating',
+            width: "90px" 
+        },
+        {
+            name: "Site Last Visited",
+            selector: row => formatDisplayDate(row.last_visited_at),
+            sortable: true,
+            sortField: 'last_visited_at',
+            maxWidth: "150px",
+            id: 'last_visited_at',
         },
         {
             name: 'Headline',
             selector: row => row.headline,
-            sortable: true,
+            grow: 2,
+            maxWidth: "400px",
+            wrap: true,
         },
-        {
-            name: 'Site Last Visited',
-            selector: row => row.last_visted_at,
-            sortable: true,
-        },
+        
     ];
 
     onRowClicked = (row, event) => {
@@ -73,6 +83,7 @@ class JobSiteList extends Component {
                 </Row>
                 <DataTableBase  columns={this.columns}
                                 data={jobSites}
+                                defaultSortFieldId="rating"
                                 onRowClicked={this.onRowClicked} />
             </Container>
         )
