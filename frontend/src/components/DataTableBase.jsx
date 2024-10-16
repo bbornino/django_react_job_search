@@ -12,6 +12,7 @@ function DataTableBase(props) {
 		<DataTable
 			selectableRowsComponentProps={selectProps}
 			paginationComponentOptions={paginationComponentOptions}
+			paginationPerPage={25}
 			paginationRowsPerPageOptions={[10,25,100]}
 			pagination striped highlightOnHover dense
 			{...props}
