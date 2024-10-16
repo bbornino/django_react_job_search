@@ -4,11 +4,14 @@ import axios from "axios";
 import { JOB_POSTING_API_URL, formatDisplayDate } from "../constants";
 
 import DataTableBase from './DataTableBase';
-import {Button, Container, Row, Col} from 'reactstrap';
+import {Container, Row, Col, FormGroup, Input, Button, InputGroup} from 'reactstrap';
 
 class JobPostingList extends Component {
     state = {
         jobPostings: [],
+        filteredJobPostings: [],
+        filterText: '',
+        resetPaginationToggle: false,
     };
 
     componentDidMount() {
@@ -21,7 +24,10 @@ class JobPostingList extends Component {
 
     getJobPostings = () => {
         axios.get(JOB_POSTING_API_URL).then(
-            res => this.setState({jobPostings:res.data}));
+            res => {
+
+                this.setState({jobPostings:res.data, filteredJobPostings:res.data})
+            });
     }
 
     columns = [
@@ -67,22 +73,49 @@ class JobPostingList extends Component {
         window.location = '/job-posting-new/'
     }
 
+    onFilter = e => {
+        // debugger
+        const filterValue = e.target.value
+        const filteredItems = this.state.jobPostings.filter(
+            item => item.company_name && item.company_name.toLowerCase().
+                    includes(filterValue.toLowerCase()),
+        );
+        this.setState({filterText: filterValue, filteredJobPostings: filteredItems})
+    }
+
+    handleClear = () => {
+
+    }
+
     render() {
-        const {jobPostings} = this.state;
+
         return (
             <Container>
-                <Row className="m-4">
-                    <Col xxl="10" xl="9" lg="9" md="8" sm="5" xs="3">
+                <Row className="m-4 align-items-center">
+                    <Col md="6">
                         <h1>All Job Postings</h1>
                     </Col>
-                    <Col>
+                    <Col lg="3" md="6">
                         <Link to='/job-posting-new'>
-                            <Button> Create Job Posting</Button>
+                            <Button color="success" > Create Job Posting</Button>
                         </Link>
                     </Col>
+                    <Col lg="3" md="3">
+                        <InputGroup>
+                            <Input  id="search" type="text" 
+                                    className="m-0"
+                                    placeholder="Filter by Company Name" 
+                                    aria-label="Search Input"
+                                    value={this.state.filterText}
+                                    onChange={this.onFilter} />
+                            <Button color="danger" className="">X</Button>
+                        </InputGroup>
+                    </Col>
+
                 </Row>
                 <DataTableBase  columns={this.columns}
-                                data={jobPostings}
+                                data={this.state.filteredJobPostings}
+                                paginationPerPage={100}
                                 onRowClicked={this.onRowClicked} />
             </Container>
         )
