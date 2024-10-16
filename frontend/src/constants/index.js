@@ -38,7 +38,8 @@ export const formatDisplayDateTime = (rawDate) => {
 }
 
 export const formatDisplayDate = (rawDate) => {
-    if (rawDate === null) return null;
+
+    if (rawDate === undefined || rawDate === null) return null;
     // From a code perspective, I would love to live with the default:
     // const theDate = new Date(rawDate).toLocaleString('en-US')
     // 9/5/2024, 5:42:00 PM
