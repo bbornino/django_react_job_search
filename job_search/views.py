@@ -89,7 +89,8 @@ def job_site_detail(request, pk):
 def job_site_postings(request, job_site_id):
     """ Define the listing of all Job Postings for REST API """
     if request.method == 'GET':
-        data = JobPosting.objects.filter(job_site_id=job_site_id).values('id', 'company_name', 'posting_title', 'posting_status', 'applied_at')
+        data = JobPosting.objects.filter(job_site_id=job_site_id).values(
+                    'id', 'company_name', 'posting_title', 'posting_status', 'applied_at')
         serializer = JobSitePostingsSerializer(data, context={'request': request}, many=True)
         return Response(serializer.data)
 
@@ -98,8 +99,9 @@ def job_site_postings(request, job_site_id):
 def job_posting_list(request):
     """ Define the listing of all Job Postings for REST API """
     if request.method == 'GET':
-        data = JobPosting.objects.all()
-        serializer = JobPostingSerializer(data, context={'request': request}, many=True)
+        data = JobPosting.objects.values('id', 'company_name', 'posting_title', 'posting_status', 
+                  'rejected_after_stage', 'applied_at', 'rejected_at')
+        serializer = JobPostingListSerializer(data, context={'request': request}, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
