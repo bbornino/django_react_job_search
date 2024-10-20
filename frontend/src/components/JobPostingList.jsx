@@ -53,16 +53,16 @@ class JobPostingList extends Component {
         },
         {
             name: "Applied On",
-            selector: row => formatDisplayDate(row.applied_at),
+            selector: row => row.applied_at,
+            cell: row => formatDisplayDate(row.applied_at),
             sortable: true,
-            sortField: 'applied_at',
             width: "150px",
         },
         {
             name: "Rejected On",
-            selector: row => formatDisplayDate(row.rejected_at),
+            selector: row => row.rejected_at,
+            cell: row => formatDisplayDate(row.applied_at),
             sortable: true,
-            sortField: 'rejected_at',
             width: "150px",
         },
     ];

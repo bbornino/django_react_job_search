@@ -47,9 +47,9 @@ class JobSiteList extends Component {
         },
         {
             name: "Site Last Visited",
-            selector: row => formatDisplayDate(row.last_visited_at),
+            selector: row => row.last_visited_at,
             sortable: true,
-            sortField: 'last_visited_at',
+            cell: row => formatDisplayDate(row.last_visited_at),
             width: "150px",
             id: 'last_visited_at',
         },

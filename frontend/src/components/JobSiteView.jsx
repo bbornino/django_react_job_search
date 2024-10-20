@@ -80,9 +80,10 @@ class JobSiteView extends Component {
         },
         {
             name: 'Applied At',
-            selector: row => formatDisplayDateTime(row.applied_at),
+            selector: row => row.applied_at,
+            cell: row => formatDisplayDateTime(row.applied_at),
+            width: "150px",
             sortable: true,
-            sortField: 'applied_at'
         },
     ]
 
