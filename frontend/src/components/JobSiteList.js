@@ -30,13 +30,13 @@ class JobSiteList extends Component {
             name: 'Site Name',
             selector: row => row.site_name,
             sortable: true,
-            maxWidth: "200px",
+            width: "200px",
         },
         {
             name: 'Site URL',
             selector: row => row.site_url,
             sortable: true,
-            maxWidth: "300px",
+            width: "300px",
         },
         {
             name: 'Rating',
@@ -50,14 +50,12 @@ class JobSiteList extends Component {
             selector: row => formatDisplayDate(row.last_visited_at),
             sortable: true,
             sortField: 'last_visited_at',
-            maxWidth: "150px",
+            width: "150px",
             id: 'last_visited_at',
         },
         {
             name: 'Headline',
             selector: row => row.headline,
-            grow: 2,
-            maxWidth: "400px",
             wrap: true,
         },
         

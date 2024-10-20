@@ -56,14 +56,14 @@ class JobPostingList extends Component {
             selector: row => formatDisplayDate(row.applied_at),
             sortable: true,
             sortField: 'applied_at',
-            maxWidth: "150px",
+            width: "150px",
         },
         {
             name: "Rejected On",
             selector: row => formatDisplayDate(row.rejected_at),
             sortable: true,
             sortField: 'rejected_at',
-            maxWidth: "150px",
+            width: "150px",
         },
     ];
 
