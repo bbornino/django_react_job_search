@@ -1,7 +1,7 @@
 import {React, Component} from "react";
 import { Link } from 'react-router-dom'
 import axios from "axios";
-import { JOB_OPPORTUNITY_API_URL } from "../constants";
+import { JOB_OPPORTUNITY_API_URL, formatDisplayDateTime } from "../constants";
 
 import DataTableBase from './DataTableBase';
 import {Button, Container, Row, Col} from 'reactstrap';
@@ -38,6 +38,13 @@ class OpportunityList extends Component {
             name: 'Status',
             selector: row => row.opportunity_status,
             sortable: true,
+        },
+        {
+            name: "Received At",
+            selector: row => row.email_received_at,
+            cell: row => formatDisplayDateTime(row.email_received_at),
+            sortable: true,
+            width: "250px",
         },
     ];
 
