@@ -85,8 +85,9 @@ class JobPostingList extends Component {
         this.setState({filterText: filterValue, filteredJobPostings: filteredItems})
     }
 
-    handleClear = () => {
-
+    onClear = () => {
+        debugger
+        this.setState({filterText: '', filteredJobPostings: this.state.jobPostings})
     }
 
     render() {
@@ -110,7 +111,7 @@ class JobPostingList extends Component {
                                     aria-label="Search Input"
                                     value={this.state.filterText}
                                     onChange={this.onFilter} />
-                            <Button color="danger" className="">X</Button>
+                            <Button color="danger" onClick={this.onClear}  className="">X</Button>
                         </InputGroup>
                     </Col>
 
