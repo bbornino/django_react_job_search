@@ -5,6 +5,8 @@ import { formatDisplayDateTime, formatInputFieldDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
+import Editor from "./Editor"
+
 function Comments({itemComments, onCommentsSave}) {
     const [commentId, setCommentId] = useState(-1);
     const [commentDateTime, setCommentDateTime] = useState('');
@@ -23,7 +25,11 @@ function Comments({itemComments, onCommentsSave}) {
         return -1;
     }
 
-
+    const onCommentChange = (e) => {
+        const descCard = document.getElementById("comment_field")
+        const ckeContent = descCard.querySelector(".ck-content")
+        setCommentContent(ckeContent.ckeditorInstance.getData())
+    };
 
     const onEditButtonClick = (e) => {
         // Load the contents of the particular comment into the edit area
@@ -84,7 +90,7 @@ function Comments({itemComments, onCommentsSave}) {
 
         let updatedComments = [];
 
-        if (theComments.length === 0) {
+        if (theComments === null || theComments.length === 0) {
             comment.id=0;
             updatedComments.push(comment);
             console.log(updatedComments);
@@ -120,8 +126,10 @@ function Comments({itemComments, onCommentsSave}) {
         setShowComments(true)
     }
 
+    const commentCount = (itemComments.length) ? itemComments.length : 0
     const showCommentsButton = 
-            <Button color="success" type="button" onClick={onShowEditComments}>Show Comments ({itemComments.length})</Button>
+            <Button color="success" type="button" onClick={onShowEditComments}>
+                Show Comments ( { commentCount} )</Button>
         
     const editCommentsContent = 
             <Row id="comment_row">
@@ -166,46 +174,45 @@ function Comments({itemComments, onCommentsSave}) {
                     <p id="comment_type_err_msg" style={{display:"none"}}>Select Comment Type</p>
                 </FormGroup>
             </Col>
-            <Col lg="9" md="12">
+            <Col lg="9" md="12" id="comment_field">
                 <Row>
-                <FormGroup>
+                <FormGroup >
                     <Label for="comment_content">Comment</Label>
-                    <Input
-                        type="textarea" rows="8"
-                        name="comment_content"
-                        onChange={(e) => setCommentContent(e.target.value)}
-                        value={commentContent ?? ''}
-                    />
+                    <Editor editorText={commentContent}
+                            onEditorChange={onCommentChange} ></Editor>
                 </FormGroup>
                 </Row>
             </Col>
         </Row>
     
+    var commentBlock = '';
+    if (theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
+        commentBlock = theComments.map((comment_row) => (
+            <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
+                <hr/>
+                <Col md="3">
+                    <strong>{ formatDisplayDateTime(comment_row.commented_at)}</strong><br/>
+                    <strong>{comment_row.comment_type}</strong><br/>
+                    <Button color="success" type="button" 
+                        className="m-2 btn-sm" 
+                        comment_id={comment_row.id}
+                        onClick={onEditButtonClick}>
+                         <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit</Button>
+                    <Button color="danger" type="button" className="m-1  btn-sm" 
+                        comment_id={comment_row.id}
+                        onClick={onDeleteComment}>
+                        <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
+                </Col>
+                <Col md="9" dangerouslySetInnerHTML={{ __html: comment_row.comment_content }}>
+                </Col>
+            </Row>
+        ));
+    }
     
     return (
         <div>
             {showComments ? editCommentsContent : showCommentsButton}
-            {theComments.map((comment_row) => (
-                <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
-                    <hr/>
-                    <Col md="3">
-                        <strong>{ formatDisplayDateTime(comment_row.commented_at)}</strong><br/>
-                        <strong>{comment_row.comment_type}</strong><br/>
-                        <Button color="success" type="button" 
-                            className="m-2 btn-sm" 
-                            comment_id={comment_row.id}
-                            onClick={onEditButtonClick}>
-                             <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit</Button>
-                        <Button color="danger" type="button" className="m-1  btn-sm" 
-                            comment_id={comment_row.id}
-                            onClick={onDeleteComment}>
-                            <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
-                    </Col>
-                    <Col md="9">{comment_row.comment_content}
-                    </Col>
-                    
-                </Row>
-            ))}
+            {commentBlock }
 
         </div>
     )
