@@ -126,7 +126,7 @@ function Comments({itemComments, onCommentsSave}) {
         setShowComments(true)
     }
 
-    const commentCount = (itemComments.length) ? itemComments.length : 0
+    const commentCount = (itemComments !== null && itemComments.length) ? itemComments.length : 0
     const showCommentsButton = 
             <Button color="success" type="button" onClick={onShowEditComments}>
                 Show Comments ( { commentCount} )</Button>
