@@ -44,6 +44,7 @@ class OpportunityList extends Component {
             selector: row => row.email_received_at,
             cell: row => formatDisplayDateTime(row.email_received_at),
             sortable: true,
+            id:'email_received_at',
             width: "250px",
         },
     ];
@@ -70,6 +71,8 @@ class OpportunityList extends Component {
                     </Col>
                 </Row>
                 <DataTableBase  columns={this.columns} data={opportunities} 
+                                defaultSortFieldId="email_received_at"
+                                defaultSortAsc={false}
                                 onRowClicked={this.onRowClicked} />
             </Container>
         )
