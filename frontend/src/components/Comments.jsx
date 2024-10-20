@@ -33,13 +33,21 @@ function Comments({itemComments, onCommentsSave}) {
 
     const onEditButtonClick = (e) => {
         // Load the contents of the particular comment into the edit area
+        // if (!e.target.attributes.comment_id.value) console.log("oops")
+
         var editCommentId = e.target.attributes.comment_id.value;
         setCommentId(editCommentId);
         var thisComment = theComments[editCommentId];
 
         setCommentDateTime(thisComment.commented_at)
+        clearDateGroupError()
         setCommentType(thisComment.comment_type)
+        clearTypeGroupError()
         setCommentContent(thisComment.comment_content)
+
+        const commentCard = document.getElementById("comment_field")
+        const ckeContent = commentCard.querySelector(".ck-content")
+        ckeContent.ckeditorInstance.setData(thisComment.comment_content)
     };
 
     const onDeleteComment = (e) => {
@@ -54,8 +62,8 @@ function Comments({itemComments, onCommentsSave}) {
     }
 
     const onCommentSave = () => {
-        console.log("Comments function saving Comment Data")
-        console.log(theComments)
+        // console.log("Comments function saving Comment Data")
+        // console.log(theComments)
         var validated = true;
 
         if (commentType === '') {
@@ -65,6 +73,8 @@ function Comments({itemComments, onCommentsSave}) {
             var commentTypeError = document.getElementById('comment_type_err_msg')
             commentTypeError.style.display = 'block'
             validated = false;
+        } else {
+            clearTypeGroupError()
         }
 
         if (commentDateTime === '') {
@@ -74,6 +84,8 @@ function Comments({itemComments, onCommentsSave}) {
             var commentDateError = document.getElementById('comment_date_err_msg')
             commentDateError.style.display = 'block'
             validated = false;
+        } else {
+            clearDateGroupError()
         }
 
         if (!validated) {
@@ -119,11 +131,29 @@ function Comments({itemComments, onCommentsSave}) {
         setCommentContent('');
         setCommentType('');
         setCommentId(-1);
+
+        const commentCard = document.getElementById("comment_field")
+        const ckeContent = commentCard.querySelector(".ck-content")
+        ckeContent.ckeditorInstance.setData('')
     }
 
     const onShowEditComments = (e) => {
         setTheComments(itemComments)
         setShowComments(true)
+    }
+
+    const clearDateGroupError = (e) => {
+        var commentDateGroup = document.getElementById('comment_date_grp')
+        commentDateGroup.classList.remove('input-error')
+        var commentDateErrorMsg = document.getElementById('comment_date_err_msg')
+        commentDateErrorMsg.style.display = 'none'
+    }
+
+    const clearTypeGroupError = (e) => {
+        var commentTypeGroup = document.getElementById('comment_type_grp')
+        commentTypeGroup.classList.remove('input-error')
+        var commentTypeError = document.getElementById('comment_type_err_msg')
+        commentTypeError.style.display = 'none'
     }
 
     const commentCount = (itemComments !== null && itemComments.length) ? itemComments.length : 0
@@ -145,10 +175,7 @@ function Comments({itemComments, onCommentsSave}) {
                         name="commented_at"
                         onChange={(e) => {
                             setCommentDateTime(e.target.value)
-                            var commentDateGroup = document.getElementById('comment_date_grp')
-                            commentDateGroup.classList.remove('input-error')
-                            var commentTypeError = document.getElementById('comment_date_err_msg')
-                            commentTypeError.style.display = 'none'
+                            clearDateGroupError()
                         }}
                         value={commentDateTime ?? ''} />
                     <p id="comment_date_err_msg" style={{display:"none"}}>Select Date & Time</p>
@@ -160,10 +187,7 @@ function Comments({itemComments, onCommentsSave}) {
                         name="comment_type"
                         onChange={(e) => {
                             setCommentType(e.target.value)
-                            var commentTypeGroup = document.getElementById('comment_type_grp')
-                            commentTypeGroup.classList.remove('input-error')
-                            var commentDateError = document.getElementById('comment_type_err_msg')
-                            commentDateError.style.display = 'none'
+                            clearTypeGroupError()
                         }}
                         value={commentType ?? ''} >
                             <option value=''></option>
