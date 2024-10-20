@@ -4,7 +4,7 @@ from datetime import datetime
 
 class EmailOpportunity(models.Model):
     job_title = models.CharField(max_length=128)
-    opportunity_status = models.CharField(max_length=24)
+    opportunity_status = models.CharField(max_length=48)
     recruiter_name = models.CharField(max_length=64)
     recruiter_company = models.CharField(max_length=64)
     
@@ -13,7 +13,7 @@ class EmailOpportunity(models.Model):
     job_duration = models.CharField(max_length=64, default='')
     location_type = models.CharField(max_length=32, default='')
     location_city = models.CharField(max_length=64, default='')
-    comments = models.JSONField(default=list)
+    comments = models.JSONField(default=list, blank=True, null=True)
     job_description = models.TextField(default='')
 
     def _str_(self):
@@ -45,7 +45,7 @@ class JobPosting(models.Model):
     posting_title = models.CharField(max_length=128, default='')
     posting_status = models.CharField(max_length=32, default='')
     
-    posting_url_full = models.CharField(max_length=256, default='')
+    posting_url_full = models.CharField(max_length=1024, default='')
     posting_url_domain = models.CharField(max_length=32, default='')
     posting_password = models.CharField(max_length=32, default='', blank=True)
     
