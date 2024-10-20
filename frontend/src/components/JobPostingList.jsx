@@ -10,7 +10,8 @@ class JobPostingList extends Component {
     state = {
         jobPostings: [],
         filteredJobPostings: [],
-        filterText: '',
+        filterCompanyNameText: '',
+        filterPostingTitleText: '',
         resetPaginationToggle: false,
     };
 
@@ -75,19 +76,32 @@ class JobPostingList extends Component {
         window.location = '/job-posting-new/'
     }
 
-    onFilter = e => {
-        // debugger
-        const filterValue = e.target.value
-        const filteredItems = this.state.jobPostings.filter(
-            item => item.company_name && item.company_name.toLowerCase().
-                    includes(filterValue.toLowerCase()),
-        );
-        this.setState({filterText: filterValue, filteredJobPostings: filteredItems})
+    filterJobPostingsByParams = (companyName, postingTitle) => {
+        const { jobPostings } = this.state;
+
+        const filteredItems = this.state.jobPostings.filter(item => 
+            item.company_name && item.company_name.toLowerCase().includes(companyName.toLowerCase()) && 
+            item.posting_title && item.posting_title.toLowerCase().includes(postingTitle.toLowerCase()))
+
+        this.setState({ filterCompanyNameText: companyName, 
+                        filterPostingTitleText: postingTitle,
+                        filteredJobPostings: filteredItems})
+    };
+
+    onCompanyNameFilter = e => {
+        this.filterJobPostingsByParams(e.target.value, this.state.filterPostingTitleText)
     }
 
-    onClear = () => {
-        debugger
-        this.setState({filterText: '', filteredJobPostings: this.state.jobPostings})
+    onCompanyNameClear = () => {
+        this.filterJobPostingsByParams('', this.state.filterPostingTitleText)
+    }
+
+    onPostingTitleFilter = e => {
+        this.filterJobPostingsByParams(this.state.filterCompanyNameText, e.target.value)
+    }
+
+    onPostingTitleClear = () => {
+        this.filterJobPostingsByParams(this.state.filterCompanyNameText, '')
     }
 
     render() {
@@ -95,7 +109,7 @@ class JobPostingList extends Component {
         return (
             <Container>
                 <Row className="m-4 align-items-center">
-                    <Col md="6">
+                    <Col md="3">
                         <h1>All Job Postings</h1>
                     </Col>
                     <Col lg="3" md="6">
@@ -109,12 +123,22 @@ class JobPostingList extends Component {
                                     className="m-0"
                                     placeholder="Filter by Company Name" 
                                     aria-label="Search Input"
-                                    value={this.state.filterText}
-                                    onChange={this.onFilter} />
-                            <Button color="danger" onClick={this.onClear}  className="">X</Button>
+                                    value={this.state.filterCompanyNameText}
+                                    onChange={this.onCompanyNameFilter} />
+                            <Button color="danger" onClick={this.onCompanyNameClear}  className="">X</Button>
                         </InputGroup>
                     </Col>
-
+                    <Col lg="3" md="3">
+                        <InputGroup>
+                            <Input  id="search" type="text" 
+                                    className="m-0"
+                                    placeholder="Filter by Posting Title" 
+                                    aria-label="Search Input"
+                                    value={this.state.filterPostingTitleText}
+                                    onChange={this.onPostingTitleFilter} />
+                            <Button color="danger" onClick={this.onPostingTitleClear}  className="">X</Button>
+                        </InputGroup>
+                    </Col>
                 </Row>
                 <DataTableBase  columns={this.columns}
                                 data={this.state.filteredJobPostings}
