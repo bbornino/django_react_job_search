@@ -11,6 +11,7 @@ import Editor from "./Editor"
 import Comments from "./Comments"
 
 class OpportunityDetails extends Component {
+    // All Default values are set here
     state = {
         opportunity_id: 0,
         job_title: '',
@@ -21,7 +22,7 @@ class OpportunityDetails extends Component {
         email_received_at: '',
         employment_type: '',
         job_duration: '',
-        location_type: 'On-Site',
+        location_type: '',
         location_city: '',
 
         comments: [],
@@ -32,7 +33,7 @@ class OpportunityDetails extends Component {
     getOpportunity = (opportunity_id) => {
         // console.log("getOpportunity received " + opportunity_id)
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
-            
+            // NOTE: Any attempted setting of defaults here are overwritten by the state = line above!
             this.setState({
                 job_title: res.data.job_title,
                 opportunity_status: res.data.opportunity_status,
@@ -130,7 +131,7 @@ class OpportunityDetails extends Component {
                                             id="recruiter_name"
                                             name="recruiter_name"
                                             onChange={this.onChange}
-                                            value={this.state.recruiter_name ?? ''}
+                                            value={this.state.recruiter_name}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -141,7 +142,7 @@ class OpportunityDetails extends Component {
                                             type="text" required
                                             name="recruiter_company"
                                             onChange={this.onChange}
-                                            value={this.state.recruiter_company ?? ''}
+                                            value={this.state.recruiter_company}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -152,7 +153,10 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="opportunity_status"
                                             onChange={this.onChange}
-                                            value={this.state.opportunity_status ?? ''} >
+                                            value={this.state.opportunity_status} >
+                                                <option value="6 - Opportunity Ignored">6 - Opportunity Ignored</option>
+                                                <option value="5 - Showed Opportunity Interest">5 - Showed Opportunity Interest</option>
+                                                <option value="4 - Recruiter Ignored Interest">4 - Recruiter Ignored Interest</option>
                                                 <option value="4 - No Response">4 - No Response</option>
                                                 <option value="3 - Rejected">3 - Rejected</option>
                                                 <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
@@ -166,7 +170,7 @@ class OpportunityDetails extends Component {
                                         <Input type="datetime-local" required
                                             name="email_received_at"
                                             onChange={this.onChange}
-                                            value={this.state.email_received_at ?? ''} />
+                                            value={this.state.email_received_at} />
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -178,7 +182,7 @@ class OpportunityDetails extends Component {
                                             type="text" required
                                             name="job_title"
                                             onChange={this.onChange}
-                                            value={this.state.job_title ?? ''}
+                                            value={this.state.job_title}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -189,7 +193,7 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="employment_type"
                                             onChange={this.onChange}
-                                            value={this.state.employment_type ?? ''} >
+                                            value={this.state.employment_type} >
                                                 <option value="">Select Type</option>
                                                 <option value="Contract">Contract</option>
                                                 <option value="Full-time">Full-time</option>
@@ -217,7 +221,7 @@ class OpportunityDetails extends Component {
                                             type="select" required
                                             name="location_type"
                                             onChange={this.onChange}
-                                            value={this.state.location_type ?? ''} >
+                                            value={this.state.location_type} >
                                                 <option value="">Select Type</option>
                                                 <option value="On-Site">On-Site</option>
                                                 <option value="Hybrid">Hybrid</option>
@@ -232,7 +236,7 @@ class OpportunityDetails extends Component {
                                             type="text" required
                                             name="location_city"
                                             onChange={this.onChange}
-                                            value={this.state.location_city ?? ''}
+                                            value={this.state.location_city}
                                         />
                                     </FormGroup>
                                 </Col>
