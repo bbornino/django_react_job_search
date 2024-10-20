@@ -16,7 +16,7 @@ class JobPostingEdit extends Component {
         job_site_id: 0,
         posting_title: '',
         company_name: '',
-        posting_status: '4 - No Response',
+        posting_status: '',
 
         posting_url_full: '',
         posting_url_domain: '',
@@ -73,9 +73,9 @@ class JobPostingEdit extends Component {
                 outreach_info: res.data.outreach_info,
                 time_spent: (res.data.time_spent && res.data.time_spent !== 1) ?? '',
                 technology_string: res.data.technology_string,
-                technology_stack: res.data.technology_stack,
-                comments: res.data.comments,
-                posting_application_questions: res.data.posting_application_questions,
+                technology_stack: {},
+                comments: (res.data.comments === null || res.data.comments === ''  ? [] : res.data.comments),
+                posting_application_questions: {},
                 job_description: res.data.job_description,
             })
 
@@ -218,7 +218,7 @@ class JobPostingEdit extends Component {
                                             value={this.state.posting_status ?? ''}>
                                                 <option value="4 - No Response">4 - No Response</option>
                                                 <option value="3 - Rejected">3 - Rejected</option>
-                                                <option value="3 - Rejected">2.5 - Post Interview Declined</option>
+                                                <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
                                                 <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
                                                 <option value="1 - Actively Engaged">1 - Actively Engaged</option>
                                         </Input>
@@ -249,7 +249,8 @@ class JobPostingEdit extends Component {
                                             onChange={this.onChange}
                                             value={this.state.posting_url_domain ?? ''}>
                                                 <option value="">Select Posting Domain</option>
-                                                <option value="LinkedIn Easy Apply ">LinkedIn Easy Apply </option>
+                                                <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
+                                                <option value="Indeed">Indeed</option>
                                                 <option value="Greenhouse">Greenhouse</option>
                                                 <option value="Workday Jobs">Workday Jobs</option>
                                                 <option value="Lever">Lever</option>
@@ -263,7 +264,7 @@ class JobPostingEdit extends Component {
                                 </Col>
                                 <Col lg="2" md="6">
                                     <FormGroup>
-                                        <Label for="posting_password">Posting Password</Label>
+                                        <Label for="posting_password">Posting Site Password</Label>
                                         <Input
                                             type="text"
                                             id="posting_password"
