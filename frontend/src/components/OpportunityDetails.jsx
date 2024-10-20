@@ -30,7 +30,7 @@ class OpportunityDetails extends Component {
     }
 
     getOpportunity = (opportunity_id) => {
-        console.log("getOpportunity received " + opportunity_id)
+        // console.log("getOpportunity received " + opportunity_id)
         axios.get(JOB_OPPORTUNITY_API_URL + opportunity_id).then(res => {
             
             this.setState({
@@ -48,10 +48,9 @@ class OpportunityDetails extends Component {
                 comments: res.data.comments,
                 job_description: res.data.job_description,
             })
-            const collection = document.getElementsByClassName("ck-content")
-            if ( collection.length !== 0) {
-                collection[0].ckeditorInstance.setData(res.data.job_description)
-            }
+            const descCard = document.getElementById("description_card_body")
+            const ckeContent = descCard.querySelector(".ck-content")
+            if(ckeContent) ckeContent.ckeditorInstance.setData(res.data.job_description)
         });
     };
     
@@ -69,11 +68,10 @@ class OpportunityDetails extends Component {
     };
 
     onEditorChange = e => {
-        const collection = document.getElementsByClassName("ck-content")
-        if (collection.length === 1) {
-            const newVal = collection[0].ckeditorInstance.getData()
-            this.setState({job_description: newVal})
-        }
+        const descCard = document.getElementById("description_card_body")
+        const ckeContent = descCard.querySelector(".ck-content")
+        const newVal = ckeContent.ckeditorInstance.getData()
+        this.setState({job_description: newVal})
     }
 
     onDeleteOpportunity = e => {
@@ -248,9 +246,9 @@ class OpportunityDetails extends Component {
                                       onCommentsSave={this.setCommentsCallback} />
                         </CardBody>
                     </Card>
-                    <Card className="text-dark bg-light m-3">
+                    <Card id="description_card" className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2"><strong>Opportunity Job Description</strong></CardTitle>
-                        <CardBody className="bg-white">
+                        <CardBody id="description_card_body" className="bg-white">
                             <Editor editorText={this.state.job_description} 
                                     onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
