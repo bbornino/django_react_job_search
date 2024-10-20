@@ -11,12 +11,13 @@ import Editor from "./Editor"
 import Comments from "./Comments"
 
 class JobPostingEdit extends Component {
+    // All Default values are set here
     state = {
         job_posting_id: 0,
         job_site_id: 0,
         posting_title: '',
         company_name: '',
-        posting_status: '',
+        posting_status: '4 - No Response',
 
         posting_url_full: '',
         posting_url_domain: '',
@@ -34,6 +35,7 @@ class JobPostingEdit extends Component {
 
         job_scan_info: '',
         outreach_info: '',
+        time_spent: '',
         
         technology_string: '',
         technology_stack: [],
@@ -54,27 +56,34 @@ class JobPostingEdit extends Component {
     getJobPosting = (jobPostingId) => {
         console.log("getJobPosting")
         axios.get(JOB_POSTING_API_URL + jobPostingId).then(res => {
+            // NOTE: Any attempted setting of defaults here are overwritten by the state = line above!
             this.setState({
                 job_site_id: res.data.job_site_id,
                 posting_title: res.data.posting_title,
                 company_name: res.data.company_name,
                 posting_status: res.data.posting_status,
+
                 posting_url_full: res.data.posting_url_full,
                 posting_url_domain: res.data.posting_url_domain,
                 posting_password: res.data.posting_password,
+
                 pay_range: res.data.pay_range,
                 location_city: res.data.location_city,
                 location_type: res.data.location_type,
                 employment_type: res.data.employment_type,
+
                 applied_at: formatInputFieldDateTime(res.data.applied_at),
                 interviewed_at:  formatInputFieldDateTime(res.data.interviewed_at),
                 rejected_at: formatInputFieldDateTime(res.data.rejected_at),
+                rejected_after_stage: res.data.rejected_after_stage,
+
                 job_scan_info: res.data.job_scan_info,
                 outreach_info: res.data.outreach_info,
-                time_spent: (res.data.time_spent && res.data.time_spent !== 1) ?? '',
+                time_spent: res.data.time_spent,
+
                 technology_string: res.data.technology_string,
                 technology_stack: {},
-                comments: (res.data.comments === null || res.data.comments === ''  ? [] : res.data.comments),
+                comments: res.data.comments,
                 posting_application_questions: {},
                 job_description: res.data.job_description,
             })
@@ -120,11 +129,10 @@ class JobPostingEdit extends Component {
     };
 
     onEditorChange = e => {
-        const collection = document.getElementsByClassName("ck-content")
-        if (collection.length === 1) {
-            const newVal = collection[0].ckeditorInstance.getData()
-            this.setState({job_description: newVal})
-        }
+        const descCard = document.getElementById("description_card_body")
+        const ckeContent = descCard.querySelector(".ck-content")
+        const newVal = ckeContent.ckeditorInstance.getData()
+        this.setState({job_description: newVal})
     };
 
     setCommentsCallback = (updatedComments) => {
@@ -185,7 +193,7 @@ class JobPostingEdit extends Component {
                                             id="posting_title"
                                             name="posting_title"
                                             onChange={this.onChange}
-                                            value={this.state.posting_title ?? ''}
+                                            value={this.state.posting_title}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -197,7 +205,7 @@ class JobPostingEdit extends Component {
                                             id="job_site_id"
                                             name="job_site_id"
                                             onChange={this.onChange}
-                                            value={this.state.job_site_id ?? ''}>
+                                            value={this.state.job_site_id}>
                                                 <option value="">Select Job Site</option>
                                                 {this.state.job_sites.map((option) => (
                                                     <option key={option.id} value={option.id}>
@@ -215,7 +223,7 @@ class JobPostingEdit extends Component {
                                             id="posting_status"
                                             name="posting_status"
                                             onChange={this.onChange}
-                                            value={this.state.posting_status ?? ''}>
+                                            value={this.state.posting_status}>
                                                 <option value="4 - No Response">4 - No Response</option>
                                                 <option value="3 - Rejected">3 - Rejected</option>
                                                 <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
@@ -234,7 +242,7 @@ class JobPostingEdit extends Component {
                                             id="company_name"
                                             name="company_name"
                                             onChange={this.onChange}
-                                            value={this.state.company_name ?? ''}
+                                            value={this.state.company_name}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -247,7 +255,7 @@ class JobPostingEdit extends Component {
                                             id="posting_url_domain"
                                             name="posting_url_domain"
                                             onChange={this.onChange}
-                                            value={this.state.posting_url_domain ?? ''}>
+                                            value={this.state.posting_url_domain}>
                                                 <option value="">Select Posting Domain</option>
                                                 <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
                                                 <option value="Indeed">Indeed</option>
@@ -270,7 +278,7 @@ class JobPostingEdit extends Component {
                                             id="posting_password"
                                             name="posting_password"
                                             onChange={this.onChange}
-                                            value={this.state.posting_password ?? ''}
+                                            value={this.state.posting_password}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -284,7 +292,7 @@ class JobPostingEdit extends Component {
                                             id="posting_url_full"
                                             name="posting_url_full"
                                             onChange={this.onChange}
-                                            value={this.state.posting_url_full ?? ''}
+                                            value={this.state.posting_url_full}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -298,7 +306,7 @@ class JobPostingEdit extends Component {
                                             id="pay_range"
                                             name="pay_range"
                                             onChange={this.onChange}
-                                            value={this.state.pay_range ?? ''}
+                                            value={this.state.pay_range}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -310,7 +318,7 @@ class JobPostingEdit extends Component {
                                             id="employment_type"
                                             name="employment_type"
                                             onChange={this.onChange}
-                                            value={this.state.employment_type ?? ''} >
+                                            value={this.state.employment_type} >
                                                 <option value="">Select Type</option>
                                                 <option value="Full-time">Full-time</option>
                                                 <option value="Freelance">Freelance</option>
@@ -326,7 +334,7 @@ class JobPostingEdit extends Component {
                                             id="location_city"
                                             name="location_city"
                                             onChange={this.onChange}
-                                            value={this.state.location_city ?? ''}
+                                            value={this.state.location_city}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -338,7 +346,7 @@ class JobPostingEdit extends Component {
                                             id="location_type"
                                             name="location_type"
                                             onChange={this.onChange}
-                                            value={this.state.location_type ?? ''}>
+                                            value={this.state.location_type}>
                                                 <option value="">Select Type</option>
                                                 <option value="Remote">Remote</option>
                                                 <option value="Hybrid">Hybrid</option>
@@ -356,7 +364,7 @@ class JobPostingEdit extends Component {
                                             id="applied_at"
                                             name="applied_at"
                                             onChange={this.onChange}
-                                            value={this.state.applied_at ?? ''}
+                                            value={this.state.applied_at}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -368,7 +376,7 @@ class JobPostingEdit extends Component {
                                             id="interviewed_at"
                                             name="interviewed_at"
                                             onChange={this.onChange}
-                                            value={this.state.interviewed_at ?? ''}
+                                            value={this.state.interviewed_at}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -380,7 +388,7 @@ class JobPostingEdit extends Component {
                                             id="rejected_at"
                                             name="rejected_at"
                                             onChange={this.onChange}
-                                            value={this.state.rejected_at ?? ''}
+                                            value={this.state.rejected_at}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -392,7 +400,7 @@ class JobPostingEdit extends Component {
                                             id="rejected_after_stage"
                                             name="rejected_after_stage"
                                             onChange={this.onChange}
-                                            value={this.state.rejected_after_stage ?? ''}>
+                                            value={this.state.rejected_after_stage}>
                                                 <option value="Application Submission">Application Submission</option>
                                                 <option value="Screening">Screening</option>
                                                 <option value="HR Interview">HR Interview</option>
@@ -412,7 +420,7 @@ class JobPostingEdit extends Component {
                                             id="outreach_info"
                                             name="outreach_info"
                                             onChange={this.onChange}
-                                            value={this.state.outreach_info ?? ''}
+                                            value={this.state.outreach_info}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -424,7 +432,7 @@ class JobPostingEdit extends Component {
                                             id="job_scan_info"
                                             name="job_scan_info"
                                             onChange={this.onChange}
-                                            value={this.state.job_scan_info ?? ''}
+                                            value={this.state.job_scan_info}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -434,7 +442,7 @@ class JobPostingEdit extends Component {
                                         <Input  type="number" required
                                                 name="time_spent" id="time_spent"
                                                 onChange={this.onChange}
-                                                value={this.state.time_spent ?? ''}
+                                                value={this.state.time_spent}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -448,7 +456,7 @@ class JobPostingEdit extends Component {
                                             id="technology_string"
                                             name="technology_string"
                                             onChange={this.onChange}
-                                            value={this.state.technology_string ?? ''}
+                                            value={this.state.technology_string}
                                         />
                                     </FormGroup>
                                 </Col>
@@ -464,8 +472,8 @@ class JobPostingEdit extends Component {
                     </Card>
                     <Card id="description_card" className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2"><strong>Job Posting Description</strong></CardTitle>
-                        <CardBody className="bg-white">
-                            <Editor editorText={this.state.job_description} 
+                        <CardBody className="bg-white" id="description_card_body">
+                            <Editor id="my_ed" editorText={this.state.job_description} 
                                     onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
                     </Card>
