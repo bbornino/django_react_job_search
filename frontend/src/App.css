@@ -75,5 +75,5 @@ ul li.check:before  {
 }
 
 .ck-editor__editable_inline {
-  min-height: 600px;
+  min-height: 400px;
 }
