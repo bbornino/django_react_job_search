@@ -88,10 +88,9 @@ class JobPostingEdit extends Component {
                 job_description: res.data.job_description,
             })
 
-            const collection = document.getElementsByClassName("ck-content")
-            if ( collection.length !== 0) {
-                collection[0].ckeditorInstance.setData(res.data.job_description)
-            }
+            const descCard = document.getElementById("description_card_body")
+            const ckeContent = descCard.querySelector(".ck-content")
+            ckeContent.ckeditorInstance.setData(res.data.job_description)
         })
     }
 
