@@ -9,14 +9,14 @@ const paginationComponentOptions = {
 
 
 function DataTableBase(props) {
-	// const emptyTableMessage = (props.data.length) ? "Loading Data" : "No Table Data";
+	const emptyTableMessage = (props.data.length) ? "Loading Data" : "No Table Data";
 
 	return (
 		<DataTable
 			selectableRowsComponentProps={selectProps}
 			paginationComponentOptions={paginationComponentOptions}
-			// noDataComponent={emptyTableMessage}
-			noDataComponent="Loading Data"
+			noDataComponent={emptyTableMessage}
+			// noDataComponent="Loading Data"
 			paginationPerPage={25}
 			paginationRowsPerPageOptions={[10,25,100]}
 			pagination striped highlightOnHover dense
