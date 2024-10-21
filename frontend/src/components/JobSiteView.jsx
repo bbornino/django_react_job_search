@@ -80,9 +80,10 @@ class JobSiteView extends Component {
         },
         {
             name: 'Applied At',
+            id: 'applied_at',
             selector: row => row.applied_at,
             cell: row => formatDisplayDateTime(row.applied_at),
-            width: "150px",
+            width: "250px",
             sortable: true,
         },
     ]
@@ -187,6 +188,8 @@ class JobSiteView extends Component {
                             <Col>
                                 <DataTableBase  columns={this.columns}
                                     data={this.state.postings}
+                                    defaultSortFieldId="applied_at"
+                                    defaultSortAsc={false}
                                     onRowClicked={this.onRowClicked} />
                             </Col>
                         </Row>
