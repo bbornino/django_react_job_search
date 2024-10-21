@@ -87,14 +87,14 @@ class JobSiteEdit extends Component {
         console.log("Deleting Job Site")
         axios.delete(JOB_SITE_API_URL + this.state.job_site_id,
                     this.state).then(() => {
-            window.location = '/job-site-view'
+            window.location = '/job-sites'
         })
     }
 
     createJobSite = e => {
         e.preventDefault();
         axios.post(JOB_SITE_API_URL, this.state).then(() => {
-            window.location = '/job-site-view/' + this.state.job_site_id
+            window.location = '/job-sites'
         })
     }
 
