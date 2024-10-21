@@ -90,7 +90,11 @@ class JobPostingEdit extends Component {
 
             const descCard = document.getElementById("description_card_body")
             const ckeContent = descCard.querySelector(".ck-content")
-            ckeContent.ckeditorInstance.setData(res.data.job_description)
+
+            if (ckeContent !== null) {
+                ckeContent.ckeditorInstance.setData(res.data.job_description)
+            }
+
         })
     }
 
@@ -141,8 +145,8 @@ class JobPostingEdit extends Component {
     onDeleteJobPosting = e => {
         console.log("Deleting Job Posting")
         axios.delete(JOB_POSTING_API_URL + this.state.job_posting_id,
-                    this.state).then(() => {
-            window.location = '/job-posting-view'
+            this.state).then(() => {
+                window.location = document.referrer
         })
     }
 
@@ -472,7 +476,7 @@ class JobPostingEdit extends Component {
                     <Card id="description_card" className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2"><strong>Job Posting Description</strong></CardTitle>
                         <CardBody className="bg-white" id="description_card_body">
-                            <Editor id="my_ed" editorText={this.state.job_description} 
+                            <Editor editorText={this.state.job_description} 
                                     onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
                     </Card>
