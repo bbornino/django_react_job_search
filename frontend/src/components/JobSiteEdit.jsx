@@ -22,13 +22,19 @@ class JobSiteEdit extends Component {
         github_field: false,
         project_site_field: false,
         headline: '',
-        description: 'TBD',
+        description: '',
         
     }
 
     getJobSite = (job_site_id) => {
-        console.log("getJobSite received " + job_site_id)
+        // console.log("getJobSite received " + job_site_id)
         axios.get(JOB_SITE_API_URL + job_site_id).then(res => {
+
+            const gitHubField = document.getElementById('github_field')
+            gitHubField.checked = res.data.github_field
+            const projectSiteField = document.getElementById('project_site_field')
+            projectSiteField.checked = res.data.project_site_field
+
             this.setState({
                 site_name: res.data.site_name,
                 site_url: res.data.site_url,
@@ -42,6 +48,13 @@ class JobSiteEdit extends Component {
                 headline: res.data.headline,
                 description: res.data.description,
             })
+
+            const descCard = document.getElementById("description_group")
+            const ckeContent = descCard.querySelector(".ck-content")
+            if (ckeContent !== null) {
+                ckeContent.ckeditorInstance.setData(res.data.description)
+            }
+
         })
     }
 
@@ -57,6 +70,10 @@ class JobSiteEdit extends Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value});
     };
+
+    onCheckBoxChange = e => {
+        this.setState({ [e.target.name]: e.target.checked ? true : false});
+    }
 
     onEditorChange = e => {
         const collection = document.getElementsByClassName("ck-content")
@@ -116,7 +133,7 @@ class JobSiteEdit extends Component {
 
                         <CardBody className="bg-white" >
                             <Row id="name_url_row">
-                                <Col lg="5" id="site_name_field">
+                                <Col id="site_name_field" lg="5" >
                                     <FormGroup>
                                         <Label for="site_name">Site Name</Label>
                                         <Input  type="text" required
@@ -126,17 +143,7 @@ class JobSiteEdit extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="5" id="site_url_field">
-                                    <FormGroup>
-                                        <Label for="site_url">Site URL</Label>
-                                        <Input  type="text" required
-                                                name="site_url" id="site_url"
-                                                onChange={this.onChange}
-                                                value={this.state.site_url ?? ''}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                                <Col lg="2" id="rating_field">
+                                <Col id="rating_field" lg="1" >
                                     <FormGroup>
                                         <Label for="rating">Rating</Label>
                                         <Input  type="number" required
@@ -146,9 +153,29 @@ class JobSiteEdit extends Component {
                                         />
                                     </FormGroup>
                                 </Col>
+                                <Col id="site_url_field" lg="4" >
+                                    <FormGroup>
+                                        <Label for="site_url">Site URL</Label>
+                                        <Input  type="text" required
+                                                name="site_url" id="site_url"
+                                                onChange={this.onChange}
+                                                value={this.state.site_url ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col id="site_password_field" lg="2" >
+                                    <FormGroup>
+                                        <Label for="site_password">Password</Label>
+                                        <Input  type="text" required
+                                                name="site_password" id="site_password"
+                                                onChange={this.onChange}
+                                                value={this.state.site_password ?? ''}
+                                        />
+                                    </FormGroup>
+                                </Col>
                             </Row>
                             <Row id="dates_row">
-                                <Col lg="3" md="6">
+                                <Col id="last_visted_field" lg="3" md="6">
                                     <FormGroup>
                                         <Label for="last_visited_at">Last Visited At</Label>
                                         <Input type="datetime-local" required
@@ -157,21 +184,29 @@ class JobSiteEdit extends Component {
                                             value={this.state.last_visited_at ?? ''} />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="3" md="6">
+                                <Col id="resume_updated_field" lg="3" md="6">
                                     <FormGroup>
                                         <Label for="resume_updated_at">Resume Updated At</Label>
                                         <Input type="datetime-local" required
                                             name="resume_updated_at" id="resume_updated_at"
                                             onChange={this.onChange}
-                                            value={this.state.resume_updated_at ?? ''} />
+                                            value={this.state.resume_updated_at} />
                                     </FormGroup>
                                 </Col>
-                                <Col lg="4" md="8">
-                                    <FormGroup>
-                                        <Label for="resume_updated_at">TBD Check Boxes</Label>
-                                        <Input  type="text"
-                                                
-                                        />
+                                <Col id="git_hub_group_field" lg="4" md="8">
+                                    <FormGroup check inline>
+                                        <Input type="checkbox"
+                                            name="github_field" id="github_field"
+                                            onChange={this.onCheckBoxChange}
+                                            value={this.state.github_field} />
+                                        <Label for="github_field">Has GitHub Field</Label>
+                                    </FormGroup>
+                                    <FormGroup check inline>
+                                        <Input type="checkbox"
+                                            name="project_site_field" id="project_site_field"
+                                            onChange={this.onCheckBoxChange}
+                                            value={this.state.project_site_field} />
+                                        <Label for="project_site_field">Has Project Site Field</Label>
                                     </FormGroup>
                                 </Col>
                                 <Col lg="2" >
@@ -203,7 +238,7 @@ class JobSiteEdit extends Component {
                             </Row>
                             <Row id="description_row">
                                 <Col>
-                                    <FormGroup>
+                                    <FormGroup id="description_group">
                                         <Label>Description</Label>
                                         <Editor editorText={this.state.description}
                                             onEditorChange={this.onEditorChange}></Editor>  
