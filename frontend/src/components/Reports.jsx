@@ -1,6 +1,6 @@
 import {React, Component} from "react";
 import axios from "axios";
-import { REPORT_API_URL, formatDisplayDate } from "../constants";
+import { REPORT_API_URL, formatInputFieldDateTime } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
 import DataTableBase from './DataTableBase';
@@ -64,8 +64,10 @@ class Reports extends Component {
                     name: fieldInfo.field_title,
                     selector: row => {
                         const value = row[fieldInfo.field_name];
-                        // Check if the value is a date
-                        return isDate(value) ? formatDisplayDate(value) : value;
+                        // Check if the value is a date only
+                        // return isDate(value) ? formatInputFieldDateTime(value) : value;
+                        // Back end report now correctly formats the date
+                        return value;
                       },
                     sortable: fieldInfo.sortable,
                     sortField: row => row[fieldInfo.field_name],
