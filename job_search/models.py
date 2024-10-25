@@ -24,7 +24,7 @@ class EmailOpportunity(models.Model):
 class JobSite(models.Model):
     site_name = models.CharField(max_length=64, default='')
     site_url = models.CharField(max_length=64, default='')
-    site_password = models.CharField(max_length=64, default='', blank=True)
+    site_password = models.CharField(max_length=64, default='', blank=True, null=True)
     rating = models.IntegerField(default=1)
 
     resume_format = models.CharField(max_length=32, default='')
@@ -34,7 +34,7 @@ class JobSite(models.Model):
     resume_updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
     headline = models.CharField(max_length=64, default='')
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
 
     def _str_(self):
         return self.site_name
