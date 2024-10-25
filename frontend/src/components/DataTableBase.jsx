@@ -16,7 +16,6 @@ function DataTableBase(props) {
 			selectableRowsComponentProps={selectProps}
 			paginationComponentOptions={paginationComponentOptions}
 			noDataComponent={emptyTableMessage}
-			// noDataComponent="Loading Data"
 			paginationPerPage={25}
 			paginationRowsPerPageOptions={[10,25,100]}
 			pagination striped highlightOnHover dense
