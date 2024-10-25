@@ -15,24 +15,25 @@ class Dashboard extends Component {
                         <strong>Job Hunt Statistics</strong>
                     </CardTitle>
                     <CardBody className="bg-white">
-                        Sample Data
+                        Static Data As of October 25, 2024<br/><br/>
                         <Row>
                             <Col></Col>
                             <Col>Postings Applied </Col>
                             <Col>Responses</Col>
+                            <Col>Response Rate</Col>
                         </Row>
                         <Row>
                             <Col>March 1, 2024 (edit box?)</Col>
-                            <Col>1,000</Col>
+                            <Col>933</Col>
                             <Col>17</Col>
+                            <Col>1.8%</Col>
                         </Row>
                         <Row>
                             <Col>June 25, 2024 (edit box?)</Col>
-                            <Col>300</Col>
-                            <Col>10</Col>
+                            <Col>237</Col>
+                            <Col>5</Col>
+                            <Col>2.1%</Col>
                         </Row>
-                    x postings since date x       pos response
-                    y postings since date y       pos response
                     </CardBody>
                 </Card>
 
@@ -41,7 +42,7 @@ class Dashboard extends Component {
                         <strong>Active Job Postings</strong>
                     </CardTitle>
                     <CardBody className="bg-white">
-                        small datatable here.  Default: show!  Linkable...
+                        small datatable here with linkable rows...
                     </CardBody>
                 </Card>
                 <Card id="active_opportunities" className="text-dark bg-light m-3">
@@ -49,7 +50,7 @@ class Dashboard extends Component {
                         <strong>Active Opportunities</strong>
                     </CardTitle>
                     <CardBody className="bg-white">
-                        small datatable here.  Default: hide?!  Linkable...
+                        small datatable here with linkable rows...
                     </CardBody>
                 </Card>
             </Container>
