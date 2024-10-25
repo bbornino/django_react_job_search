@@ -109,15 +109,15 @@ class JobPostingList extends Component {
         return (
             <Container>
                 <Row className="m-4 align-items-center">
-                    <Col md="3">
+                    <Col xl="4" sm="6" >
                         <h1>All Job Postings</h1>
                     </Col>
-                    <Col lg="3" md="6">
+                    <Col xl="2" sm="6">
                         <Link to='/job-posting-new'>
                             <Button color="success" > Create Job Posting</Button>
                         </Link>
                     </Col>
-                    <Col lg="3" md="3">
+                    <Col xl="3" lg="6" sm="6">
                         <InputGroup>
                             <Input  id="search" type="text" 
                                     className="m-0"
@@ -128,7 +128,7 @@ class JobPostingList extends Component {
                             <Button color="danger" onClick={this.onCompanyNameClear}  className="">X</Button>
                         </InputGroup>
                     </Col>
-                    <Col lg="3" md="3">
+                    <Col xl="3" lg="6" sm="6">
                         <InputGroup>
                             <Input  id="search" type="text" 
                                     className="m-0"
