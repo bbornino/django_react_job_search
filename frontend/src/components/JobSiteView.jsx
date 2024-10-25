@@ -1,7 +1,7 @@
 import React, { Component} from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { JOB_SITE_API_URL, JOB_SITE_POSTINGS_API_URL, formatDisplayDateTime } from "../constants";
+import { JOB_SITE_API_URL, JOB_SITE_POSTINGS_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -106,10 +106,10 @@ class JobSiteView extends Component {
                 <Card className="text-dark bg-light m-3">
                     <CardTitle className="mx-2 my-2">
                         <Row className="m-2">
-                            <Col xxl="10" xl="9" lg="8" md="7" sm="5" xs="3">
+                            <Col xl="10" md="9" sm="8" xs="6">
                                 <h1>{this.state.site_name}</h1>
                             </Col>
-                            <Col xxl="2" xl="3" lg="4" md="5" sm="7" xs="9" className="pull-right">
+                            <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
                                 <Button color="success" type="button"
                                         className="m-2"
                                         onClick={this.onEditClicked}>
@@ -121,7 +121,7 @@ class JobSiteView extends Component {
                     
                     <CardBody className="bg-white">
                         <Row>
-                            <Col>
+                            <Col lg="3" xs="6">
                                 <dl>
                                     <dt>URL</dt>
                                     <dd>
@@ -131,22 +131,22 @@ class JobSiteView extends Component {
                                     </dd>
                                 </dl>
                             </Col>
-                            <Col>
+                            <Col lg="3" xs="6">
                                 <dl>
                                     <dt>Rating</dt>
                                     <dd>{this.state.rating}</dd>
                                 </dl>
                             </Col>
-                            <Col>
+                            <Col lg="3" xs="6">
                                 <dl>
                                     <dt>Last Visited</dt>
-                                    <dd>{this.state.last_visited_at}</dd>
+                                    <dd>{formatDisplayDate(this.state.last_visited_at)}</dd>
                                 </dl>
                             </Col>
-                            <Col>
+                            <Col lg="3" xs="6">
                                 <dl>
                                     <dt>Resume Last Updated</dt>
-                                    <dd>{this.state.resume_updated_at}</dd>
+                                    <dd>{formatDisplayDate(this.state.resume_updated_at)}</dd>
                                 </dl>
                             </Col>
                         </Row>
@@ -172,10 +172,10 @@ class JobSiteView extends Component {
                 <Card className="text-dark bg-light m-3">
                     <CardTitle className="mx-2 my-1">
                         <Row className="m-1">
-                            <Col xxl="10" xl="9" lg="8" md="7" sm="6" xs="6" >
+                            <Col xl="10" md="9" sm="8" xs="6" >
                                 <h3>Job Site Postings Applied</h3>
                             </Col>
-                            <Col xxl="2" xl="3" lg="4" md="5" sm="6" xs="6" className="pull-right">
+                            <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
                                 <Button color="success" type="button"
                                         onClick={this.onNewPostingClicked}>
                                     <FontAwesomeIcon icon={faSquarePlus} /> &nbsp; Add New
