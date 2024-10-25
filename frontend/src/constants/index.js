@@ -13,7 +13,7 @@ export const formatInputFieldDateTime = (originalDateTime) => {
     // The front end widget does not need a time zone, nor the 'T'.
     // From: 2024-09-02T14:19:00-07:00
     // To: 2024-09-02 14:19:00   (no time zones)
-    // console.log("Stripping the Time Zone from " + originalDateTime);
+
     var originalDtArr = originalDateTime.split('T')
     var originalDtTimeArr = originalDtArr[1].split('-')
     return originalDtArr[0] + ' ' + originalDtTimeArr[0]
@@ -24,7 +24,7 @@ export const formatDisplayDateTime = (rawDate) => {
     // From a code perspective, I would love to live with the default:
     // const theDate = new Date(rawDate).toLocaleString('en-US')
     // 9/5/2024, 5:42:00 PM
-    // but... you can't turn off the seconds!
+    // but... you can't easily turn off the seconds!
     // return: Tuesday, Sep 10, 2024, 5:42 AM
     const theDate = new Date(rawDate).toLocaleString('en-US', {
         weekday: 'long',
@@ -37,16 +37,11 @@ export const formatDisplayDateTime = (rawDate) => {
     return theDate
 }
 
+// return: Sep 10, 2024
 export const formatDisplayDate = (rawDate) => {
-
     if (rawDate === undefined || rawDate === null) return null;
-    // From a code perspective, I would love to live with the default:
-    // const theDate = new Date(rawDate).toLocaleString('en-US')
-    // 9/5/2024, 5:42:00 PM
-    // but... you can't turn off the seconds!
-    // return: Tuesday, Sep 10, 2024, 5:42 AM
+    
     const theDate = new Date(rawDate).toLocaleString('en-US', {
-        // weekday: 'long',
         year: 'numeric',
         month: 'short',
         day: 'numeric'})
