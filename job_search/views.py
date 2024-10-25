@@ -185,6 +185,12 @@ def job_postings_report(request, report_type, reference_date=None):
         with connection.cursor() as cursor:
             cursor.execute(sql_query, [reference_date or '2024-01-01'])
             report_data = dictfetchall(cursor)
+            
+        # Loop to format the 'applied_at' field
+        for record in report_data:
+            applied_at = record.get('applied_at')
+            # Format the date as 'Month Day, Year' (e.g., 'October 7, 2024')
+            record['applied_at'] = datetime.strptime(str(applied_at), "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
 
     elif report_type == 'perWeek':
         report_name = f"Applications Per Week {formatted_date}" if reference_date else "Applications Per Week"
@@ -223,7 +229,7 @@ def job_postings_report(request, report_type, reference_date=None):
             month = applied_at_dt.strftime("%B")
 
             # Create a unique key for each year and week combination
-            year_week_key = (year, week)
+            year_week_key = (year, week, month)
 
             # Update the week count for each unique year-week
             if year_week_key not in week_count:
@@ -231,7 +237,7 @@ def job_postings_report(request, report_type, reference_date=None):
             week_count[year_week_key] += 1
 
         # Add the data to the report data
-        for (year, week), count in week_count.items():
+        for (year, week, month), count in week_count.items():
             report_data.append({
                 "year": year,
                 "week": week,
