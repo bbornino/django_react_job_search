@@ -26,7 +26,7 @@ urlpatterns = [
     re_path(r'^api/email_opportunity/([0-9]*)', views.email_opportunity_detail),
     re_path(r'^api/job_site/$', views.job_site_list),
     re_path(r'^api/job_site/([0-9]*)', views.job_site_detail),
-    re_path(r'^api/job_site_postings/([0-9]*)', views.job_site_postings),
+    re_path(r'^api/job_site_postings/([0-9]*)', views.job_site_postings),           # NOT REST Compliant!  SHOULD BE: api/job_site/([0-9]*)/job_postings
     re_path(r'^api/job_posting/$', views.job_posting_list),
     re_path(r'^api/job_posting/([0-9]*)', views.job_posting_detail),
     re_path(r'^api/report/(?P<report_type>\w+)/?(?P<reference_date>\d{4}-\d{2}-\d{2})?/?$', views.job_postings_report),
