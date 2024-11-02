@@ -26,7 +26,7 @@ class OpportunityDetails extends Component {
         location_city: '',
 
         comments: [],
-        job_description: 'TBD',
+        job_description: '',
 
     }
 
@@ -49,10 +49,19 @@ class OpportunityDetails extends Component {
                 comments: res.data.comments,
                 job_description: res.data.job_description,
             })
+
+            //Race Condition! sometimes, this is triggered before... CKEditor is ready?!
+            // WAIT for things to settle down before loading the data into CKEditor
+            setTimeout(() => {
+                // Code to execute after 0.1 seconds (100 milliseconds)
+                console.log("Hello after 0.1 second");
             const descCard = document.getElementById("description_card_body")
             const ckeContent = descCard.querySelector(".ck-content")
             if(ckeContent) ckeContent.ckeditorInstance.setData(res.data.job_description)
+              }, 100); 
+            
         });
+        
     };
     
     componentDidMount() {
