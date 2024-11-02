@@ -47,14 +47,12 @@ class JobPostingEdit extends Component {
     }
 
     getJobSites = e => {
-        console.log("getJobSites");
         axios.get(JOB_SITE_API_URL).then( res => {
             this.setState({job_sites:res.data})
         });
     }
 
     getJobPosting = (jobPostingId) => {
-        console.log("getJobPosting")
         axios.get(JOB_POSTING_API_URL + jobPostingId).then(res => {
             // NOTE: Any attempted setting of defaults here are overwritten by the state = line above!
             this.setState({
@@ -99,7 +97,6 @@ class JobPostingEdit extends Component {
     }
 
     componentDidMount() {
-        console.log("Starting Mount")
         const pathArr = window.location.pathname.split('/')
         
         if (pathArr[1] === "job-posting-new") {
@@ -116,7 +113,6 @@ class JobPostingEdit extends Component {
                     applied_at: currentdate + 'T' + currenttime,
                 })
             }
-            
             
         } else {
             // NOT new.  Use as the posting id
@@ -143,7 +139,6 @@ class JobPostingEdit extends Component {
     }
 
     onDeleteJobPosting = e => {
-        console.log("Deleting Job Posting")
         axios.delete(JOB_POSTING_API_URL + this.state.job_posting_id,
             this.state).then(() => {
                 window.location = document.referrer
