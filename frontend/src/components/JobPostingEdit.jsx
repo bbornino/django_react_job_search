@@ -29,8 +29,8 @@ class JobPostingEdit extends Component {
         employment_type: '',
 
         applied_at: '',
-        interviewed_at: null,
-        rejected_at: null,
+        interviewed_at: '',
+        rejected_at: '',
         rejected_after_stage: 'Application Submission',
 
         job_scan_info: '',
@@ -147,7 +147,11 @@ class JobPostingEdit extends Component {
 
     createJobPosting = e => {
         e.preventDefault();
-        axios.post(JOB_POSTING_API_URL, this.state).then(() => {
+        const jobPostingParams = this.state
+        jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
+        jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
+
+        axios.post(JOB_POSTING_API_URL, jobPostingParams).then(() => {
             // Create always comes from the Job Site page
             window.location = document.referrer
         })
