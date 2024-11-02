@@ -24,6 +24,7 @@ import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
 import FinancialAssistance from "./components/FinancialAssistance";
+import BooleanSearch from "./components/BooleanSearch";
 
 
 export default class App extends React.Component {
@@ -61,7 +62,7 @@ export default class App extends React.Component {
                   <DropdownItem tag={Link} to="/about">User Guide</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem tag={Link} to="/job-hunt-tips">Job Hunt Tips</DropdownItem>
-                  <DropdownItem tag={Link} to="/about">Boolean Search</DropdownItem>
+                  <DropdownItem tag={Link} to="/boolean-search">Boolean Search</DropdownItem>
                   <DropdownItem tag={Link} to="/financial-assistance">Financial Assistance Programs</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem tag={Link} to="/release-history">Release History</DropdownItem>
@@ -107,6 +108,7 @@ export default class App extends React.Component {
               <Route path="/reports/:reportType/:referenceDate?" element={<Reports />} />
               <Route path="/job-hunt-tips" element={<JobHuntTips />} />
               <Route path="/release-history" element={<ReleaseHistory />} />
+              <Route path="/boolean-search" element={<BooleanSearch />} />
               <Route path="/financial-assistance" element={<FinancialAssistance />} />
               <Route path="/about" element={<About />} />
           </Routes>
