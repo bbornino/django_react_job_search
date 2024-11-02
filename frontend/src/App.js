@@ -14,15 +14,16 @@ import JobSiteList from "./components/JobSiteList";
 import JobSiteView from "./components/JobSiteView";
 import JobSiteEdit from "./components/JobSiteEdit";
 import JobPostingList from "./components/JobPostingList";
-// import JobSiteView from "./components/JobSiteView";
 import JobPostingEdit from "./components/JobPostingEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
+
+import Dashboard from "./components/Dashboard";
 import Reports from "./components/Reports";
 import About from "./components/About";
 import JobHuntTips from "./components/JobHuntTips";
 import ReleaseHistory from "./components/ReleaseHistory";
-import Dashboard from "./components/Dashboard";
+import FinancialAssistance from "./components/FinancialAssistance";
 
 
 export default class App extends React.Component {
@@ -61,6 +62,7 @@ export default class App extends React.Component {
                   <DropdownItem divider />
                   <DropdownItem tag={Link} to="/job-hunt-tips">Job Hunt Tips</DropdownItem>
                   <DropdownItem tag={Link} to="/about">Boolean Search</DropdownItem>
+                  <DropdownItem tag={Link} to="/financial-assistance">Financial Assistance Programs</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem tag={Link} to="/release-history">Release History</DropdownItem>
                 </DropdownMenu>
@@ -105,6 +107,7 @@ export default class App extends React.Component {
               <Route path="/reports/:reportType/:referenceDate?" element={<Reports />} />
               <Route path="/job-hunt-tips" element={<JobHuntTips />} />
               <Route path="/release-history" element={<ReleaseHistory />} />
+              <Route path="/financial-assistance" element={<FinancialAssistance />} />
               <Route path="/about" element={<About />} />
           </Routes>
       </Router>
