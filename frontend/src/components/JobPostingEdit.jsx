@@ -86,12 +86,20 @@ class JobPostingEdit extends Component {
                 job_description: res.data.job_description,
             })
 
+            //Race Condition! sometimes, this is triggered before... CKEditor is ready?!
+            // WAIT for things to settle down before loading the data into CKEditor
+            setTimeout(() => {
+                // Code to execute after 0.1 seconds (300 milliseconds)
+                console.log("Hello after 0.1 second");
             const descCard = document.getElementById("description_card_body")
             const ckeContent = descCard.querySelector(".ck-content")
 
             if (ckeContent !== null) {
                 ckeContent.ckeditorInstance.setData(res.data.job_description)
             }
+              }, 100); 
+
+            
 
         })
     }
