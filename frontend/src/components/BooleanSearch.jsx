@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import {Container, Row, Col} from 'reactstrap';
 
 class BooleanSearch extends Component {
+    componentDidMount() {
+        document.title = "Boolean Search - Job Search Tracker";
+    }
+
     render() {
         return (
             <Container className="my-4 pb-5">

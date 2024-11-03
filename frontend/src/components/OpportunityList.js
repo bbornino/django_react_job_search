@@ -12,6 +12,7 @@ class OpportunityList extends Component {
     };
 
     componentDidMount() {
+        document.title = "Opportunity List - Job Search Tracker";
         this.resetState();
     }
 

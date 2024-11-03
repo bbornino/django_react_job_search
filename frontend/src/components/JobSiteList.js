@@ -13,6 +13,7 @@ class JobSiteList extends Component {
     };
 
     componentDidMount() {
+        document.title = "Job Site List - Job Search Tracker";
         this.resetState();
     };
 

@@ -16,6 +16,7 @@ class JobPostingList extends Component {
     };
 
     componentDidMount() {
+        document.title = "Job Posting List - Job Search Tracker";
         this.resetState();
     };
 

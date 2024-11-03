@@ -105,6 +105,7 @@ class JobPostingEdit extends Component {
     }
 
     componentDidMount() {
+        document.title = "Job Posting Edit - Job Search Tracker";
         const pathArr = window.location.pathname.split('/')
         
         if (pathArr[1] === "job-posting-new") {

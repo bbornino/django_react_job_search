@@ -46,9 +46,11 @@ class Reports extends Component {
     }
 
     componentDidMount() {
+        
         const pathArr = window.location.pathname.split('/')
         if (pathArr.length > 2) {
             var reportName = pathArr[2]
+            document.title = reportName + " Report - Job Search Tracker";
             var reportDate = this.parseWindowLocationDate(pathArr)
             this.getReports(reportName, reportDate);
         }

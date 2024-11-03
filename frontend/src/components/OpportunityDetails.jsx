@@ -65,6 +65,7 @@ class OpportunityDetails extends Component {
     };
     
     componentDidMount() {
+        document.title = "Opportunity Details - Job Search Tracker";
         const pathArr = window.location.pathname.split('/')
         if (pathArr[2] !== undefined) {
             const opportunity_id = pathArr[2]

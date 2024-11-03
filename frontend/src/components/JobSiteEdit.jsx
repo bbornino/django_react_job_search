@@ -59,6 +59,7 @@ class JobSiteEdit extends Component {
     }
 
     componentDidMount() {
+        document.title = "Job Site Edit - Job Search Tracker";
         const pathArr = window.location.pathname.split('/')
         if (pathArr[2] !== undefined) {
             const job_site_id = pathArr[2]
@@ -138,6 +139,7 @@ class JobSiteEdit extends Component {
                                         <Label for="site_name">Site Name</Label>
                                         <Input  type="text" required
                                                 name="site_name" id="site_name"
+                                                maxLength={64}
                                                 onChange={this.onChange}
                                                 value={this.state.site_name ?? ''}
                                         />
@@ -158,6 +160,7 @@ class JobSiteEdit extends Component {
                                         <Label for="site_url">Site URL</Label>
                                         <Input  type="text" required
                                                 name="site_url" id="site_url"
+                                                maxLength={64}
                                                 onChange={this.onChange}
                                                 value={this.state.site_url ?? ''}
                                         />
@@ -168,6 +171,7 @@ class JobSiteEdit extends Component {
                                         <Label for="site_password">Password</Label>
                                         <Input  type="text" required
                                                 name="site_password" id="site_password"
+                                                maxLength={64}
                                                 onChange={this.onChange}
                                                 value={this.state.site_password ?? ''}
                                         />
@@ -230,6 +234,7 @@ class JobSiteEdit extends Component {
                                         <Label for="headline">Headline</Label>
                                         <Input  type="text" required
                                                 name="headline" id="headline"
+                                                maxLength={64}
                                                 onChange={this.onChange}
                                                 value={this.state.headline ?? ''}
                                         />

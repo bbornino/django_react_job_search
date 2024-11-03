@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import {Container, Row, Col} from 'reactstrap';
 
 class ReleaseHistory extends Component {
+    componentDidMount() {
+        document.title = "Release History - Job Search Tracker";
+    }
+
     render() {
         return (
             <Container className="mt-4 p-t-10">

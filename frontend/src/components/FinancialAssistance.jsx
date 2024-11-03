@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import {Container, Row, Col} from 'reactstrap';
 
 class FinancialAssistance extends Component {
+    componentDidMount() {
+        document.title = "Financial Assistance - Job Search Tracker";
+    }
+
     render() {
         return (
             <Container className="mt-4 p-t-10">

@@ -6,6 +6,9 @@ import DataTableBase from './DataTableBase';
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 
 class Dashboard extends Component {
+    componentDidMount() {
+        document.title = "Dashboard - Job Search Tracker";
+    }
 
     render() {
         return(

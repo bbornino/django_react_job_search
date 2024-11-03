@@ -23,6 +23,7 @@ class JobSiteView extends Component {
     };
 
     componentDidMount() {
+        document.title = "Job Site View - Job Search Tracker";
         const pathArr = window.location.pathname.split('/')
         if (pathArr[2] !== undefined) {
             const jobSiteId = pathArr[2];
