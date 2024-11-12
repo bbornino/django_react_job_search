@@ -4,7 +4,7 @@ import axios from "axios";
 import { JOB_POSTING_API_URL, formatDisplayDate } from "../constants";
 
 import DataTableBase from './DataTableBase';
-import {Container, Row, Col, FormGroup, Input, Button, InputGroup} from 'reactstrap';
+import {Container, Row, Col, Input, Button, InputGroup} from 'reactstrap';
 
 class JobPostingList extends Component {
     state = {
@@ -63,7 +63,7 @@ class JobPostingList extends Component {
         {
             name: "Rejected On",
             selector: row => row.rejected_at,
-            cell: row => formatDisplayDate(row.applied_at),
+            cell: row => formatDisplayDate(row.rejected_at),
             sortable: true,
             width: "150px",
         },
@@ -78,8 +78,6 @@ class JobPostingList extends Component {
     }
 
     filterJobPostingsByParams = (companyName, postingTitle) => {
-        const { jobPostings } = this.state;
-
         const filteredItems = this.state.jobPostings.filter(item => 
             item.company_name && item.company_name.toLowerCase().includes(companyName.toLowerCase()) && 
             item.posting_title && item.posting_title.toLowerCase().includes(postingTitle.toLowerCase()))

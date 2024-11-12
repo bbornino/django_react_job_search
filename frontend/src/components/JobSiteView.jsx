@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import DataTableBase from './DataTableBase';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faFloppyDisk, faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
+import { faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 
 class JobSiteView extends Component {
     state = {

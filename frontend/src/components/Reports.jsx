@@ -1,26 +1,26 @@
 import {React, Component} from "react";
 import axios from "axios";
-import { REPORT_API_URL, formatInputFieldDateTime } from "../constants";
+import { REPORT_API_URL } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
 import DataTableBase from './DataTableBase';
 
-const isDate = (value) => {
-      // Check if the value is a string
-    if (typeof value !== 'string') return false;
+// const isDate = (value) => {
+//       // Check if the value is a string
+//     if (typeof value !== 'string') return false;
 
-    // Regular expression to match date formats (YYYY-MM-DD or MM/DD/YYYY)
-    const dateRegex = /^(?:(?:\d{4}-\d{2}-\d{2})|(?:\d{1,2}\/\d{1,2}\/\d{4}))$/;
+//     // Regular expression to match date formats (YYYY-MM-DD or MM/DD/YYYY)
+//     const dateRegex = /^(?:(?:\d{4}-\d{2}-\d{2})|(?:\d{1,2}\/\d{1,2}\/\d{4}))$/;
 
-    // Check if the value matches the date format
-    if (!dateRegex.test(value)) return false;
+//     // Check if the value matches the date format
+//     if (!dateRegex.test(value)) return false;
 
-    // Attempt to create a date from the value
-    const date = new Date(value);
+//     // Attempt to create a date from the value
+//     const date = new Date(value);
     
-    // Check if the date is valid
-    return !isNaN(date.getTime()) && date.toString() !== 'Invalid Date';
-};
+//     // Check if the date is valid
+//     return !isNaN(date.getTime()) && date.toString() !== 'Invalid Date';
+// };
 
 class Reports extends Component {
 
@@ -34,7 +34,6 @@ class Reports extends Component {
     }
 
     parseWindowLocationDate = (pathArr) => {
-        console.log("Parsing window Date")
         var reportDate = '2024-01-01'       // Default Report Date when none set
         if (pathArr.length > 3) {
             const rDate = new Date(pathArr[3])
@@ -57,7 +56,6 @@ class Reports extends Component {
     };
 
     getReports = (reportName, reportDate) => {
-        console.log("get Reports")
         this.setState({report_name:reportName, start_date: reportDate});
         axios.get(REPORT_API_URL + reportName + '/' + reportDate).then( res => {
             var tableColumns = [];
