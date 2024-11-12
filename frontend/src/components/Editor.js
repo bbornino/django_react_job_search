@@ -47,7 +47,7 @@ function Editor({editorText, onEditorChange}) {
     const editorContainerRef = useRef(null);
 	const editorRef = useRef(null);
 	const [isLayoutReady, setIsLayoutReady] = useState(false);
-    const [initData, setInitData] = useState(editorText)
+    const [initData] = useState(editorText)
 
 	useEffect(() => {
 		setIsLayoutReady(true);

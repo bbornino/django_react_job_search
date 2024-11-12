@@ -1,7 +1,7 @@
 // Comments section drawn by both Opportunitiy and Job Postings
 import React, {useState} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
-import { formatDisplayDateTime, formatInputFieldDateTime } from "../constants";
+import { formatDisplayDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 
@@ -18,7 +18,7 @@ function Comments({itemComments, onCommentsSave}) {
     const getCommentIdIndex = (commentId) => {
         // the comment ID is not necessarily the same as the array index
         for (let idIndex = 0; idIndex < theComments.length; idIndex++) {
-            if (theComments[idIndex].id == commentId) {
+            if (theComments[idIndex].id === commentId) {
                 return idIndex;
             }
         }

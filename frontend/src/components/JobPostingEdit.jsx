@@ -1,4 +1,4 @@
-import React, { Component, useRef} from "react";
+import React, { Component} from "react";
 import axios from "axios";
 import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
@@ -44,11 +44,6 @@ class JobPostingEdit extends Component {
         job_description: 'TBD',
 
         job_sites: [],
-    }
-
-    constructor(props) {
-        super(props);
-        this.formRef = React.createRef(); // Create a reference to the form
     }
 
     getJobSites = e => {
@@ -163,34 +158,13 @@ class JobPostingEdit extends Component {
         e.preventDefault();
         const jobPostingParams = this.state
 
-        let allValid = true; // Track if all fields are valid
+        jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
+        jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
 
-        // Iterate through each form element to check validity
-        Array.from(this.formRef.current.elements).forEach((input) => {
-          if (!input.checkValidity()) {
-            input.setCustomValidity(''); // Clear custom validity
-            allValid = false; // Mark as invalid
-            input.reportValidity(); // Trigger the validity message
-          } else {
-            input.setCustomValidity(''); // Clear custom validity
-          }
-        });
-
-debugger
-        if (this.formRef.current.reportValidity()) {
-            // All fields are valid, proceed with form submission logic
-            console.log('Form is valid, proceed with submission');
-            jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
-            jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
-    
-            axios.post(JOB_POSTING_API_URL, jobPostingParams).then(() => {
-                // Create always comes from the Job Site page
-                window.location = document.referrer
-            })
-          } else {
-            console.log('Form is invalid');
-          }
-
+        axios.post(JOB_POSTING_API_URL, jobPostingParams).then(() => {
+            // Create always comes from the Job Site page
+            window.location = document.referrer
+        })
 
     }
 
@@ -206,7 +180,7 @@ debugger
     render() {
         return (
             <Container>
-                <form ref={this.formRef} noValidate onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
+                <Form onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
                     <Card className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2">
                             <Row className="">
@@ -524,7 +498,7 @@ debugger
                                     onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
                     </Card>
-                </form>
+                </Form>
 
             </Container>
         )
