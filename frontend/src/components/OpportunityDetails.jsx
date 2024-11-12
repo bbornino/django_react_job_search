@@ -15,7 +15,7 @@ class OpportunityDetails extends Component {
     state = {
         opportunity_id: 0,
         job_title: '',
-        opportunity_status: '4 - No Response',
+        opportunity_status: '6 - Opportunity Ignored',
         recruiter_name: '',
         recruiter_company: '',
         
@@ -55,9 +55,9 @@ class OpportunityDetails extends Component {
             setTimeout(() => {
                 // Code to execute after 0.1 seconds (100 milliseconds)
                 console.log("Hello after 0.1 second");
-            const descCard = document.getElementById("description_card_body")
-            const ckeContent = descCard.querySelector(".ck-content")
-            if(ckeContent) ckeContent.ckeditorInstance.setData(res.data.job_description)
+                const descCard = document.getElementById("description_card_body")
+                const ckeContent = descCard.querySelector(".ck-content")
+                if(ckeContent) ckeContent.ckeditorInstance.setData(res.data.job_description)
               }, 100); 
             
         });
@@ -140,6 +140,7 @@ class OpportunityDetails extends Component {
                                             type="text" required
                                             id="recruiter_name"
                                             name="recruiter_name"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.recruiter_name}
                                         />
@@ -151,6 +152,7 @@ class OpportunityDetails extends Component {
                                         <Input
                                             type="text" required
                                             name="recruiter_company"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.recruiter_company}
                                         />
@@ -167,6 +169,7 @@ class OpportunityDetails extends Component {
                                                 <option value="6 - Opportunity Ignored">6 - Opportunity Ignored</option>
                                                 <option value="5 - Showed Opportunity Interest">5 - Showed Opportunity Interest</option>
                                                 <option value="4 - Recruiter Ignored Interest">4 - Recruiter Ignored Interest</option>
+                                                <option value="3 - Right to Represent Signed">3 - Right to Represent Signed</option>
                                                 <option value="4 - No Response">4 - No Response</option>
                                                 <option value="3 - Rejected">3 - Rejected</option>
                                                 <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
@@ -191,6 +194,7 @@ class OpportunityDetails extends Component {
                                         <Input
                                             type="text" required
                                             name="job_title"
+                                            maxLength={128}
                                             onChange={this.onChange}
                                             value={this.state.job_title}
                                         />
@@ -217,6 +221,7 @@ class OpportunityDetails extends Component {
                                         <Input
                                             type="text" required
                                             name="job_duration"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.job_duration ?? ''}
                                         />
@@ -245,6 +250,7 @@ class OpportunityDetails extends Component {
                                         <Input
                                             type="text" required
                                             name="location_city"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.location_city}
                                         />

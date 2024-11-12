@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component, useRef} from "react";
 import axios from "axios";
 import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
@@ -46,6 +46,11 @@ class JobPostingEdit extends Component {
         job_sites: [],
     }
 
+    constructor(props) {
+        super(props);
+        this.formRef = React.createRef(); // Create a reference to the form
+    }
+
     getJobSites = e => {
         axios.get(JOB_SITE_API_URL).then( res => {
             this.setState({job_sites:res.data})
@@ -91,12 +96,12 @@ class JobPostingEdit extends Component {
             setTimeout(() => {
                 // Code to execute after 0.1 seconds (300 milliseconds)
                 console.log("Hello after 0.1 second");
-            const descCard = document.getElementById("description_card_body")
-            const ckeContent = descCard.querySelector(".ck-content")
+                const descCard = document.getElementById("description_card_body")
+                const ckeContent = descCard.querySelector(".ck-content")
 
-            if (ckeContent !== null) {
-                ckeContent.ckeditorInstance.setData(res.data.job_description)
-            }
+                if (ckeContent !== null) {
+                    ckeContent.ckeditorInstance.setData(res.data.job_description)
+                }
               }, 100); 
 
             
@@ -157,13 +162,36 @@ class JobPostingEdit extends Component {
     createJobPosting = e => {
         e.preventDefault();
         const jobPostingParams = this.state
-        jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
-        jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
 
-        axios.post(JOB_POSTING_API_URL, jobPostingParams).then(() => {
-            // Create always comes from the Job Site page
-            window.location = document.referrer
-        })
+        let allValid = true; // Track if all fields are valid
+
+        // Iterate through each form element to check validity
+        Array.from(this.formRef.current.elements).forEach((input) => {
+          if (!input.checkValidity()) {
+            input.setCustomValidity(''); // Clear custom validity
+            allValid = false; // Mark as invalid
+            input.reportValidity(); // Trigger the validity message
+          } else {
+            input.setCustomValidity(''); // Clear custom validity
+          }
+        });
+
+debugger
+        if (this.formRef.current.reportValidity()) {
+            // All fields are valid, proceed with form submission logic
+            console.log('Form is valid, proceed with submission');
+            jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
+            jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
+    
+            axios.post(JOB_POSTING_API_URL, jobPostingParams).then(() => {
+                // Create always comes from the Job Site page
+                window.location = document.referrer
+            })
+          } else {
+            console.log('Form is invalid');
+          }
+
+
     }
 
     editJobPosting = e => {
@@ -178,7 +206,7 @@ class JobPostingEdit extends Component {
     render() {
         return (
             <Container>
-                <Form onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
+                <form ref={this.formRef} noValidate onSubmit={this.state.job_posting_id === 0 ? this.createJobPosting : this.editJobPosting}>
                     <Card className="text-dark bg-light m-3">
                         <CardTitle className="mx-4 my-2">
                             <Row className="">
@@ -203,6 +231,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="posting_title"
                                             name="posting_title"
+                                            maxLength={128}
                                             onChange={this.onChange}
                                             value={this.state.posting_title}
                                         />
@@ -252,6 +281,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="company_name"
                                             name="company_name"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.company_name}
                                         />
@@ -264,6 +294,7 @@ class JobPostingEdit extends Component {
                                         <Input
                                             type="select" required
                                             id="posting_url_domain"
+                                            maxLength={32}
                                             name="posting_url_domain"
                                             onChange={this.onChange}
                                             value={this.state.posting_url_domain}>
@@ -271,7 +302,7 @@ class JobPostingEdit extends Component {
                                                 <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
                                                 <option value="Indeed">Indeed</option>
                                                 <option value="Greenhouse">Greenhouse</option>
-                                                <option value="Workday Jobs">Workday Jobs</option>
+                                                <option value="My Workday Jobs">My Workday Jobs</option>
                                                 <option value="Lever">Lever</option>
                                                 <option value="JobVite">JobVite</option>
                                                 <option value="Bamboo HR">Bamboo HR</option>
@@ -288,6 +319,7 @@ class JobPostingEdit extends Component {
                                             type="text"
                                             id="posting_password"
                                             name="posting_password"
+                                            maxLength={32}
                                             onChange={this.onChange}
                                             value={this.state.posting_password}
                                         />
@@ -302,6 +334,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="posting_url_full"
                                             name="posting_url_full"
+                                            maxLength={1024}
                                             onChange={this.onChange}
                                             value={this.state.posting_url_full}
                                         />
@@ -316,6 +349,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="pay_range"
                                             name="pay_range"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.pay_range}
                                         />
@@ -344,6 +378,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="location_city"
                                             name="location_city"
+                                            maxLength={64}
                                             onChange={this.onChange}
                                             value={this.state.location_city}
                                         />
@@ -427,7 +462,7 @@ class JobPostingEdit extends Component {
                                     <FormGroup>
                                         <Label for="outreach_info">Outreach Names</Label>
                                         <Input
-                                            type="text" required
+                                            type="text"
                                             id="outreach_info"
                                             name="outreach_info"
                                             onChange={this.onChange}
@@ -439,7 +474,7 @@ class JobPostingEdit extends Component {
                                     <FormGroup>
                                         <Label for="job_scan_info">Job Scan Percent</Label>
                                         <Input
-                                            type="text" required
+                                            type="text" 
                                             id="job_scan_info"
                                             name="job_scan_info"
                                             onChange={this.onChange}
@@ -450,7 +485,7 @@ class JobPostingEdit extends Component {
                                 <Col xl="2" lg="3" md="4">
                                     <FormGroup>
                                         <Label for="time_spent">Time Spent (minutes)</Label>
-                                        <Input  type="number" required
+                                        <Input  type="number" 
                                                 name="time_spent" id="time_spent"
                                                 onChange={this.onChange}
                                                 value={this.state.time_spent}
@@ -466,6 +501,7 @@ class JobPostingEdit extends Component {
                                             type="text" required
                                             id="technology_string"
                                             name="technology_string"
+                                            maxLength={128}
                                             onChange={this.onChange}
                                             value={this.state.technology_string}
                                         />
@@ -488,7 +524,7 @@ class JobPostingEdit extends Component {
                                     onEditorChange={this.onEditorChange} ></Editor>
                         </CardBody>
                     </Card>
-                </Form>
+                </form>
 
             </Container>
         )
