@@ -14,7 +14,7 @@ class EmailOpportunity(models.Model):
     location_type = models.CharField(max_length=32, default='')
     location_city = models.CharField(max_length=64, default='')
     comments = models.JSONField(default=list, blank=True, null=True)
-    job_description = models.TextField(default='')
+    job_description = models.TextField(default='', blank=True, null=True)
 
     def _str_(self):
         return self.job_title
@@ -47,7 +47,7 @@ class JobPosting(models.Model):
     
     posting_url_full = models.CharField(max_length=1024, default='')
     posting_url_domain = models.CharField(max_length=32, default='')
-    posting_password = models.CharField(max_length=32, default='', blank=True)
+    posting_password = models.CharField(max_length=32, default='', blank=True, null=True)
     
     pay_range = models.CharField(max_length=64, default='')
     location_type = models.CharField(max_length=32, default='')
@@ -55,17 +55,17 @@ class JobPosting(models.Model):
     employment_type = models.CharField(max_length=32, default='')
     
     applied_at = models.DateTimeField(default=datetime.now)
-    interviewed_at = models.DateTimeField(default=datetime.now, blank=True, null=True)
-    rejected_at = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    interviewed_at = models.DateTimeField(blank=True, null=True)
+    rejected_at = models.DateTimeField(blank=True, null=True)
     rejected_after_stage = models.CharField(max_length=32, default='')
 
-    job_scan_info = models.CharField(max_length=64, default='', blank=True)
-    outreach_info = models.CharField(max_length=64, default='', blank=True)
-    time_spent = models.IntegerField(default=1)
+    job_scan_info = models.CharField(max_length=64, default='', blank=True, null=True)
+    outreach_info = models.CharField(max_length=64, default='', blank=True, null=True)
+    time_spent = models.IntegerField(default='', blank=True, null=True)
 
-    technology_string = models.CharField(max_length=64, default='', blank=True)
+    technology_string = models.CharField(max_length=128, default='', blank=True)
     technology_stack = models.JSONField(default=list, blank=True)
-    comments = models.JSONField(default=list, blank=True)
+    comments = models.JSONField(default=list, blank=True, null=True)
     posting_application_questions = models.JSONField(default=list, blank=True)
     job_description = models.TextField()
 
