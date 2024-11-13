@@ -241,6 +241,7 @@ class JobPostingEdit extends Component {
                                                 <option value="4 - No Response">4 - No Response</option>
                                                 <option value="3 - Rejected">3 - Rejected</option>
                                                 <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
+                                                <option value="2.4 - Post Interview Declined">2.4 - Post Interview Silence</option>
                                                 <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
                                                 <option value="1 - Actively Engaged">1 - Actively Engaged</option>
                                         </Input>
@@ -280,6 +281,7 @@ class JobPostingEdit extends Component {
                                                 <option value="Lever">Lever</option>
                                                 <option value="JobVite">JobVite</option>
                                                 <option value="Bamboo HR">Bamboo HR</option>
+                                                <option value="Cal Careers">Cal Careers</option>
                                                 <option value="Custom / In House">Custom / In House</option>
                                                 <option value="Other">Other</option>
                                         </Input>
@@ -416,7 +418,7 @@ class JobPostingEdit extends Component {
                                     <FormGroup>
                                         <Label for="rejected_after_stage">Recruitment Stage</Label>
                                         <Input
-                                            type="select"
+                                            type="select" required
                                             id="rejected_after_stage"
                                             name="rejected_after_stage"
                                             onChange={this.onChange}
