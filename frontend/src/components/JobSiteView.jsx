@@ -1,7 +1,7 @@
 import React, { Component} from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
+import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate, jobPostingListColumns } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -35,7 +35,6 @@ class JobSiteView extends Component {
 
 
     getJobSite = (jobSiteId) => {
-        console.log("getJobSite received " + jobSiteId);
         axios.get(JOB_SITE_API_URL + jobSiteId).then(res => {
             this.setState({
                 job_site_id: res.data.id,
@@ -56,7 +55,6 @@ class JobSiteView extends Component {
             this.setState({
                 postings: res.data,
             })
-            console.log(this.state)
         });
     }
 
