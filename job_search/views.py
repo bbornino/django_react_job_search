@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django.utils import timezone
 from django.db import connection
+import pdb
 
 from .models import *
 from .serializers import *
@@ -45,6 +46,16 @@ def email_opportunity_detail(request, pk):
     elif request.method == 'DELETE':
         email_opportunity.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def email_opportunity_active(request):
+    excluded_statuses = ['6 - Opportunity Ignored', '4 - Recruiter Ignored Interest']
+    data = EmailOpportunity.objects.exclude(opportunity_status__in=excluded_statuses).values('id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at')
+    # pdb.set_trace()
+    # print("Retrieved Data:", data)
+    # return Response(status=status.HTTP_204_NO_CONTENT)
+    serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
@@ -135,6 +146,54 @@ def job_posting_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET'])
+def postings_active(request):
+    included_statuses = ['1 - Actively Engaged', '2 - Awaiting Feedback']
+    # excluded_statuses = ['4 - No Response', '3 - Rejected']
+    # or .exclude(posting_status__in=excluded_statuses)
+    data = JobPosting.objects.filter(posting_status__in=included_statuses).values('id',
+                                    'company_name', 'posting_title', 'posting_status', 
+                                    'rejected_after_stage', 'applied_at', 'rejected_at')
+    print(data)
+    if not data:
+        # print("There are no active postings")    
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        serializer = JobPostingListSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def dashboard_statistics(request):
+    # if request.method == 'GET':
+        # pdb.set_trace()
+    report = []
+    report.append(getDashboardDateStatistics("2024-03-01"))
+    report.append(getDashboardDateStatistics("2024-07-01"))
+
+    print("Final Report: ", report)
+    return Response(report, status=status.HTTP_204_NO_CONTENT)
+        
+def getDashboardDateStatistics(startDate):
+    sql_query = """
+            SELECT
+                COUNT(*) AS total_count,
+                COUNT(CASE
+                    WHEN posting_status NOT IN ('4 - No Response', '3 - Rejected') THEN 1
+                    ELSE NULL
+                END) AS response_count
+            FROM job_search_jobposting
+            WHERE applied_at >= %s
+        """
+    with connection.cursor() as cursor:
+        cursor.execute(sql_query, [startDate or '2024-01-01'])
+        report_data = dictfetchall(cursor)
+
+    report_row = report_data[0]
+    report_row['raw_date'] = startDate
+    report_row['formatted_date'] = datetime.strptime(startDate, '%Y-%m-%d').strftime('%B %d, %Y')
+    
+    return report_row
 
 
 
