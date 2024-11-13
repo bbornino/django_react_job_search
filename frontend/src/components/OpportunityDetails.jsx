@@ -104,7 +104,7 @@ class OpportunityDetails extends Component {
         e.preventDefault();
         axios.put(JOB_OPPORTUNITY_API_URL + this.state.opportunity_id, this.state)
             .then(() => {
-            window.location = '/opportunities'
+            window.location = document.referrer
         })
     }
     
