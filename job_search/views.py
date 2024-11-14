@@ -49,7 +49,7 @@ def email_opportunity_detail(request, pk):
 
 @api_view(['GET'])
 def email_opportunity_active(request):
-    excluded_statuses = ['6 - Opportunity Ignored', '4 - Recruiter Ignored Interest']
+    excluded_statuses = ['6 - Opportunity Ignored', '4 - Recruiter Ignored Interest', '2.7 - Right to Represent Ignored', '2.5 - Interviewed then Ignored']
     data = EmailOpportunity.objects.exclude(opportunity_status__in=excluded_statuses).values('id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at')
     # pdb.set_trace()
     # print("Retrieved Data:", data)
@@ -145,7 +145,6 @@ def job_posting_detail(request, pk):
         job_posting.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 @api_view(['GET'])
 def postings_active(request):
     included_statuses = ['1 - Actively Engaged', '2 - Awaiting Feedback']
@@ -171,8 +170,8 @@ def dashboard_statistics(request):
     report.append(getDashboardDateStatistics("2024-03-01"))
     report.append(getDashboardDateStatistics("2024-07-01"))
 
-    print("Final Report: ", report)
-    return Response(report, status=status.HTTP_204_NO_CONTENT)
+    serialized_data = DashboardStatisticsSerializer(report, many=True).data
+    return Response(serialized_data, status=status.HTTP_200_OK if report else status.HTTP_204_NO_CONTENT)
         
 def getDashboardDateStatistics(startDate):
     sql_query = """

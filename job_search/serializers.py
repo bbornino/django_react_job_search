@@ -32,6 +32,20 @@ class JobPostingListSerializer(serializers.ModelSerializer):
         fields = ('id', 'company_name', 'posting_title', 'posting_status', 
                   'rejected_after_stage', 'applied_at', 'rejected_at')
 
+class DashboardStatisticsSerializer(serializers.Serializer):
+    total_count = serializers.IntegerField()
+    response_count = serializers.IntegerField()
+    raw_date = serializers.DateField()
+    formatted_date = serializers.CharField()
+
+    def to_representation(self, instance):
+        # Ensure `raw_date` field is formatted as expected
+        representation = super().to_representation(instance)
+        if 'raw_date' in representation:
+            representation['raw_date'] = datetime.strptime(representation['raw_date'], '%Y-%m-%d').date()
+        return representation
+
+
 class ReportJobPostingSerializer(serializers.Serializer):
     report_name = serializers.CharField(max_length=255)
     report_fields = serializers.ListField(
