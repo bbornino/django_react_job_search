@@ -1,9 +1,9 @@
 const BASE_API_URL = "http://localhost:8000/api/";
 
-export const JOB_OPPORTUNITY_API_URL = "http://localhost:8000/api/email_opportunity/";
-export const JOB_SITE_API_URL = "http://localhost:8000/api/job_site/";
-export const JOB_POSTING_API_URL = "http://localhost:8000/api/job_posting/";
-export const JOB_SITE_POSTINGS_API_URL = BASE_API_URL + 'job_site_postings/';
+export const JOB_OPPORTUNITY_API_URL = BASE_API_URL + 'email_opportunity/';
+export const JOB_SITE_API_URL = BASE_API_URL + 'job_site/';
+export const JOB_POSTING_API_URL = BASE_API_URL + 'job_posting/';
+export const DASHBOARD_API_URL = BASE_API_URL + 'dashboard/';
 export const REPORT_API_URL = BASE_API_URL + 'report/';
 
 export const formatInputFieldDateTime = (originalDateTime) => {
@@ -47,3 +47,4 @@ export const formatDisplayDate = (rawDate) => {
         day: 'numeric'})
     return theDate
 }
+
