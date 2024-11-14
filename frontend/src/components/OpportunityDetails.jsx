@@ -170,8 +170,9 @@ class OpportunityDetails extends Component {
                                                 <option value="5 - Showed Opportunity Interest">5 - Showed Opportunity Interest</option>
                                                 <option value="4 - Recruiter Ignored Interest">4 - Recruiter Ignored Interest</option>
                                                 <option value="3 - Right to Represent Signed">3 - Right to Represent Signed</option>
-                                                <option value="4 - No Response">4 - No Response</option>
-                                                <option value="3 - Rejected">3 - Rejected</option>
+                                                <option value="2.7 - Right to Represent Ignored">2.7 - Right to Represent Ignored</option>
+                                                <option value="2.5 - Interviewed then Ignored">2.5 - Interviewed then Ignored</option>
+                                                <option value="2.3 - Rejected">2.3 - Rejected</option>
                                                 <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
                                                 <option value="1 - Actively Engaged">1 - Actively Engaged</option>
                                         </Input>
