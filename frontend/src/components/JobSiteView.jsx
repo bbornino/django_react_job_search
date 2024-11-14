@@ -1,7 +1,7 @@
 import React, { Component} from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate, jobPostingListColumns } from "../constants";
+import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
