@@ -17,7 +17,15 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
-                        <h2>October 25, 2024 - Release 2</h2>
+                        <h2>November 14, 2024 - Release 3</h2>
+                        <ul>
+                            <li>Added Dashboard with dynamically calculated statistics</li>
+                            <li>Added Static Boolean Search Page</li>
+                            <li>Added Additional Field Validations</li>
+                            <li>Fixed a few minor bugs and a race condition</li>
+                        </ul>
+
+                        <h2 className="mt-5">October 25, 2024 - Release 2</h2>
                         <ul>
                             <li>Added Job Sites and Job Postings</li>
                             <li>Added Reports</li>
