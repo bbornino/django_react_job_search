@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
+AUTH_USER_MODEL = 'job_search.CustomUser'
+
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'django_react_job_search.urls'
 
@@ -79,10 +81,25 @@ WSGI_APPLICATION = 'django_react_job_search.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Use MySQL engine for MariaDB compatibility
+        'NAME': 'django_job_search',  # Replace with your actual database name
+        'USER': 'django_app',  # Replace with your MariaDB username
+        'PASSWORD': 'django_app',  # Replace with your MariaDB password
+        'HOST': 'localhost',  # Or use your MariaDB server address (e.g., IP or domain)
+        'PORT': '3306',  # Default MariaDB/MySQL port
+        'OPTIONS': {
+            'charset': 'utf8mb4',  # Set charset to utf8mb4 for better Unicode support
+            'collation': 'utf8mb4_unicode_ci',  # Ensure the collation is utf8mb4-based
+        },
     }
 }
 

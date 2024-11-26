@@ -1,8 +1,20 @@
 from django.db import models
 from datetime import datetime 
-# Create your models here.
+from django.contrib.auth.models import AbstractUser, Group, Permission
+
+class CustomUser(AbstractUser):
+    bio = models.TextField()
+    user_greeting = models.CharField(max_length=24)
+    color_mode = models.CharField(max_length=24)
+    dashboard_first_date = models.DateTimeField(blank=True, null=True)
+    dashboard_second_date = models.DateTimeField(blank=True, null=True)
 
 class EmailOpportunity(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE,
+        null=True, # Temporary.  To be removed after migration
+        # default=1,  # Set the default user ID
+    )
     job_title = models.CharField(max_length=128)
     opportunity_status = models.CharField(max_length=48)
     recruiter_name = models.CharField(max_length=64)
@@ -22,8 +34,13 @@ class EmailOpportunity(models.Model):
 
 
 class JobSite(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE,
+        null=True, # Temporary.  To be removed after migration
+        # default=1,  # Set the default user ID
+    )
     site_name = models.CharField(max_length=64, default='')
-    site_url = models.CharField(max_length=64, default='')
+    site_url = models.CharField(max_length=2048, default='')
     site_password = models.CharField(max_length=64, default='', blank=True, null=True)
     rating = models.IntegerField(default=1)
 
@@ -33,23 +50,28 @@ class JobSite(models.Model):
     last_visited_at = models.DateTimeField(default=datetime.now, blank=True)
     resume_updated_at = models.DateTimeField(default=datetime.now, blank=True)
 
-    headline = models.CharField(max_length=64, default='')
+    headline = models.CharField(max_length=512, default='')
     description = models.TextField(blank=True, null=True)
 
     def _str_(self):
         return self.site_name
 
 class JobPosting(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE,
+        null=True, # Temporary.  To be removed after migration
+        # default=1,  # Set the default user ID
+    )
     job_site_id = models.ForeignKey(JobSite, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=64, default='')
+    company_name = models.CharField(max_length=128, default='')
     posting_title = models.CharField(max_length=128, default='')
     posting_status = models.CharField(max_length=32, default='')
     
-    posting_url_full = models.CharField(max_length=1024, default='')
+    posting_url_full = models.CharField(max_length=2048, default='')
     posting_url_domain = models.CharField(max_length=32, default='')
     posting_password = models.CharField(max_length=32, default='', blank=True, null=True)
     
-    pay_range = models.CharField(max_length=64, default='')
+    pay_range = models.CharField(max_length=256, default='')
     location_type = models.CharField(max_length=32, default='')
     location_city = models.CharField(max_length=64, default='')
     employment_type = models.CharField(max_length=32, default='')
@@ -63,17 +85,12 @@ class JobPosting(models.Model):
     outreach_info = models.CharField(max_length=64, default='', blank=True, null=True)
     time_spent = models.IntegerField(default='', blank=True, null=True)
 
-    technology_string = models.CharField(max_length=128, default='', blank=True)
-    technology_stack = models.JSONField(default=list, blank=True)
+    technology_string = models.CharField(max_length=512, default='', blank=True)
+    technology_stack = models.JSONField(default=list, blank=True, null=True)
     comments = models.JSONField(default=list, blank=True, null=True)
-    posting_application_questions = models.JSONField(default=list, blank=True)
+    posting_application_questions = models.JSONField(default=list, blank=True, null=True)
     job_description = models.TextField()
 
     def _str_(self):
         return self.posting_title
 
-class UserSettings(models.Model):
-    user_greeting = models.CharField(max_length=24)
-    color_mode = models.CharField(max_length=24)
-    dashboard_first_date = models.DateTimeField(default=datetime.now, blank=True)
-    dashboard_second_date = models.DateTimeField(default=datetime.now, blank=True)
