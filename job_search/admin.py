@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import EmailOpportunity, JobSite, JobPosting
+from job_search.email_opportunity.email_opportunity import EmailOpportunity
+from job_search.job_site.job_site import JobSite
+from job_search.job_posting.job_posting import JobPosting
 
 class EmailOpportunityAdmin(admin.ModelAdmin):
     list_display = ('recruiter_name', 'recruiter_company', 'job_title')
