@@ -65,6 +65,25 @@ ul li.check:before  {
   background-color: bg-white;
 }
 
+/* For centering any container */
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns items at the top */
+  padding-top: 100px; /* Offset from the navbar */
+  height: 100vh; /* Full viewport height */
+}
+
+/* Reusable for any narrow container/card */
+.card-narrow {
+  width: 100%;
+  max-width: 320px; /* You can adjust this to your liking */
+  padding: 20px;
+  border: 1px solid #ddd; /* Optional: Subtle border */
+  border-radius: 8px; /* Optional: Rounded corners */
+}
+
+
 /* Make sure all content containers are distinguishable on a web page even of not focused. */
 .ck.ck-content:not(:focus) {
   border: 1px solid var(--ck-color-base-border);
