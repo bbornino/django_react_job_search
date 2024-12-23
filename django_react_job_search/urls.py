@@ -33,6 +33,12 @@ from job_search.job_site.job_site_views import (
     job_site_list,
     job_site_detail,
 )
+from job_search.custom_user.custom_user_views import (
+    authenticate_user,
+    logout_user,
+    update_user_info,
+    list_all_users,
+)
 
 
 urlpatterns = [
@@ -52,4 +58,10 @@ urlpatterns = [
     re_path(r'^api/job_posting/([0-9]+)$', job_posting_detail),
     re_path(r'^api/report/(?P<report_type>\w+)/?(?P<reference_date>\d{4}-\d{2}-\d{2})?/?$', job_postings_report),
     re_path(r'^api/dashboard/$', dashboard_statistics),
+
+    # Custom User Endpoints
+    path('api/auth/login/', authenticate_user, name='authenticate_user'),
+    path('api/auth/logout/', logout_user, name='logout_user'),
+    path('api/custom_user/update/', update_user_info, name='update_user_info'),
+    path('api/custom_user/all/', list_all_users, name='list_all_users'),
 ]
