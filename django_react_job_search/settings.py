@@ -11,10 +11,21 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Initialize environment variables from .env file
+env = environ.Env()
+environ.Env.read_env()  # Reads the .env file from the root directory
+
+# Optionally, for production, you can specify the file manually:
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env.production'))
+
+# Read the environment variable ENABLE_AUTH, default to True for production
+ENABLE_AUTH = os.getenv('ENABLE_AUTH', 'True') == 'True'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -38,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'job_search'
 ]
@@ -76,6 +88,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_react_job_search.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 
 # Database
