@@ -43,7 +43,7 @@ def email_opportunity_detail(request, pk):
 
 @api_view(['GET'])
 def email_opportunity_active(request):
-    excluded_statuses = ['6 - Opportunity Ignored', '4 - Recruiter Ignored Interest', '2.7 - Right to Represent Ignored', '2.5 - Interviewed then Ignored']
+    excluded_statuses = ['6 - Opportunity Ignored', '4 - Recruiter Ignored Interest', '2.7 - Right to Represent Ignored', '2.5 - Interviewed then Ignored', '2.3 - Rejected']
     data = EmailOpportunity.objects.exclude(opportunity_status__in=excluded_statuses).values('id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at')
 
     serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)
