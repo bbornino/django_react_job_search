@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Type
 from django.db import models
-# from job_search.custom_user.custom_user import CustomUser
 from job_search.models import CustomUser
 from job_search.job_site.job_site import JobSite
 
