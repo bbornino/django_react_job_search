@@ -1,4 +1,4 @@
-const BASE_API_URL = "http://localhost:8000/api/";
+const BASE_API_URL = process.env.REACT_APP_API_URL;
 
 export const JOB_OPPORTUNITY_API_URL = BASE_API_URL + 'email_opportunity/';
 export const JOB_SITE_API_URL = BASE_API_URL + 'job_site/';
