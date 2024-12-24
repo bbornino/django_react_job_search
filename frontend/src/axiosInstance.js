@@ -14,7 +14,7 @@ axiosInstance.interceptors.request.use(
         if (enableAuth) {
             const token = localStorage.getItem('access_token'); // Get the token from localStorage
 
-            if (token) {
+            if (token && token !== 'undefined' && token !== 'null') {
                 config.headers['Authorization'] = `Bearer ${token}`; // Attach token in Authorization header
             }
         }
