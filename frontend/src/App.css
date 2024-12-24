@@ -83,6 +83,16 @@ ul li.check:before  {
   border-radius: 8px; /* Optional: Rounded corners */
 }
 
+/* Reusable medium-wide container/card */
+.card-medium {
+  width: 100%;
+  max-width: 400px; /* Medium-wide container */
+  padding: 20px;
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 10px; /* Slightly rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: soft shadow for better contrast */
+  background-color: #fff; /* Optional: White background */
+}
 
 /* Make sure all content containers are distinguishable on a web page even of not focused. */
 .ck.ck-content:not(:focus) {
