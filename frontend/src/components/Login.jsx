@@ -11,7 +11,6 @@ const Login = () => {
     const enableAuth = process.env.REACT_APP_ENABLE_AUTH === 'true';  // Read from environment
 
     const handleSubmit = async (e) => {
-        // debugger
         e.preventDefault();
     
         if (!enableAuth) {
@@ -20,19 +19,12 @@ const Login = () => {
         }
 
         try {
+            const response = await axiosInstance.post('/auth/login/', { username, password });
 
-            const apiUrl = `${axiosInstance.defaults.baseURL}/auth/login/`;
-console.log('Request URL:', apiUrl);
-
-          const response = await axiosInstance.post('/auth/login/', { username, password });
-          debugger
-          // Extract tokens from response
-          const { access_token, refresh_token } = response.data;
-          alert(response.data.message); // Show success message
             // Store the tokens in localStorage or sessionStorage
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-          navigate("/secret");
+            localStorage.setItem('access_token', response.data.access);
+            localStorage.setItem('refresh_token', response.data.refresh);
+            navigate("/secret");
         } catch (error) {
             debugger
             if (error.response && error.response.data.error) {
