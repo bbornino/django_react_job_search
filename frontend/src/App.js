@@ -1,68 +1,55 @@
-import React from "react";
-import './App.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-} from "react-router-dom";
+import React, { Component } from "react";
+import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
+import Cookies from 'js-cookie';
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, 
           UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+import axiosInstance from "./axiosInstance";
 
-import JobSiteList from "./components/JobSiteList";
-import JobSiteView from "./components/JobSiteView";
-import JobSiteEdit from "./components/JobSiteEdit";
-import JobPostingList from "./components/JobPostingList";
-import JobPostingEdit from "./components/JobPostingEdit";
-import OpportunityList from "./components/OpportunityList";
-import OpportunityDetails from "./components/OpportunityDetails";
+import {
+  JobSiteList,
+  JobSiteView,
+  JobSiteEdit,
+  JobPostingList,
+  JobPostingEdit,
+  OpportunityList,
+  OpportunityDetails,
+  Dashboard,
+  Reports,
+  About,
+  JobHuntTips,
+  ReleaseHistory,
+  FinancialAssistance,
+  BooleanSearch,
+  Login,
+  Secret,
+  Welcome,
+  ProtectedRoute
+} from "./components";
 
-import Dashboard from "./components/Dashboard";
-import Reports from "./components/Reports";
-import About from "./components/About";
-import JobHuntTips from "./components/JobHuntTips";
-import ReleaseHistory from "./components/ReleaseHistory";
-import FinancialAssistance from "./components/FinancialAssistance";
-import BooleanSearch from "./components/BooleanSearch";
-
-import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./components/Login";
-import Secret from "./components/Secret";
-
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);  // Bind the handleLogout method
-    this.state = {
-      isOpen: false,
-      user: null,  // State to track the logged-in user
-    };
-  }
+export default class App extends Component {
+  state = {
+    isOpen: false,
+    user: null,
+    access_token: null,
+  };
 
   toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
+    this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   }
 
-  // Logout function
-  handleLogout() {
-    debugger
-    // Clear user session (e.g., tokens)
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-
-    // Update user state to null
-    this.setState({ user: null });
-
-    // Optionally, redirect the user to the login page
-    this.props.history.push('/login');  // Or use 'navigate' if you're using 'react-router-dom v6'
+  async handleLogout() {
+    try {
+      await axiosInstance.post('/api/logout_user/', {}, { withCredentials: true });
+      Cookies.remove('refresh_token');  // Remove refresh token from cookies
+      this.setState({ user: null, access_token: null  });
+      Navigate('/welcome');  
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   }
 
-  // In App.js, add a method to handle user login
   handleLogin = (user) => {
     this.setState({ user });
   }
@@ -76,9 +63,10 @@ export default class App extends React.Component {
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/" >Job Search Tracker</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
+          <Collapse isOpen={isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem><NavLink href="/">Dashboard</NavLink></NavItem>
+              <NavItem><NavLink href="/">Welcome</NavLink></NavItem>
+              <NavItem><NavLink href="/dashboard">Dashboard</NavLink></NavItem>
 
               {/* Static Pages Submenu */}
               <UncontrolledDropdown nav inNavbar>
@@ -122,27 +110,32 @@ export default class App extends React.Component {
 
             {/* Right-Aligned Login/Register Section */}
             <Nav className="ms-auto" navbar>
-              {user ? (
-                <NavItem>
-                  <NavLink href="#" onClick={this.handleLogout}>
-                    {user.firstName || user.username} (Logout)
-                  </NavLink>
-                </NavItem>
+              {localStorage.getItem("access_token") !== null ? (
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    Hi B!
+                  </DropdownToggle>
+                  <DropdownMenu end>
+                    <DropdownItem tag={Link} to="/edit-profile">Edit Profile</DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={this.handleLogout}>Logout</DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
               ) : (
-                enableAuth && (
-                  <>
+                <>
                     <NavItem><NavLink tag={Link} to="/login">Login</NavLink></NavItem>
                     <NavItem><NavLink tag={Link} to="/register">Register</NavLink></NavItem>
                   </>
-                )
               )}
+
             </Nav>
           </Collapse>
         </Navbar>
 
         <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login onLogin={this.handleLogin} />} />
+            <Route path="/welcome" element={<Welcome />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/job-sites" element={<JobSiteList />} />
             <Route path="/job-site-view/:id" element={<JobSiteView />} />
