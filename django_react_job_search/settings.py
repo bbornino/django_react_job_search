@@ -36,11 +36,7 @@ SECRET_KEY = 'django-insecure-mgyu$=!%*u3=b&o9%(4m8)xul*4lj31bfpob%9*fvwkmp6)vxc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,7 +64,21 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = 'job_search.CustomUser'
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS configuration
+CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', False)
+CORS_ALLOW_CREDENTIALS = env.bool('CORS_ALLOW_CREDENTIALS', True)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
+
+
+# CORS settings based on CORS_ORIGIN_ALLOW_ALL
+if CORS_ORIGIN_ALLOW_ALL:
+    # Allow all origins (i.e., open CORS policy)
+    CORS_ALLOWED_ORIGINS = []
+else:
+    # Use specific allowed origins
+    CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000'])
+
+
 ROOT_URLCONF = 'django_react_job_search.urls'
 
 TEMPLATES = [
