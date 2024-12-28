@@ -1,15 +1,17 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useIsAuthenticated } from 'react-auth-kit';
 
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("access_token");
+const ProtectedRoute = ({ element, ...rest }) => {
+  const isAuthenticated = useIsAuthenticated();
 
-  if (!token) {
-    // Redirect to login page if not authenticated
+  // If the user is not authenticated, redirect to the login page
+  if (!isAuthenticated()) {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  // If authenticated, render the passed-in element
+  return element;
 };
 
 export default ProtectedRoute;
