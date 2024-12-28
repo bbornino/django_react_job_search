@@ -31,7 +31,7 @@ const Login = () => {
         authState: { user },  // Set the user info to store in the app state
       });
 
-      navigate("/secret");  // Redirect to the protected page after successful login
+      navigate("/dashboard");  // Redirect to the protected page after successful login
 
     } catch (error) {
       // Check if the error response contains a message to display
