@@ -86,7 +86,7 @@ ul li.check:before  {
 /* Reusable medium-wide container/card */
 .card-medium {
   width: 100%;
-  max-width: 400px; /* Medium-wide container */
+  max-width: 600px; /* Medium-wide container */
   padding: 20px;
   border: 1px solid #ddd; /* Subtle border */
   border-radius: 10px; /* Slightly rounded corners */

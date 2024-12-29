@@ -8,6 +8,17 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+import Welcome from "./components/Welcome";
+import About from "./components/About";
+import JobHuntTips from "./components/JobHuntTips";
+import ReleaseHistory from "./components/ReleaseHistory";
+import FinancialAssistance from "./components/FinancialAssistance";
+import BooleanSearch from "./components/BooleanSearch";
+import Login from "./components/Login";
+import Register from './components/Register';
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/Dashboard";
 import JobSiteList from "./components/JobSiteList";
 import JobSiteView from "./components/JobSiteView";
 import JobSiteEdit from "./components/JobSiteEdit";
@@ -15,16 +26,7 @@ import JobPostingList from "./components/JobPostingList";
 import JobPostingEdit from "./components/JobPostingEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
-import Dashboard from "./components/Dashboard";
 import Reports from "./components/Reports";
-import About from "./components/About";
-import JobHuntTips from "./components/JobHuntTips";
-import ReleaseHistory from "./components/ReleaseHistory";
-import FinancialAssistance from "./components/FinancialAssistance";
-import BooleanSearch from "./components/BooleanSearch";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./components/Login";
-import Welcome from "./components/Welcome";
 import Secret from "./components/Secret";
 
 
@@ -134,6 +136,7 @@ function App() {
         <Route path="/" element={<Welcome />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
         <Route path="/job-hunt-tips" element={<JobHuntTips />} />
         <Route path="/release-history" element={<ReleaseHistory />} />
