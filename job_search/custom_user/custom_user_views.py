@@ -1,14 +1,13 @@
-from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-from django.contrib.auth import login, authenticate, logout
+from rest_framework_simplejwt.views import TokenRefreshView
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.conf import settings
-from django.shortcuts import get_object_or_404, render, redirect
 from job_search.custom_user.custom_user_serializer import CustomUserSerializer, CustomUserListSerializer
 
 
@@ -26,12 +25,25 @@ def authenticate_user(request):
         # Create JWT token for the user
         refresh = RefreshToken.for_user(user)
         access_token = refresh.access_token
+
+        # Serialize the user object using CustomUserSerializer (adjust fields as necessary)
+        user_data = CustomUserSerializer(user).data
+
+        # Return access token, refresh token, and serialized user data
         return Response({
             'access': str(access_token),
-            'refresh': str(refresh)
+            'refresh': str(refresh),
+            'user': user_data,  # Return the serialized user data
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class TokenRefreshCustomView(TokenRefreshView):
+    """
+    Custom refresh token view that can be used to refresh the JWT token.
+    This uses SimpleJWT's built-in view.
+    """
 
 
 @api_view(['POST'])
@@ -49,6 +61,25 @@ def logout_user(request):
             return Response({"detail": "No refresh token provided."}, status=status.HTTP_400_BAD_REQUEST)
     except TokenError:
         return Response({"detail": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(APIView):
+    """
+    A view to get the current logged-in user's profile.
+    This is a 'me' endpoint to fetch the user details.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

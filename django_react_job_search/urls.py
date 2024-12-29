@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from rest_framework_simplejwt.views import TokenObtainPairView
 from job_search.dashboard.dashboard_views import dashboard_statistics
 from job_search.email_opportunity.email_opportunity_views import (
     email_opportunity_list,
@@ -35,6 +36,8 @@ from job_search.job_site.job_site_views import (
 )
 from job_search.custom_user.custom_user_views import (
     authenticate_user,
+    TokenRefreshCustomView,
+    UserProfileView,
     logout_user,
     update_user_info,
     list_all_users,
@@ -64,4 +67,14 @@ urlpatterns = [
     path('api/auth/logout/', logout_user, name='logout_user'),
     path('api/custom_user/update/', update_user_info, name='update_user_info'),
     path('api/custom_user/all/', list_all_users, name='list_all_users'),
+    
+    # Token obtain pair (login endpoint)
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    
+    # Token refresh endpoint
+    path('api/token/refresh/', TokenRefreshCustomView.as_view(), name='token_refresh'),
+
+    # "Me" endpoint to get current authenticated user data
+    path('api/me/', UserProfileView.as_view(), name='user_profile'),
+    
 ]
