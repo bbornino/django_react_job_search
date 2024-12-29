@@ -17,11 +17,27 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [showPassword, setShowPassword] = useState(false); 
     const [passwordError, setPasswordError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
+    const [emailError, setEmailError] = useState("");
     const navigate = useNavigate();
 
     const handlePasswordToggle = () => {
         setShowPassword((prevState) => !prevState);
     };
+
+    const validateUserName = (username) => {
+        const usernameRegex = /^(?=.{3,20}$)(?![_\-.])(?!.*[_\-.]{2})[a-zA-Z0-9._-]+(?<![_\-.])$/;
+
+        if (!usernameRegex.test(username)) {
+            setUsernameError(
+                "Username must be 3–20 characters long, alphanumeric, and can include underscores (_), dots (.), or hyphens (-). It cannot start, end, or have consecutive special characters."
+            );
+            return false;
+        }
+
+        setUsernameError(""); // Clear error if validation passes
+        return true;
+    }
 
     const validatePassword = (password) => {
         if (!ENFORCE_STRONG_PASSWORD) {
@@ -43,8 +59,34 @@ export default function Register() {
         return true;
     };
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            setEmailError(
+                "Please enter a valid email address."
+            );
+            return false;
+        }
+
+        setEmailError(""); // Clear error if validation passes
+        return true;
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Run all validations before proceeding
+        const isUsernameValid = validateUserName(username);
+        const isPasswordValid = validatePassword(password);
+        const isEmailValid = validateEmail(email);
+
+        // If any validation fails, stop form submission
+        if (!isUsernameValid || !isPasswordValid || !isEmailValid) {
+            console.error("Validation failed. Please fix the errors and try again.");
+            return;
+        }
+
         try {
             const response = await axios.post("/api/register", {
                 username,
@@ -76,7 +118,7 @@ export default function Register() {
                                 <FormGroup>
                                     <Label>First Name</Label>
                                     <Input
-                                    type="text"
+                                    type="text" required
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
                                     />
@@ -86,7 +128,7 @@ export default function Register() {
                                 <FormGroup>
                                     <Label>Last Name</Label>
                                     <Input
-                                    type="text"
+                                    type="text" required
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
                                     />
@@ -98,10 +140,14 @@ export default function Register() {
                                 <FormGroup>
                                     <Label>User Name</Label>
                                     <Input
-                                    type="text"
+                                    type="text" required
                                     value={username}
                                     onChange={(e) => setUserName(e.target.value)}
+                                    onBlur={() => validateUserName(username)}
                                     />
+                                    {usernameError && (
+                                        <div className="text-danger mt-1">{usernameError}</div>
+                                    )}
                                 </FormGroup>
                             </Col>
                             <Col id="pass" >
@@ -138,6 +184,7 @@ export default function Register() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    onBlur={() => validateEmail(username)}
                                     />
                                 </FormGroup>
                             </Col>
