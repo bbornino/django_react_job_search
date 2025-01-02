@@ -41,6 +41,7 @@ from job_search.custom_user.custom_user_views import (
     logout_user,
     update_user_info,
     list_all_users,
+    register_user
 )
 
 
@@ -63,6 +64,7 @@ urlpatterns = [
     re_path(r'^api/dashboard/$', dashboard_statistics),
 
     # Custom User Endpoints
+    path('api/auth/register/', register_user, name='register_user'),
     path('api/auth/login/', authenticate_user, name='authenticate_user'),
     path('api/auth/logout/', logout_user, name='logout_user'),
     path('api/custom_user/update/', update_user_info, name='update_user_info'),

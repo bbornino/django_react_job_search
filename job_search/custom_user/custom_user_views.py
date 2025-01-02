@@ -1,3 +1,4 @@
+import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -6,10 +7,17 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
+# import environ
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from job_search.custom_user.custom_user_serializer import CustomUserSerializer, CustomUserListSerializer
+from django.contrib.auth.password_validation import validate_password
+from django.conf import settings
+from job_search.models import CustomUser
+from job_search.custom_user.custom_user_serializer import (
+    CustomUserSerializer,
+    CustomUserListSerializer,
+)
 
+DJANGO_ENV = settings.DJANGO_ENV
 
 @api_view(['POST'])
 def authenticate_user(request):
@@ -99,6 +107,65 @@ def update_user_info(request):
 @permission_classes([IsAdminUser])
 def list_all_users(request):
     """Retrieve a list of all users (admin access only)."""
-    users = User.objects.all()
+    users = CustomUser.objects.all()
     serializer = CustomUserListSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def register_user(request):
+    """
+    Register a new user with basic information: username, email, first name, last name, and password.
+    All additional fields are set to default values.
+    """
+    # Get the data from the request
+    username = request.data.get('username')
+    email = request.data.get('email')
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
+    password = request.data.get('password')
+
+    # Validate required fields
+    if not username or not email or not first_name or not last_name or not password:
+        return Response({'error': 'All fields are required: username, email, first_name, last_name, and password.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    # Check if the username already exists
+    if CustomUser.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Skip email check if in development environment
+    print(f'DJANGO_ENV value: {os.environ.get("DJANGO_ENV")}')
+    if DJANGO_ENV != 'development':
+        # Check if the email already exists, skip for development
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({'error': 'Email address is already registered.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    try:
+        # Validate password using Django's built-in password validators
+        validate_password(password)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Set optional fields to default values
+    bio = ""  # Default value for bio
+    user_greeting = "Welcome!"  # Default greeting message
+    color_mode = "light"  # Default color mode
+    dashboard_first_date = None  # Default value for dashboard_first_date
+    dashboard_second_date = None  # Default value for dashboard_second_date
+
+    # Create the custom user (including required fields and default optional fields)
+    user = CustomUser.objects.create_user(
+        username=username,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        password=password,
+        bio=bio,
+        user_greeting=user_greeting,
+        color_mode=color_mode,
+        dashboard_first_date=dashboard_first_date,
+        dashboard_second_date=dashboard_second_date
+    )
+
+    return Response({'message': 'User successfully registered.'}, status=status.HTTP_201_CREATED)
