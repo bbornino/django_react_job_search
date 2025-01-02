@@ -19,10 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables from .env file
 env = environ.Env()
-environ.Env.read_env()  # Reads the .env file from the root directory
-
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Optionally, for production, you can specify the file manually:
 # environ.Env.read_env(os.path.join(BASE_DIR, '.env.production'))
+
+DJANGO_ENV = env('DJANGO_ENV', default='production')
 
 # Read the environment variable ENABLE_AUTH, default to True for production
 ENABLE_AUTH = os.getenv('ENABLE_AUTH', 'True') == 'True'
@@ -134,21 +135,28 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+ENABLE_STRONG_PASSWORDS = env.bool('ENABLE_STRONG_PASSWORDS', default=True)
+if ENABLE_STRONG_PASSWORDS:
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        },
+        {
+            'NAME': 'job_search.custom_user.custom_user_validators.StrongPasswordValidator',
+        },
+    ]
+else:
+    # Disable strong password validation if the flag is set to False
+    AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
