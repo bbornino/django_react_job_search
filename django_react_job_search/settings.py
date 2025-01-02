@@ -69,6 +69,10 @@ AUTH_USER_MODEL = 'job_search.CustomUser'
 CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', False)
 CORS_ALLOW_CREDENTIALS = env.bool('CORS_ALLOW_CREDENTIALS', True)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
+CORS_ALLOW_HEADERS = [
+  'authorization',
+  'content-type',
+]
 
 
 # CORS settings based on CORS_ORIGIN_ALLOW_ALL
