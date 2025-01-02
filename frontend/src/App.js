@@ -1,12 +1,13 @@
 import React, { useState }  from 'react';
 import {  useAuthUser, useIsAuthenticated, useSignOut  } from 'react-auth-kit';
-import { Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import {
   Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink,
   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import { useSetupAxiosInterceptor } from './axios';
 
 import Welcome from "./components/Welcome";
 import About from "./components/About";
@@ -35,12 +36,31 @@ function App() {
   const user = useAuthUser(); // Hook to get the user object
   const signOut = useSignOut();  // Hook to handle sign out
   const [isOpen, setIsOpen] = useState(false);
+  useSetupAxiosInterceptor(); // This will set up the Axios interceptor
 
   // Toggle the navigation bar
   const toggle = () => setIsOpen((prevState) => !prevState);
   
   const handleLogout = () => {
     signOut();  // Sign out the user
+
+    const deleteCookiesByPrefix = (prefix) => {
+      // Loop through all cookies
+      document.cookie.split(';').forEach((cookie) => {
+        const cookieName = cookie.split('=')[0].trim();
+        if (cookieName.startsWith(prefix)) {
+          // Set the expiration date in the past to delete the cookie
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        }
+      });
+    };
+
+    deleteCookiesByPrefix('remember_web_');
+    document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/"; 
+    document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
+    localStorage.removeItem("access_token");
+
     window.location.href = "/";  // Redirect to home page after logout
   };
 
@@ -109,7 +129,7 @@ function App() {
         {isAuthenticated() ? (
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-              Hi {user()?.user?.first_name || 'First Name Not Available'}!
+              Hi {user()?.first_name || 'First Name Not Available'}!
             </DropdownToggle>
             <DropdownMenu end>
               <DropdownItem tag={Link} to="/edit-profile">Edit Profile</DropdownItem>
