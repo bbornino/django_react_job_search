@@ -19,6 +19,7 @@ export default function Register() {
     const [passwordError, setPasswordError] = useState("");
     const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [backendErrors, setBackendErrors] = useState([]);
     const navigate = useNavigate();
 
     const handlePasswordToggle = () => {
@@ -60,12 +61,14 @@ export default function Register() {
     };
 
     const validateEmail = (email) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const sanitizedEmail = email.trim(); // Trim whitespace
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,20}$/;
 
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(sanitizedEmail)) {
             setEmailError(
                 "Please enter a valid email address."
             );
+            console.log("Email Address Tested: " + email)
             return false;
         }
 
@@ -88,7 +91,8 @@ export default function Register() {
         }
 
         try {
-            const response = await axios.post("/api/register", {
+            const apiUrl = process.env.REACT_APP_API_URL;
+            const response = await axios.post(`${apiUrl}auth/register/`, {
                 username,
                 password,
                 first_name: firstName,
@@ -104,6 +108,17 @@ export default function Register() {
             }
         } catch (err) {
             console.error("Error during registration:", err);
+            console.error(err.response?.data?.error)
+            setBackendErrors(
+                Array.isArray(err.response?.data?.error)
+                  ? err.response.data.error
+                  : typeof err.response?.data?.error === 'string'
+                  ? err.response?.data?.error.startsWith('[')  // Check if the string looks like an array
+                    ? JSON.parse(err.response?.data?.error.replace(/'/g, '"'))  // Parse the string as JSON if it's an array-like string
+                    : [err.response?.data?.error]  // Otherwise, wrap the single error in an array
+                  : ['An unknown error occurred']
+              );
+              
         }
     }
 
@@ -181,14 +196,31 @@ export default function Register() {
                                 <FormGroup>
                                     <Label>Email Address</Label>
                                     <Input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    onBlur={() => validateEmail(username)}
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        onBlur={() => validateEmail(email)}
                                     />
+                                    {emailError && (
+                                        <div className="text-danger mt-1">{emailError}</div>
+                                    )}
                                 </FormGroup>
                             </Col>
                         </Row>
+
+                        {backendErrors.length > 0 && (
+                            <Row className="error-summary alert alert-danger mb-4">
+                                <Col>
+                                    <h5>Please correct the following:</h5>
+                                    <ul>
+                                    {backendErrors.map((error, index) => (
+                                        <li key={index}>{error}</li>
+                                    ))}
+                                    </ul>
+                                </Col>
+                            </Row>
+                        )}
+
                     </CardBody>
                     <CardFooter>
                         <button type="submit">Register</button>
