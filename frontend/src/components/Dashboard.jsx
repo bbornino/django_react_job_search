@@ -3,7 +3,7 @@ import axios from "axios";
 import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL, formatDisplayDate } from "../constants";
 
 import DataTableBase from './DataTableBase';
-import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
+import {Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 
 class Dashboard extends Component {
     state = {
@@ -42,7 +42,8 @@ class Dashboard extends Component {
 
     getActiveJobPostings = () => {
         axios.get(JOB_POSTING_API_URL + 'active').then( res => {
-            if (res.status == 200) {
+            console.log('Response:', res)
+            if (res.status === 200) {
                 this.setState({activeJobPostings: res.data})
             }
         });
@@ -86,7 +87,7 @@ class Dashboard extends Component {
 
     getActiveOpportunities = () => {
         axios.get(JOB_OPPORTUNITY_API_URL + 'active').then( res => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 this.setState({activeOpportunities: res.data})
             }
         });
