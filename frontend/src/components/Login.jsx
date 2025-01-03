@@ -29,6 +29,7 @@ const Login = () => {
 
       // Store the access token in LocalStorage
       localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
 
       // Call signIn from react-auth-kit
       const isSignedIn = signIn({
