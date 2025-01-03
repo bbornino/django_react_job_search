@@ -5,6 +5,7 @@ export const JOB_SITE_API_URL = BASE_API_URL + 'job_site/';
 export const JOB_POSTING_API_URL = BASE_API_URL + 'job_posting/';
 export const DASHBOARD_API_URL = BASE_API_URL + 'dashboard/';
 export const REPORT_API_URL = BASE_API_URL + 'report/';
+export const TOKEN_REFRESH_API_URL = BASE_API_URL + 'token/refresh/'; 
 
 export const formatInputFieldDateTime = (originalDateTime) => {
     if (originalDateTime === null) return null;
