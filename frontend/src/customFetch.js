@@ -1,54 +1,96 @@
+import { TOKEN_REFRESH_API_URL } from "./constants";
+
 export async function customFetch(url, options = {}, accessToken, refreshToken, navigate) {
-    try {
-      // Set up the headers with Authorization token
-      const headers = {
-        'Content-Type': 'application/json',
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        ...(refreshToken && { 'X-Refresh-Token': refreshToken })
-      };
-  
-      const response = await fetch(url, {
-        ...options,
-        headers,
+  let isRefreshing = false; // Track if the token refresh process is ongoing
+
+  try {
+    // Helper function to refresh the token
+    async function refreshAccessToken() {
+      const response = await fetch(TOKEN_REFRESH_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refresh: refreshToken }),
       });
-  
-      // Check for the status codes
+
       if (!response.ok) {
-        // Handle non-OK status codes (e.g., 404, 500)
-        if (response.status === 401 || response.status === 403) {
-          // Handle unauthorized access (e.g., navigate to login page)
-          navigate('/login');
-        }
-        throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+        // If refreshing fails, navigate to login
+        navigate('/login');
+        throw new Error('Failed to refresh access token');
       }
-  
-      // Check for empty response body and handle gracefully
-      const contentType = response.headers.get('Content-Type');
-      if (!contentType || !contentType.includes('application/json')) {
-        // Handle non-JSON responses (like HTML error pages or empty responses)
-        const text = await response.text();
-        if (text.trim().length === 0) {
-          // Return empty object/array to indicate "no data"
-          return [];
+
+      const data = await response.json();
+      return data.access;
+    }
+
+    // Set up headers with the access token
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+    };
+
+    let response = await fetch(url, {
+      ...options,
+      headers,
+    });
+
+    if (response.status === 401 && refreshToken && !isRefreshing) {
+      // Access token expired, start the refresh process
+      isRefreshing = true;
+      console.log('Access token expired, attempting to refresh...');
+      
+      try {
+        const newAccessToken = await refreshAccessToken();
+        
+        // Save the new access token to localStorage
+        localStorage.setItem('access_token', newAccessToken);
+
+        // Retry the original request with the new access token
+        const retryHeaders = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${newAccessToken}`,
+        };
+        response = await fetch(url, {
+          ...options,
+          headers: retryHeaders,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
         }
-        // If it's HTML, handle as an error page (you can adjust based on your needs)
-        if (text.startsWith('<!DOCTYPE html>')) {
-          return []; // Return an empty array for HTML error pages
-        }
-        // If it's unexpected content, return empty array
+
+        // Parse and return the JSON data from the retried response
+        const retryData = await response.json();
+        return retryData || [];
+      } catch (refreshError) {
+        console.error('Error refreshing access token:', refreshError);
+        navigate('/login'); // Navigate to login if refreshing fails
         return [];
       }
-  
-      // If it's a JSON response, parse it
-      const data = await response.json();
-      
-      // Return the parsed JSON data (or empty array if data is null/undefined)
-      return data || [];
-  
-    } catch (error) {
-      console.error('Custom fetch error:', error);
-      // You can return an empty array or an empty object here to gracefully handle the error
-      return [];
     }
+
+    // For other non-401 errors, handle them as usual
+    if (!response.ok && response.status !== 401) {
+
+      // Log the error for non-401 statuses
+      console.error(`HTTP Error: ${response.status} - ${response.statusText}`);
+
+      // throw new Error(`HELP HTTP Error: ${response.status} - ${response.statusText}`);
+    }
+
+    // Handle empty or non-JSON response body
+    const contentType = response.headers.get('Content-Type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      return text.trim().length === 0 ? [] : [];
+    }
+
+    // Parse and return JSON data
+    const data = await response.json();
+    return data || [];
+  } catch (error) {
+    console.error('Custom fetch error:', error);
+    return [];
   }
-  
+}
