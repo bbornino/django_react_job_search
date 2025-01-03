@@ -52,6 +52,22 @@ class TokenRefreshCustomView(TokenRefreshView):
     Custom refresh token view that can be used to refresh the JWT token.
     This uses SimpleJWT's built-in view.
     """
+    def post(self, request, *args, **kwargs):
+        try:
+            # Call the original TokenRefreshView's post method to handle refresh logic
+            return super().post(request, *args, **kwargs)
+        except TokenError:
+            # Catch TokenError if the refresh token is invalid or expired
+            return Response(
+                {'detail': 'Token refresh failed. Please log in again.'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        except Exception:
+            # General exception handling for any other errors
+            return Response(
+                {'detail': 'An unexpected error occurred during token refresh.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 @api_view(['POST'])
