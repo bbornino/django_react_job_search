@@ -109,6 +109,12 @@ def email_opportunity_active(request):
         - 200 OK: Successfully retrieved active opportunities.
         - 401 Unauthorized: If the user is not authenticated.
     """
+    # Debugging: Print request.user info to console
+    print(f"email_opportunity_active User Info: {request.user}")
+    print(f"email_opportunity_active Is Authenticated: {request.user.is_authenticated}")
+    print(f"email_opportunity_active User ID: {request.user.id}")
+    print(f"email_opportunity_active User Username: {request.user.username}")
+    
         # Ensure the user is authenticated
     if not request.user.is_authenticated:
         return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
