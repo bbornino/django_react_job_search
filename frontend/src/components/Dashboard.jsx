@@ -1,59 +1,56 @@
-import {React, Component} from "react";
-import axios from "axios";
-import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL, formatDisplayDate } from "../constants";
-
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
+import { useApiRequest } from '../useApiRequest'; // Import the hook
+import { formatDisplayDate } from '../constants'; 
 import DataTableBase from './DataTableBase';
-import {Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 
-class Dashboard extends Component {
-    state = {
-        activeJobPostings: [],
-        activeOpportunities: [],
-        statisticsBlock: '',
-    }
-    
-    componentDidMount() {
+const Dashboard = () => {
+    const [activeJobPostings, setActiveJobPostings] = useState([]);
+    const [activeOpportunities, setActiveOpportunities] = useState([]);
+    const [statisticsBlock, setStatisticsBlock] = useState('');
+    const { request, error } = useApiRequest();
+
+    useEffect(() => {
         document.title = "Dashboard - Job Search Tracker";
-        this.getJobHuntStatistics();
-        this.getActiveJobPostings();
-        this.getActiveOpportunities();
-    }
+        getJobHuntStatistics();
+        getActiveJobPostings();
+        getActiveOpportunities();
+    }, []);
 
-    getJobHuntStatistics = () => {
-        axios.get(DASHBOARD_API_URL).then( res => {
-            console.log("Job Hunt Statistics:")
-            console.log(res.data)
-            if(res.data === '') {
-                console.log("TODO: write dashboard serializer")
-            }
-
-            var statisticsBlock = res.data.map((statistics_row) => (
+    const getJobHuntStatistics = async () => {
+        const response = await request('dashboard/');
+        if (response && response.data) {
+            const statistics = response.data.map((statistics_row) => (
                 <Row className="my-1" key={statistics_row.formatted_date}>
                     <Col>{statistics_row.formatted_date}</Col>
                     <Col>{statistics_row.total_count}</Col>
                     <Col>{statistics_row.response_count}</Col>
-                    <Col>{(100*statistics_row.response_count / statistics_row.total_count).toFixed(1)}%</Col>
+                    <Col>{(100 * statistics_row.response_count / statistics_row.total_count).toFixed(1)}%</Col>
                 </Row>
             ));
-
-            this.setState({statisticsBlock: statisticsBlock})
-        });
+            setStatisticsBlock(statistics);
+        }
     };
 
-    getActiveJobPostings = () => {
-        axios.get(JOB_POSTING_API_URL + 'active').then( res => {
-            console.log('Response:', res)
-            if (res.status === 200) {
-                this.setState({activeJobPostings: res.data})
-            }
-        });
+    const getActiveJobPostings = async () => {
+        const response = await request('job_posting/active');
+        if (response && response.status === 200) {
+            setActiveJobPostings(response.data);
+        }
     };
 
-    onActiveJobPostingRowClicked = (row, event) => {
-        window.location = '/job-posting-edit/' + row.id
-    }
+    const getActiveOpportunities = async () => {
+        const response = await request('email_opportunity/active');
+        if (response && response.status === 200) {
+            setActiveOpportunities(response.data);
+        }
+    };
 
-    jobPostingListColumns = [
+    const onActiveJobPostingRowClicked = (row) => {
+        window.location = '/job-posting-edit/' + row.id;
+    };
+
+    const jobPostingListColumns = [
         {
             name: "Company Name",
             selector: row => row.company_name,
@@ -85,19 +82,11 @@ class Dashboard extends Component {
         },
     ];
 
-    getActiveOpportunities = () => {
-        axios.get(JOB_OPPORTUNITY_API_URL + 'active').then( res => {
-            if (res.status === 200) {
-                this.setState({activeOpportunities: res.data})
-            }
-        });
+    const onActiveOpportunityRowClicked = (row) => {
+        window.location = '/opportunity-details/' + row.id;
     };
 
-    onActiveOpportunityRowClicked = (row, event) => {
-        window.location = '/opportunity-details/' + row.id
-    }
-
-    opportunityListColumns = [
+    const opportunityListColumns = [
         {
             name: 'Title',
             selector: row => row.job_title,
@@ -123,74 +112,62 @@ class Dashboard extends Component {
         },
     ];
 
-    render() {
-        const currentDate = new Date().toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+    const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
-        return(
-            <Container className="mt-2">
-                <Card id="active_postings" className="text-dark bg-light m-3">
-                    <CardTitle className="mx-4 my-2">
-                        <strong>Job Hunt Statistics</strong>
-                    </CardTitle>
-                    <CardBody className="bg-white">
-                        <p>Data as of {currentDate}</p>
-                        <Row>
-                            <Col></Col>
-                            <Col>Postings Applied </Col>
-                            <Col>Responses</Col>
-                            <Col>Response Rate</Col>
-                        </Row>
-                        {this.state.statisticsBlock}
-                        {/* <Row>
-                            <Col>March 1, 2024</Col>
-                            <Col>933</Col>
-                            <Col>17</Col>
-                            <Col>1.8%</Col>
-                        </Row>
-                        <Row>
-                            <Col>June 25, 2024</Col>
-                            <Col>237</Col>
-                            <Col>5</Col>
-                            <Col>2.1%</Col>
-                        </Row> */}
-                    </CardBody>
-                </Card>
+    return (
+        <Container className="mt-2">
+            <Card id="active_postings" className="text-dark bg-light m-3">
+                <CardTitle className="mx-4 my-2">
+                    <strong>Job Hunt Statistics</strong>
+                </CardTitle>
+                <CardBody className="bg-white">
+                    <p>Data as of {currentDate}</p>
+                    <Row>
+                        <Col></Col>
+                        <Col>Postings Applied </Col>
+                        <Col>Responses</Col>
+                        <Col>Response Rate</Col>
+                    </Row>
+                    {statisticsBlock}
+                </CardBody>
+            </Card>
 
-                <Card id="active_postings" className="text-dark bg-light m-3">
-                    <CardTitle className="mx-4 my-2">
-                        <strong>Active Job Postings</strong>
-                    </CardTitle>
-                    <CardBody className="bg-white">
-                        <DataTableBase  columns={this.jobPostingListColumns}
-                                data={this.state.activeJobPostings}
-                                paginationPerPage={20}
-                                defaultSortFieldId="applied_at"
-                                noDataComponent="No Active Job Postings"
-                                defaultSortAsc={true}
-                                onRowClicked={this.onActiveJobPostingRowClicked} />
-                    </CardBody>
-                </Card>
-                <Card id="active_opportunities" className="text-dark bg-light m-3">
-                    <CardTitle className="mx-4 my-2">
-                        <strong>Active Opportunities</strong>
-                    </CardTitle>
-                    <CardBody className="bg-white">
-                        <DataTableBase  columns={this.opportunityListColumns}
-                                data={this.state.activeOpportunities}
-                                paginationPerPage={20}
-                                defaultSortFieldId="posting_status"
-                                noDataComponent="No Active Opportunities"
-                                defaultSortAsc={true}
-                                onRowClicked={this.onActiveOpportunityRowClicked} />
-                    </CardBody>
-                </Card>
-            </Container>
-        )
-    }
-}
+            <Card id="active_postings" className="text-dark bg-light m-3">
+                <CardTitle className="mx-4 my-2">
+                    <strong>Active Job Postings</strong>
+                </CardTitle>
+                <CardBody className="bg-white">
+                    <DataTableBase  
+                        columns={jobPostingListColumns}
+                        data={activeJobPostings}
+                        paginationPerPage={20}
+                        defaultSortFieldId="applied_at"
+                        noDataComponent="No Active Job Postings"
+                        defaultSortAsc={true}
+                        onRowClicked={onActiveJobPostingRowClicked} />
+                </CardBody>
+            </Card>
+            <Card id="active_opportunities" className="text-dark bg-light m-3">
+                <CardTitle className="mx-4 my-2">
+                    <strong>Active Opportunities</strong>
+                </CardTitle>
+                <CardBody className="bg-white">
+                    <DataTableBase  
+                        columns={opportunityListColumns}
+                        data={activeOpportunities}
+                        paginationPerPage={20}
+                        defaultSortFieldId="posting_status"
+                        noDataComponent="No Active Opportunities"
+                        defaultSortAsc={true}
+                        onRowClicked={onActiveOpportunityRowClicked} />
+                </CardBody>
+            </Card>
+        </Container>
+    );
+};
 
 export default Dashboard;
