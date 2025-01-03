@@ -1,7 +1,5 @@
-// useApiRequest.js
-
 import { useNavigate } from 'react-router-dom'; // To redirect to login on failure
-import { useEffect, useState } from 'react';
+import { useState, useCallback } from 'react'; // Import useCallback
 import { customFetch } from './customFetch'; // import customFetch
 
 export function useApiRequest() {
@@ -10,16 +8,17 @@ export function useApiRequest() {
   const accessToken = localStorage.getItem("access_token");
   const refreshToken = localStorage.getItem("refresh_token");
 
-  const request = async (url, options = {}) => {
+  // Use useCallback to memoize apiRequest
+  const apiRequest = useCallback(async (url, body = {}, options = {}) => {
     try {
-      const response = await customFetch(url, options, accessToken, refreshToken, navigate);
-      return response; // You can return the response here for use in components
+      const response = await customFetch(url, { ...options, body }, accessToken, refreshToken, navigate);
+      return response; // Return the response for use in components
     } catch (err) {
       setError(err.message); // Set error in case of failure
       console.error(err);
       return null;
     }
-  };
+  }, [navigate, accessToken, refreshToken]); // Add these as dependencies to ensure stable memoization
 
-  return { request, error };
+  return { apiRequest, error };
 }
