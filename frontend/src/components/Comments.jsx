@@ -156,7 +156,7 @@ function Comments({itemComments, onCommentsSave}) {
         commentTypeError.style.display = 'none'
     }
 
-    const commentCount = (itemComments !== null && itemComments.length) ? itemComments.length : 0
+    const commentCount = ( itemComments !== undefined && itemComments !== null && itemComments.length) ? itemComments.length : 0
     const showCommentsButton = 
             <Button color="success" type="button" onClick={onShowEditComments}>
                 Show Comments ( { commentCount} )</Button>
@@ -210,7 +210,7 @@ function Comments({itemComments, onCommentsSave}) {
         </Row>
     
     var commentBlock = '';
-    if (theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
+    if (theComments !== undefined && theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
         commentBlock = theComments.map((comment_row) => (
             <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                 <hr/>
