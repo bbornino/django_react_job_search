@@ -30,9 +30,15 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     };
 
+    // Ensure the body is correctly included for POST/PUT methods
+    const body = 
+      (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE')
+        ? JSON.stringify(options.body) : null;
+
     let response = await fetch(url, {
       ...options,
       headers,
+      body, // Add the body to the request
     });
 
     if (response.status === 401 && refreshToken && !isRefreshing) {
