@@ -1,6 +1,6 @@
-import React, { Component} from "react";
-import { Link } from 'react-router-dom';
-import axios from "axios";
+import React, { useEffect, useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useApiRequest } from '../useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,8 +9,8 @@ import DataTableBase from './DataTableBase';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 
-class JobSiteView extends Component {
-    state = {
+const JobSiteView = () => {
+    const [state, setState] = useState({
         job_site_id: 0,
         description: '',
         headline: '',
@@ -20,180 +20,210 @@ class JobSiteView extends Component {
         site_name: '',
         site_url: '',
         postings: [],
-    };
+    });
 
-    componentDidMount() {
-        document.title = "Job Site View - Job Search Tracker";
-        const pathArr = window.location.pathname.split('/')
-        if (pathArr[2] !== undefined) {
-            const jobSiteId = pathArr[2];
-            this.setState({job_site_id: pathArr[2]});
-            this.getJobSite(jobSiteId);
-            this.getJobSitePostings(jobSiteId);
+    const { apiRequest } = useApiRequest();
+    const navigate = useNavigate();
+
+    const getJobSite = useCallback ( async (jobSiteId) => {
+        if (!jobSiteId) return;
+
+        const data = await apiRequest(`${JOB_SITE_API_URL}${jobSiteId}`, {method:'GET'});
+        if (!data) return;
+        if (data) {
+            setState((prevState) => ({
+                ...prevState,
+                job_site_id: data.id,
+                site_name: data.site_name,
+                site_url: data.site_url,
+                rating: data.rating,
+                last_visited_at: formatDisplayDateTime(data.last_visited_at),
+                resume_updated_at: formatDisplayDateTime(data.resume_updated_at),
+                headline: data.headline,
+                description: data.description,
+            }))
         }
-    };
+    }, [apiRequest]);
 
+    const getJobSitePostings = useCallback(async (jobSiteId) => {
+        if (!jobSiteId) return;
+    
+        const data = await apiRequest(JOB_SITE_API_URL + jobSiteId + '/postings', { method: 'GET' });
+        console.log("getJobSitePostings response:", data); // Debug log
+        if (!data || !Array.isArray(data)) {
+            console.warn("Invalid or missing data for job site postings");
+            setState((prevState) => ({
+                ...prevState,
+                postings: [], // Fallback to an empty array
+            }));
+            return;
+        }
+    
+        setState((prevState) => ({
+            ...prevState,
+            postings: data,
+        }));
+    }, [apiRequest]);
 
-    getJobSite = (jobSiteId) => {
-        axios.get(JOB_SITE_API_URL + jobSiteId).then(res => {
-            this.setState({
-                job_site_id: res.data.id,
-                site_name: res.data.site_name,
-                site_url: res.data.site_url,
-                rating: res.data.rating,
-                last_visited_at: formatDisplayDateTime(res.data.last_visited_at),
-                resume_updated_at: formatDisplayDateTime(res.data.resume_updated_at),
-                headline: res.data.headline,
-                description: res.data.description,
-            })
+    useEffect(() => {
+        document.title = "Job Site View - Job Search Tracker";
+        const pathArr = window.location.pathname.split('/');
+    
+        if (pathArr.length > 2 && pathArr[2]) {
+            const jobSiteId = pathArr[2];
+            setState((prevState) => ({
+                ...prevState,
+                job_site_id: jobSiteId,
+            }));
+            getJobSite(jobSiteId);
+            getJobSitePostings(jobSiteId);
+        }
+    }, [getJobSite, getJobSitePostings]);
 
-        })
-    }
-
-    getJobSitePostings = (JobSiteId) => {
-        axios.get(JOB_SITE_API_URL + JobSiteId + '/postings' ).then(res => {
-            this.setState({
-                postings: res.data,
-            })
-        });
-    }
-
-    columns = [
+    const columns = [
         {
             name: 'Company Name',
-            selector: row => row.company_name,
+            selector: row => (typeof row?.company_name === 'string' ? row.company_name : 'N/A'),
+            selector: row => row?.company_name || 'N/A',
             sortable: true,
         },
         {
             name: 'Posting Title',
-            selector: row => row.posting_title,
+            selector: row => (typeof row?.posting_title === 'string' ? row.posting_title : 'N/A'),
             sortable: true,
         },
         {
             name: 'Posting Status',
-            selector: row => row.posting_status,
+            selector: row => (typeof row?.posting_status === 'string' ? row.posting_status : 'N/A'),
             sortable: true,
         },
         {
             name: 'Applied At',
             id: 'applied_at',
-            selector: row => row.applied_at,
-            cell: row => formatDisplayDateTime(row.applied_at),
+            selector: row => (typeof row?.applied_at === 'string' ? row.applied_at : 'N/A'),
+            cell: row => formatDisplayDateTime(row?.applied_at),
             width: "250px",
             sortable: true,
         },
     ]
 
-    onRowClicked = (row, event) => {
-        window.location = '/job-posting-edit/' + row.id
+    const onRowClicked = (row, event) => {
+        navigate('/job-posting-edit/' + row.id);
     };
 
-    onEditClicked = (r,e) => {
-        window.location = '/job-site-edit/' + this.state.job_site_id
+    const onEditClicked = (r,e) => {
+        if (!state.job_site_id) {
+            console.error("Job site ID is not defined");
+            return;
+        }
+        navigate('/job-site-edit/' + state.job_site_id);
     }
 
-    onNewPostingClicked = (r, e) => {
-        window.location = '/job-posting-new/' + this.state.job_site_id
+    const onNewPostingClicked = (r, e) => {
+        navigate('/job-posting-new/' + state.job_site_id);
     }
 
-    render() {
-        return (
-            <Container className="mt-2">
-                <Card className="text-dark bg-light m-3">
-                    <CardTitle className="mx-2 my-2">
-                        <Row className="m-2">
-                            <Col xl="10" md="9" sm="8" xs="6">
-                                <h1>{this.state.site_name}</h1>
-                            </Col>
-                            <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
-                                <Button color="success" type="button"
-                                        className="m-2"
-                                        onClick={this.onEditClicked}>
-                                    <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit
-                                </Button>
-                            </Col>
-                        </Row>
-                    </CardTitle>
-                    
-                    <CardBody className="bg-white">
-                        <Row>
-                            <Col lg="3" xs="6">
-                                <dl>
-                                    <dt>URL</dt>
-                                    <dd>
-                                        <Link to='{this.state.site_url}'>
-                                            {this.state.site_url}
-                                        </Link>
-                                    </dd>
-                                </dl>
-                            </Col>
-                            <Col lg="3" xs="6">
-                                <dl>
-                                    <dt>Rating</dt>
-                                    <dd>{this.state.rating}</dd>
-                                </dl>
-                            </Col>
-                            <Col lg="3" xs="6">
-                                <dl>
-                                    <dt>Last Visited</dt>
-                                    <dd>{formatDisplayDate(this.state.last_visited_at)}</dd>
-                                </dl>
-                            </Col>
-                            <Col lg="3" xs="6">
-                                <dl>
-                                    <dt>Resume Last Updated</dt>
-                                    <dd>{formatDisplayDate(this.state.resume_updated_at)}</dd>
-                                </dl>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <dl>
-                                    <dt>Headline</dt>
-                                    <dd>{this.state.headline}</dd>
-                                </dl>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <dl>
-                                    <dt>Description</dt>
-                                    <dd><div dangerouslySetInnerHTML={{ __html: this.state.description }} /></dd>
-                                </dl>
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
+    if (!state) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <Container className="mt-2">
+            <Card className="text-dark bg-light m-3">
+                <CardTitle className="mx-2 my-2">
+                    <Row className="m-2">
+                        <Col xl="10" md="9" sm="8" xs="6">
+                            <h1>{state.site_name}</h1>
+                        </Col>
+                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                            <Button color="success" type="button"
+                                    className="m-2"
+                                    onClick={onEditClicked}>
+                                <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit
+                            </Button>
+                        </Col>
+                    </Row>
+                </CardTitle>
                 
-                <Card className="text-dark bg-light m-3">
-                    <CardTitle className="mx-2 my-1">
-                        <Row className="m-1">
-                            <Col xl="10" md="9" sm="8" xs="6" >
-                                <h3>Job Site Postings Applied</h3>
-                            </Col>
-                            <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
-                                <Button color="success" type="button"
-                                        onClick={this.onNewPostingClicked}>
-                                    <FontAwesomeIcon icon={faSquarePlus} /> &nbsp; Add New
-                                </Button>
-                            </Col>
-                        </Row>
-                    </CardTitle>
-                    <CardBody className="bg-white">
-                        <Row>
-                            <Col>
-                                <DataTableBase  columns={this.columns}
-                                    data={this.state.postings}
-                                    defaultSortFieldId="applied_at"
-                                    defaultSortAsc={false}
-                                    onRowClicked={this.onRowClicked} />
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Container>
-        )
-    }
+                <CardBody className="bg-white">
+                    <Row>
+                        <Col lg="3" xs="6">
+                            <dl>
+                                <dt>URL</dt>
+                                <dd>
+                                    <Link to='{state.site_url}'>
+                                        {state.site_url}
+                                    </Link>
+                                </dd>
+                            </dl>
+                        </Col>
+                        <Col lg="3" xs="6">
+                            <dl>
+                                <dt>Rating</dt>
+                                <dd>{state.rating}</dd>
+                            </dl>
+                        </Col>
+                        <Col lg="3" xs="6">
+                            <dl>
+                                <dt>Last Visited</dt>
+                                <dd>{formatDisplayDate(state.last_visited_at)}</dd>
+                            </dl>
+                        </Col>
+                        <Col lg="3" xs="6">
+                            <dl>
+                                <dt>Resume Last Updated</dt>
+                                <dd>{formatDisplayDate(state.resume_updated_at)}</dd>
+                            </dl>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <dl>
+                                <dt>Headline</dt>
+                                <dd>{state.headline}</dd>
+                            </dl>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <dl>
+                                <dt>Description</dt>
+                                <dd><div dangerouslySetInnerHTML={{ __html: state.description }} /></dd>
+                            </dl>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            
+            <Card className="text-dark bg-light m-3">
+                <CardTitle className="mx-2 my-1">
+                    <Row className="m-1">
+                        <Col xl="10" md="9" sm="8" xs="6" >
+                            <h3>Job Site Postings Applied</h3>
+                        </Col>
+                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                            <Button color="success" type="button"
+                                    onClick={onNewPostingClicked}>
+                                <FontAwesomeIcon icon={faSquarePlus} /> &nbsp; Add New
+                            </Button>
+                        </Col>
+                    </Row>
+                </CardTitle>
+                <CardBody className="bg-white">
+                    <Row>
+                        <Col>
+                            <DataTableBase  columns={columns}
+                                data={state.postings}
+                                defaultSortFieldId="applied_at"
+                                defaultSortAsc={false}
+                                onRowClicked={onRowClicked} />
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+        </Container>
+    )
+
 }
 
 export default JobSiteView;
