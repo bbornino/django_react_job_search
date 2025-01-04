@@ -7,7 +7,8 @@ import {
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { useSetupAxiosInterceptor } from './axios';
+// import { customFetch } from './axiosInstance'; // Import the hook
+import { useApiRequest } from "./useApiRequest";
 
 import Welcome from "./components/Welcome";
 import About from "./components/About";
@@ -36,12 +37,18 @@ function App() {
   const user = useAuthUser(); // Hook to get the user object
   const signOut = useSignOut();  // Hook to handle sign out
   const [isOpen, setIsOpen] = useState(false);
-  useSetupAxiosInterceptor(); // This will set up the Axios interceptor
-
+  // useSetupAxiosInterceptor(); // This will set up the Axios interceptor
+  const { apiRequest } = useApiRequest();
+  
   // Toggle the navigation bar
   const toggle = () => setIsOpen((prevState) => !prevState);
   
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    
+    // Make the logout API call to invalidate the token
+    await apiRequest('/api/logout/', {}, { method: 'POST' }); // Adjust the endpoint if needed
+
+
     signOut();  // Sign out the user
 
     const deleteCookiesByPrefix = (prefix) => {
@@ -175,6 +182,7 @@ function App() {
         <Route path="/job-postings" element={<ProtectedRoute element={<JobPostingList />} />} />
         <Route path="/job-posting-edit" element={<ProtectedRoute element={<JobPostingEdit />} />} />
         <Route path="/opportunities" element={<ProtectedRoute element={<OpportunityList />} />} />
+        <Route path="/opportunity-details" element={<ProtectedRoute element={<OpportunityDetails />} />} />
         <Route path="/opportunity-details/:id" element={<ProtectedRoute element={<OpportunityDetails />} />} />
         <Route path="/reports" element={<ProtectedRoute element={<Reports />} />} />
         <Route path="/reports/:reportType/:referenceDate?" element={<ProtectedRoute element={<Reports />} />} />
