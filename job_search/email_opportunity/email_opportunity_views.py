@@ -8,18 +8,39 @@ from job_search.email_opportunity.email_opportunity_serializer import EmailOppor
 
 @api_view(['GET', 'POST'])
 def email_opportunity_list(request):
-    """ Define the listing of all Email Oppportunities for REST API """
+    """
+    Handles GET and POST requests for the JobSite list.
+
+    GET:
+        - Retrieves a list of all JobSite objects.
+        - Serializes the data and returns it in the response.
+
+    POST:
+        - Creates a new JobSite object based on the data provided in the request body.
+        - Validates the request data using the JobSiteSerializer and saves it to the database.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object containing the request data.
+
+    Returns:
+        Response:
+            - For GET: Returns a list of serialized JobSite data.
+            - For POST:
+                - Returns a 201 Created status on successful creation of a JobSite.
+                - Returns a 400 Bad Request status with validation errors if the request data is invalid.
+
+    Raises:
+        None
+    """
     
-    # Debugging: Print request.user info to console
     print(f"User Info: {request.user}")
     print(f"Is Authenticated: {request.user.is_authenticated}")
     print(f"User ID: {request.user.id}")
     print(f"User Username: {request.user.username}")
-    
-    # Ensure the user is authenticated
+
     if not request.user.is_authenticated:
         return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
     if request.method == 'GET':
         data = EmailOpportunity.objects.filter(user=request.user)
         serializer = EmailOpportunitySerializer(data, context={'request': request}, many=True)
@@ -62,7 +83,7 @@ def email_opportunity_detail(request, pk):
         HTTP_403_FORBIDDEN: If the user is not the owner of the EmailOpportunity.
         HTTP_404_NOT_FOUND: If the EmailOpportunity with the given ID does not exist.
     """
-   # Ensure the user is authenticated
+    # Ensure the user is authenticated
     if not request.user.is_authenticated:
         return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -114,10 +135,11 @@ def email_opportunity_active(request):
     print(f"email_opportunity_active Is Authenticated: {request.user.is_authenticated}")
     print(f"email_opportunity_active User ID: {request.user.id}")
     print(f"email_opportunity_active User Username: {request.user.username}")
-    
-        # Ensure the user is authenticated
+
+    # Ensure the user is authenticated
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Authentication credentials were not provided."},
+                        status=status.HTTP_401_UNAUTHORIZED)
 
     # Define statuses to exclude
     excluded_statuses = [
@@ -132,6 +154,6 @@ def email_opportunity_active(request):
     data = EmailOpportunity.objects.filter(user=request.user).exclude(opportunity_status__in=excluded_statuses).values(
         'id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at'
     )
-    
+
     serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)
     return Response(serializer.data)
