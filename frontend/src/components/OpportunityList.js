@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useApiRequest } from '../useApiRequest'; // import the hook
+import { useApiRequest } from '../useApiRequest';
 import { JOB_OPPORTUNITY_API_URL, formatDisplayDateTime } from "../constants";
 
 import DataTableBase from './DataTableBase';
@@ -8,8 +8,13 @@ import { Button, Container, Row, Col } from 'reactstrap';
 
 const OpportunityList = () => {
     const [opportunities, setOpportunities] = useState([]);
-    const { apiRequest } = useApiRequest(); // Using the custom hook
+    const { apiRequest } = useApiRequest(); 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Opportunity List - Job Search Tracker";
+        getOpportunities(); // Call the memoized getOpportunities function
+    }, [getOpportunities]); // Including getOpportunities in the dependency array
 
     // Memoize the getOpportunities function to avoid re-renders due to function change
     const getOpportunities = useCallback(async () => {
@@ -23,11 +28,6 @@ const OpportunityList = () => {
             console.error('Failed to fetch opportunities');
         }
     }, [apiRequest]); // Adding apiRequest as a dependency
-
-    useEffect(() => {
-        document.title = "Opportunity List - Job Search Tracker";
-        getOpportunities(); // Call the memoized getOpportunities function
-    }, [getOpportunities]); // Including getOpportunities in the dependency array
 
     const columns = [
         {
