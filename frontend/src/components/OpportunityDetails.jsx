@@ -36,7 +36,6 @@ const OpportunityDetails = () => {
       JOB_OPPORTUNITY_API_URL + opportunity_id,
       { method: 'GET' }
     );
-    console.log(data);
 
     if (data) {
       setState((prevState) => ({
@@ -87,9 +86,13 @@ const OpportunityDetails = () => {
     setState((prevState) => ({ ...prevState, job_description: newVal }));
   };
 
-  const handleDeleteOpportunity = async () => {
-    await deleteOpportunity(JOB_OPPORTUNITY_API_URL + state.opportunity_id, state);
-    window.location = "/opportunities";
+  const handleDeleteOpportunity = async (e) => {
+    e.preventDefault();
+    await apiRequest(
+      JOB_OPPORTUNITY_API_URL  + state.opportunity_id, state, 
+      { method: 'DELETE' }
+    );
+    navigate("/opportunities")
   };
 
   const handleCreateOpportunity = async (e) => {
@@ -275,18 +278,25 @@ const OpportunityDetails = () => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row id="description_card">
-              <Col lg="12">
-                <div id="description_card_body">
-                  <Editor handleChange={handleEditorChange} />
-                </div>
-              </Col>
-            </Row>
+          </CardBody>
+        </Card>
+
+        <Card id="comments_card" className="text-dark bg-light m-3">
+          <CardTitle className="mx-4 my-2" ><strong>Opportunity Comments</strong></CardTitle>
+          <CardBody className="bg-white">
             <Row id="comments_card">
               <Col lg="12">
-                <Comments comments={state.comments} setComments={setCommentsCallback} />
+                <Comments itemComments={state.comments} onCommentsSave={setCommentsCallback} />
               </Col>
             </Row>
+          </CardBody>
+        </Card>
+
+        <Card id="description_card" className="text-dark bg-light m-3">
+          <CardTitle className="mx-4 my-2"><strong>Opportunity Job Description</strong></CardTitle>
+          <CardBody id="description_card_body" className="bg-white">
+                <Editor editorText={state.job_description}  onEditorChange={handleEditorChange} />
+
           </CardBody>
         </Card>
       </Form>
