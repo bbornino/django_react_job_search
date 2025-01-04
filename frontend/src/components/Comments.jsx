@@ -1,5 +1,5 @@
 // Comments section drawn by both Opportunitiy and Job Postings
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
 import { formatDisplayDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +12,15 @@ function Comments({itemComments, onCommentsSave}) {
     const [commentDateTime, setCommentDateTime] = useState('');
     const [commentType, setCommentType] = useState('');
     const [commentContent, setCommentContent] = useState('');
-    const [theComments, setTheComments] = useState(itemComments);   
+    const [theComments, setTheComments] = useState([]);   
     const [showComments, setShowComments] = useState(false);
+
+    // Synchronize `theComments` state with `itemComments` prop
+    useEffect(() => {
+        if (itemComments) {
+            setTheComments(itemComments);
+        }
+    }, [itemComments]);
 
     const getCommentIdIndex = (commentId) => {
         // the comment ID is not necessarily the same as the array index
@@ -102,7 +109,7 @@ function Comments({itemComments, onCommentsSave}) {
 
         let updatedComments = [];
 
-        if (theComments === null || theComments.length === 0) {
+        if (theComments === undefined || theComments === null || theComments.length === 0) {
             comment.id=0;
             updatedComments.push(comment);
             console.log(updatedComments);
