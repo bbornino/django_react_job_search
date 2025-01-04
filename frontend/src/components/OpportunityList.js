@@ -11,11 +11,6 @@ const OpportunityList = () => {
     const { apiRequest } = useApiRequest(); 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        document.title = "Opportunity List - Job Search Tracker";
-        getOpportunities(); // Call the memoized getOpportunities function
-    }, [getOpportunities]); // Including getOpportunities in the dependency array
-
     // Memoize the getOpportunities function to avoid re-renders due to function change
     const getOpportunities = useCallback(async () => {
         const data = await apiRequest(
@@ -28,6 +23,12 @@ const OpportunityList = () => {
             console.error('Failed to fetch opportunities');
         }
     }, [apiRequest]); // Adding apiRequest as a dependency
+
+    useEffect(() => {
+        document.title = "Opportunity List - Job Search Tracker";
+        getOpportunities(); // Call the memoized getOpportunities function
+    }, [getOpportunities]); // Including getOpportunities in the dependency array
+
 
     const columns = [
         {

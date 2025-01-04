@@ -24,7 +24,6 @@ const OpportunityDetails = () => {
     job_description: "",
   });
 
-  const { apiRequest: deleteOpportunity } = useApiRequest();
   const { apiRequest } = useApiRequest();
   const navigate = useNavigate();
 
@@ -107,9 +106,9 @@ const OpportunityDetails = () => {
   const handleEditOpportunity = async (e) => {
     e.preventDefault();
     await apiRequest(
-      `${JOB_OPPORTUNITY_API_URL}${state.opportunity_id}`,  // URL with the opportunity ID to update
-      state,  // Data to update the opportunity
-      { method: 'PUT' }  // PUT method to update
+      `${JOB_OPPORTUNITY_API_URL}${state.opportunity_id}`,  
+      state,  
+      { method: 'PUT' }
     );
     navigate("/opportunities")
   };
