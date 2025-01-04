@@ -8,17 +8,17 @@ const Dashboard = () => {
     const [activeJobPostings, setActiveJobPostings] = useState([]);
     const [activeOpportunities, setActiveOpportunities] = useState([]);
     const [statisticsBlock, setStatisticsBlock] = useState('');
-    const { request, error } = useApiRequest();
+    const { apiRequest } = useApiRequest();
 
     useEffect(() => {
         document.title = "Dashboard - Job Search Tracker";
         getJobHuntStatistics();
         getActiveJobPostings();
         getActiveOpportunities();
-    }, []);
+    });
 
     const getJobHuntStatistics = async () => {
-        const response = await request('dashboard/');
+        const response = await apiRequest('dashboard/');
         if (response && response.data) {
             const statistics = response.data.map((statistics_row) => (
                 <Row className="my-1" key={statistics_row.formatted_date}>
@@ -33,14 +33,14 @@ const Dashboard = () => {
     };
 
     const getActiveJobPostings = async () => {
-        const response = await request('job_posting/active');
+        const response = await apiRequest('job_posting/active');
         if (response && response.status === 200) {
             setActiveJobPostings(response.data);
         }
     };
 
     const getActiveOpportunities = async () => {
-        const response = await request('email_opportunity/active');
+        const response = await apiRequest('email_opportunity/active');
         if (response && response.status === 200) {
             setActiveOpportunities(response.data);
         }
