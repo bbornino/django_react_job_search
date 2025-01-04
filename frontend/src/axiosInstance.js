@@ -1,33 +1,38 @@
+// axiosInstance.js
+
 import axios from 'axios';
-import { useAuthHeader } from 'react-auth-kit'; // For generating headers dynamically
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // To redirect to login on failure
 
+// Create the Axios instance with default configurations
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8000/api',
+  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Export a hook to set up Axios interceptors
 export function useSetupAxiosInterceptor() {
-  // const getAuthHeader = useAuthHeader(); // Get the Authorization header function
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log('Setting up Axios interceptors with ' + localStorage.getItem("access_token"));
 
     // Request Interceptor
-    const requestInterceptor = axios.interceptors.request.use(
+    const requestInterceptor = axiosInstance.interceptors.request.use(
       (config) => {
         const accessToken = localStorage.getItem("access_token");
         console.log('Request Interceptor - Access Token:', accessToken);
-
-        if (accessToken) {
-          config.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
         return config;
       },
       (error) => {
         return Promise.reject(error);
       }
     );
-    
+
     // Response Interceptor
-    const responseInterceptor = axios.interceptors.response.use(
+    const responseInterceptor = axiosInstance.interceptors.response.use(
       (response) => {
         // If the response is successful, return it as is
         console.log("AXIOS responseInterceptor is Successful.")
@@ -44,7 +49,7 @@ export function useSetupAxiosInterceptor() {
           try {
             // Send a request to refresh the token
             const refreshToken = localStorage.getItem("refresh_token");
-            const response = await axios.post('/auth/refresh', {
+            const response = await axiosInstance.post('/auth/refresh', {
               refresh_token: refreshToken,
             });
 
@@ -57,7 +62,7 @@ export function useSetupAxiosInterceptor() {
 
             // Update the original request with the new token and retry it
             originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-            return axios(originalRequest); // Retry the original request
+            return axiosInstance(originalRequest); // Retry the original request
           } catch (refreshError) {
             console.error('Token refresh failed:', refreshError);
             // Clear tokens and redirect to login
@@ -75,10 +80,12 @@ export function useSetupAxiosInterceptor() {
 
     // Cleanup function to eject interceptors when the component unmounts
     return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
+      axiosInstance.interceptors.request.eject(requestInterceptor);
+      axiosInstance.interceptors.response.eject(responseInterceptor);
     };
-  }, []);
+  }, [navigate]);
 
   return null;
 }
+
+export default axiosInstance;
