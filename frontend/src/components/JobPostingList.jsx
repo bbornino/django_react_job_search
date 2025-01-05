@@ -75,10 +75,6 @@ const JobPostingList = () => {
         navigate('/job-posting-edit/' + row.id);
     }
 
-    const onNewPostingClicked = (r, e) => {
-        navigate('/job-posting-new/');
-    }
-
     const filterJobPostingsByParams = (companyName, postingTitle) => {
         const filteredItems = jobPostings.filter(item => 
             item.company_name && item.company_name.toLowerCase().includes(companyName.toLowerCase()) && 
