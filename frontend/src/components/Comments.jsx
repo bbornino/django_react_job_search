@@ -166,7 +166,7 @@ function Comments({itemComments, onCommentsSave}) {
     const commentCount = ( itemComments !== undefined && itemComments !== null && itemComments.length) ? itemComments.length : 0
     const showCommentsButton = 
             <Button color="success" type="button" onClick={onShowEditComments}>
-                Show Comments ( { commentCount} )</Button>
+                Show Comments ({commentCount})</Button>
         
     const editCommentsContent = 
             <Row id="comment_row">
@@ -242,9 +242,14 @@ function Comments({itemComments, onCommentsSave}) {
     
     return (
         <div>
-            {showComments ? editCommentsContent : showCommentsButton}
-            {commentBlock }
-
+            {showComments ? (
+            <>
+                {editCommentsContent}
+                {commentBlock}
+            </>
+            ) : (
+            showCommentsButton
+            )}
         </div>
     )
 }
