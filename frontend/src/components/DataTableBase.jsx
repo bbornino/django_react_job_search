@@ -9,7 +9,13 @@ const paginationComponentOptions = {
     selectAllRowsItemText: 'ALL',
 };
 
-function DataTableBase({ data, loading, paginationPerPage = 25, paginationRowsPerPageOptions = [10, 25, 100], ...otherProps }) {
+function DataTableBase({
+    data = [],
+    loading = false,
+    paginationPerPage = 25,
+    paginationRowsPerPageOptions = [10, 25, 100],
+    ...otherProps
+                }) {
     const emptyTableMessage = loading ? "Loading Data..." : (data.length ? "" : "No Table Data");
 
     return (
@@ -34,13 +40,6 @@ DataTableBase.propTypes = {
     loading: PropTypes.bool,
     paginationPerPage: PropTypes.number,
     paginationRowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
-};
-
-DataTableBase.defaultProps = {
-    data: [],
-    loading: false,
-    paginationPerPage: 25,
-    paginationRowsPerPageOptions: [10, 25, 100],
 };
 
 export default memo(DataTableBase);
