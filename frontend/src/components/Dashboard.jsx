@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
+import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL } from "../constants";
 import { useApiRequest } from '../useApiRequest'; // Import the hook
 import { formatDisplayDate } from '../constants'; 
 import DataTableBase from './DataTableBase';
@@ -18,7 +19,7 @@ const Dashboard = () => {
     });
 
     const getJobHuntStatistics = async () => {
-        const response = await apiRequest('dashboard/');
+        const response = await apiRequest(`${DASHBOARD_API_URL}`, {method:'GET'});
         if (response && response.data) {
             const statistics = response.data.map((statistics_row) => (
                 <Row className="my-1" key={statistics_row.formatted_date}>
@@ -33,14 +34,14 @@ const Dashboard = () => {
     };
 
     const getActiveJobPostings = async () => {
-        const response = await apiRequest('job_posting/active');
+        const response = await apiRequest(`${JOB_POSTING_API_URL}active`, {method:'GET'});
         if (response && response.status === 200) {
             setActiveJobPostings(response.data);
         }
     };
 
     const getActiveOpportunities = async () => {
-        const response = await apiRequest('email_opportunity/active');
+        const response = await apiRequest(`${JOB_OPPORTUNITY_API_URL}active`, {method:'GET'});
         if (response && response.status === 200) {
             setActiveOpportunities(response.data);
         }
