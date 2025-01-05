@@ -49,7 +49,7 @@ const JobSiteView = () => {
         if (!jobSiteId) return;
     
         const data = await apiRequest(JOB_SITE_API_URL + jobSiteId + '/postings', { method: 'GET' });
-        console.log("getJobSitePostings response:", data); // Debug log
+        // console.log("getJobSitePostings response:", data); // Debug log
         if (!data || !Array.isArray(data)) {
             console.warn("Invalid or missing data for job site postings");
             setState((prevState) => ({
@@ -84,7 +84,6 @@ const JobSiteView = () => {
         {
             name: 'Company Name',
             selector: row => (typeof row?.company_name === 'string' ? row.company_name : 'N/A'),
-            selector: row => row?.company_name || 'N/A',
             sortable: true,
         },
         {
@@ -120,6 +119,10 @@ const JobSiteView = () => {
     }
 
     const onNewPostingClicked = (r, e) => {
+        if (!state.job_site_id) {
+            console.error("Job site ID is not defined");
+            return;
+        }
         navigate('/job-posting-new/' + state.job_site_id);
     }
 
