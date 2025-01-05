@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.db import connection
 from django.shortcuts import get_object_or_404
 from job_search.utils import dictfetchall
+from job_search.job_site.job_site import JobSite
 from job_search.job_posting.job_posting import JobPosting
 from job_search.job_posting.job_posting_serializer import (
     JobPostingSerializer,
@@ -47,13 +48,17 @@ def job_site_postings(request, job_site_id):
     Debugging:
         - The function ensures user authentication and authorization before retrieving job postings.
     """
+    print(f"User Info: {request.user}")
+    print(f"Is Authenticated: {request.user.is_authenticated}")
+    print(f"User ID: {request.user.id}")
+    print(f"User Username: {request.user.username}")
     
     if not request.user.is_authenticated:
         return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
 
-    # Retrieve the EmailOpportunity and ensure the user is the owner
-    job_posting = get_object_or_404(JobPosting, pk=job_site_id)
-    if job_posting.user != request.user:
+    # Retrieve the Job Site to ensure that the user is the owner
+    job_site = get_object_or_404(JobSite, pk=job_site_id)
+    if job_site.user != request.user:
         return Response({"detail": "You do not have permission to access this resource."}, status=status.HTTP_403_FORBIDDEN)
     
     if request.method == "GET":
