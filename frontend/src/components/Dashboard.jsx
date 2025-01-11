@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback  } from 'react';
 import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL } from "../constants";
 import { useApiRequest } from '../useApiRequest'; // Import the hook
@@ -11,17 +11,12 @@ const Dashboard = () => {
     const [statisticsBlock, setStatisticsBlock] = useState('');
     const { apiRequest } = useApiRequest();
 
-    useEffect(() => {
-        document.title = "Dashboard - Job Search Tracker";
-        getJobHuntStatistics();
-        getActiveJobPostings();
-        getActiveOpportunities();
-    });
 
-    const getJobHuntStatistics = async () => {
+
+    const getJobHuntStatistics = useCallback(async () => {
         const response = await apiRequest(`${DASHBOARD_API_URL}`, {method:'GET'});
-        if (response && response.data) {
-            const statistics = response.data.map((statistics_row) => (
+        if (response) {
+            const statistics = response.map((statistics_row) => (
                 <Row className="my-1" key={statistics_row.formatted_date}>
                     <Col>{statistics_row.formatted_date}</Col>
                     <Col>{statistics_row.total_count}</Col>
@@ -31,21 +26,28 @@ const Dashboard = () => {
             ));
             setStatisticsBlock(statistics);
         }
-    };
+    }, [apiRequest]);
 
-    const getActiveJobPostings = async () => {
+    const getActiveJobPostings = useCallback(async () => {
         const response = await apiRequest(`${JOB_POSTING_API_URL}active`, {method:'GET'});
-        if (response && response.status === 200) {
-            setActiveJobPostings(response.data);
+        if (response) {
+            setActiveJobPostings(response);
         }
-    };
+    }, [apiRequest]);
 
-    const getActiveOpportunities = async () => {
+    const getActiveOpportunities = useCallback(async () => {
         const response = await apiRequest(`${JOB_OPPORTUNITY_API_URL}active`, {method:'GET'});
-        if (response && response.status === 200) {
-            setActiveOpportunities(response.data);
+        if (response) {
+            setActiveOpportunities(response);
         }
-    };
+    }, [apiRequest]);
+
+    useEffect(() => {
+        document.title = "Dashboard - Job Search Tracker";
+        getJobHuntStatistics();
+        getActiveJobPostings();
+        getActiveOpportunities();
+    }, [getJobHuntStatistics, getActiveJobPostings, getActiveOpportunities]);
 
     const onActiveJobPostingRowClicked = (row) => {
         window.location = '/job-posting-edit/' + row.id;
@@ -97,11 +99,13 @@ const Dashboard = () => {
             name: 'Recruiter Name',
             selector: row => String(row.recruiter_name),
             sortable: true,
+            width: "200px",
         },
         {
             name: 'Status',
             selector: row => row.opportunity_status,
             sortable: true,
+            width: "300px",
         },
         {
             name: "Received At",
@@ -109,7 +113,7 @@ const Dashboard = () => {
             cell: row => formatDisplayDate(row.email_received_at),
             sortable: true,
             id:'email_received_at',
-            width: "250px",
+            width: "150px",
         },
     ];
 
