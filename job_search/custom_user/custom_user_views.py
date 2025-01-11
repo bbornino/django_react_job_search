@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
-# import environ
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
@@ -21,7 +20,43 @@ DJANGO_ENV = settings.DJANGO_ENV
 
 @api_view(['POST'])
 def authenticate_user(request):
-    """Authenticate a user and log them in."""
+    """
+    Authenticate a user and provide JWT tokens upon successful login.
+
+    Args:
+        request (Request): The HTTP POST request containing 'username' and 'password' in the request body.
+
+    Returns:
+        Response: 
+            - 200 OK: If authentication is successful, returns a dictionary with:
+                - 'access': Access token (str).
+                - 'refresh': Refresh token (str).
+                - 'user': Serialized user data (dict) using the CustomUserSerializer.
+            - 400 BAD REQUEST: If 'username' or 'password' is missing in the request data.
+            - 401 UNAUTHORIZED: If the provided credentials are invalid.
+
+    Raises:
+        None
+
+    Example:
+        POST /api/authenticate_user/ 
+        Request body:
+        {
+            "username": "testuser",
+            "password": "password123"
+        }
+        Response:
+        {
+            "access": "eyJ0eXAiOiJKV1QiLCJh...",
+            "refresh": "eyJhbGciOiJIUzI1NiIs...",
+            "user": {
+                "id": 1,
+                "username": "testuser",
+                "email": "testuser@example.com",
+                ...
+            }
+        }
+    """
     username = request.data.get('username')
     password = request.data.get('password')
 
@@ -33,8 +68,6 @@ def authenticate_user(request):
         # Create JWT token for the user
         refresh = RefreshToken.for_user(user)
         access_token = refresh.access_token
-
-        # Serialize the user object using CustomUserSerializer (adjust fields as necessary)
         user_data = CustomUserSerializer(user).data
 
         # Return access token, refresh token, and serialized user data
@@ -49,8 +82,43 @@ def authenticate_user(request):
 
 class TokenRefreshCustomView(TokenRefreshView):
     """
-    Custom refresh token view that can be used to refresh the JWT token.
-    This uses SimpleJWT's built-in view.
+    Custom refresh token view for handling JWT token refreshes.
+
+    This class extends SimpleJWT's built-in `TokenRefreshView` to provide
+    additional error handling and customized responses for token refresh operations.
+
+    Methods:
+        post(request, *args, **kwargs):
+            Handle POST requests to refresh JWT tokens.
+            - On success: Calls the parent `TokenRefreshView.post` method.
+            - On failure: Returns appropriate error messages and status codes.
+
+    Args:
+        request (Request): The HTTP POST request containing the refresh token in the body.
+
+    Returns:
+        Response:
+            - 200 OK: If the refresh token is valid, returns a new access token and the original refresh token.
+            - 401 UNAUTHORIZED: If the refresh token is invalid or expired.
+            - 500 INTERNAL SERVER ERROR: For any unexpected server-side errors.
+
+    Raises:
+        None
+
+    Example:
+        POST /api/token/refresh/
+        Request body:
+        {
+            "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+        Response (on success):
+        {
+            "access": "eyJ0eXAiOiJKV1QiLCJh..."
+        }
+        Response (on failure):
+        {
+            "detail": "Token refresh failed. Please log in again."
+        }
     """
     def post(self, request, *args, **kwargs):
         try:
@@ -73,7 +141,40 @@ class TokenRefreshCustomView(TokenRefreshView):
 @api_view(['POST'])
 def logout_user(request):
     """
-    Log out by blacklisting the refresh token.
+    Logs out a user by blacklisting their refresh token.
+
+    This function handles the logout process for JWT-based authentication
+    by blacklisting the provided refresh token, preventing further use.
+
+    Args:
+        request (Request): The HTTP POST request containing the 'refresh' token in the request body.
+
+    Returns:
+        Response:
+            - 200 OK: If the refresh token is successfully blacklisted.
+            - 400 BAD REQUEST: If no refresh token is provided or the token is invalid.
+
+    Raises:
+        None
+
+    Example:
+        POST /api/logout_user/
+        Request body:
+        {
+            "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+        Response (on success):
+        {
+            "detail": "Successfully logged out."
+        }
+        Response (on failure - no token):
+        {
+            "detail": "No refresh token provided."
+        }
+        Response (on failure - invalid token):
+        {
+            "detail": "Invalid token."
+        }
     """
     try:
         refresh_token = request.data.get('refresh')  # Get the refresh token from the request body
@@ -89,8 +190,44 @@ def logout_user(request):
 
 class UserProfileView(APIView):
     """
-    A view to get the current logged-in user's profile.
-    This is a 'me' endpoint to fetch the user details.
+    View to retrieve the current logged-in user's profile.
+
+    This endpoint provides user-specific information, acting as a 'me' endpoint
+    to fetch the details of the authenticated user.
+
+    Attributes:
+        permission_classes (list): List of permission classes that determine access to the view. 
+                                   Requires the user to be authenticated (`IsAuthenticated`).
+
+    Methods:
+        get(request):
+            Handle GET requests to return user profile details.
+
+    Args:
+        request (Request): The HTTP request object containing user authentication information.
+
+    Returns:
+        Response:
+            - 200 OK: If the user is authenticated, returns a dictionary containing:
+                - 'id': User ID (int)
+                - 'username': Username (str)
+                - 'email': Email address (str)
+                - 'first_name': First name (str)
+                - 'last_name': Last name (str)
+    
+    Raises:
+        None
+
+    Example:
+        GET /api/user/profile/
+        Response:
+        {
+            "id": 1,
+            "username": "john_doe",
+            "email": "john_doe@example.com",
+            "first_name": "John",
+            "last_name": "Doe"
+        }
     """
     permission_classes = [IsAuthenticated]
 
@@ -108,7 +245,40 @@ class UserProfileView(APIView):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_user_info(request):
-    """Update the logged-in user's information."""
+    """
+    Update the logged-in user's information.
+
+    This endpoint allows an authenticated user to update their profile information
+    with partial updates supported.
+
+    Args:
+        request (Request): The HTTP PUT request containing the user's updated data in the request body.
+
+    Returns:
+        Response:
+            - 200 OK: If the user information is successfully updated. Returns a success message.
+            - 400 BAD REQUEST: If the provided data is invalid. Returns validation errors.
+
+    Raises:
+        None
+
+    Example:
+        PUT /api/user/update/
+        Request body:
+        {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "new_email@example.com"
+        }
+        Response (on success):
+        {
+            "message": "User info updated successfully."
+        }
+        Response (on failure):
+        {
+            "email": ["Enter a valid email address."]
+        }
+    """
     user = request.user
     serializer = CustomUserSerializer(user, data=request.data, partial=True)  # Allow partial updates
 
@@ -119,19 +289,55 @@ def update_user_info(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def list_all_users(request):
-    """Retrieve a list of all users (admin access only)."""
-    users = CustomUser.objects.all()
-    serializer = CustomUserListSerializer(users, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
 @api_view(['POST'])
 def register_user(request):
     """
-    Register a new user with basic information: username, email, first name, last name, and password.
-    All additional fields are set to default values.
+    Register a new user with basic and default information.
+
+    This endpoint allows the creation of a new user with the following required fields:
+    - `username`
+    - `email`
+    - `first_name`
+    - `last_name`
+    - `password`
+
+    Optional fields are initialized to default values:
+    - `bio`: ""
+    - `user_greeting`: "Welcome!"
+    - `color_mode`: "light"
+    - `dashboard_first_date`: None
+    - `dashboard_second_date`: None
+
+    Args:
+        request (Request): The HTTP POST request containing user registration data in the body.
+
+    Returns:
+        Response:
+            - 201 CREATED: If the user is successfully registered. Returns a success message.
+            - 400 BAD REQUEST: If required fields are missing, the username/email is already taken,
+              or the password fails validation. Returns an error message.
+
+    Raises:
+        None
+
+    Example:
+        POST /api/register/
+        Request body:
+        {
+            "username": "johndoe",
+            "email": "johndoe@example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "password": "StrongPassword123!"
+        }
+        Response (on success):
+        {
+            "message": "User successfully registered."
+        }
+        Response (on failure):
+        {
+            "error": "Username already exists."
+        }
     """
     # Get the data from the request
     username = request.data.get('username')
@@ -185,3 +391,11 @@ def register_user(request):
     )
 
     return Response({'message': 'User successfully registered.'}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_all_users(request):
+    """Retrieve a list of all users (admin access only)."""
+    users = CustomUser.objects.all()
+    serializer = CustomUserListSerializer(users, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
