@@ -100,7 +100,7 @@ const Reports = () => {
                         <Input type="date"
                             id="start_date"
                             name="start_date"
-                            onChange={setStartDate}
+                            onChange={(e) => setStartDate(e.target.value)}
                             value={startDate ?? ''} />
                     </FormGroup>
                 </Col>

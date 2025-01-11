@@ -325,9 +325,9 @@ def job_postings_report(request, report_type, reference_date=None):
     # Determine which report to run
     if report_type == "postingsAppliedSince":
         report_name = (
-            f"Postings Applied Since {formatted_date}"
+            f"Postings Applied since {formatted_date}"
             if reference_date
-            else "Postings Applied Since"
+            else "Postings Applied"
         )
         report_fields = [
             {
@@ -374,7 +374,7 @@ def job_postings_report(request, report_type, reference_date=None):
 
     elif report_type == "perWeek":
         report_name = (
-            f"Applications Per Week {formatted_date}"
+            f"Applications Per Week since {formatted_date}"
             if reference_date
             else "Applications Per Week"
         )
@@ -437,7 +437,7 @@ def job_postings_report(request, report_type, reference_date=None):
 
     elif report_type == "perSite":
         report_name = (
-            f"Postings Per Site {formatted_date}"
+            f"Postings Per Site since {formatted_date}"
             if reference_date
             else "Postings Per Site"
         )
