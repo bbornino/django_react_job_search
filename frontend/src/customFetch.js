@@ -2,6 +2,7 @@ import { TOKEN_REFRESH_API_URL } from "./constants";
 
 export async function customFetch(url, options = {}, accessToken, refreshToken, navigate) {
   let isRefreshing = false; // Track if the token refresh process is ongoing
+  let refreshPromise = null; // To store the promise of the ongoing refresh process
 
   try {
     // Helper function to refresh the token
@@ -21,7 +22,7 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
       }
 
       const data = await response.json();
-      return data.access;
+      return data.access; // The new access token
     }
 
     // Set up headers with the access token
@@ -31,9 +32,10 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
     };
 
     // Ensure the body is correctly included for POST/PUT methods
-    const body = 
+    const body =
       (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE')
-        ? JSON.stringify(options.body) : null;
+        ? JSON.stringify(options.body)
+        : null;
 
     let response = await fetch(url, {
       ...options,
@@ -45,44 +47,40 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
       // Access token expired, start the refresh process
       isRefreshing = true;
       console.log('Access token expired, attempting to refresh...');
-      
-      try {
-        const newAccessToken = await refreshAccessToken();
-        
-        // Save the new access token to localStorage
-        localStorage.setItem('access_token', newAccessToken);
 
-        // Retry the original request with the new access token
-        const retryHeaders = {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${newAccessToken}`,
-        };
-        response = await fetch(url, {
-          ...options,
-          headers: retryHeaders,
-        });
+      // Start refreshing the access token only once
+      refreshPromise = refreshAccessToken();
 
-        if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
-        }
+      // Wait for the refresh to complete and get the new token
+      const newAccessToken = await refreshPromise;
 
-        // Parse and return the JSON data from the retried response
-        const retryData = await response.json();
-        return retryData || [];
-      } catch (refreshError) {
-        console.error('Error refreshing access token:', refreshError);
-        navigate('/login'); // Navigate to login if refreshing fails
-        return [];
+      // Save the new access token to localStorage
+      localStorage.setItem('access_token', newAccessToken);
+
+      // Now retry the original request with the new access token
+      const retryHeaders = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${newAccessToken}`,
+      };
+
+      response = await fetch(url, {
+        ...options,
+        headers: retryHeaders,
+        body, // Retry the body if needed
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
       }
+
+      // Parse and return the JSON data from the retried response
+      const retryData = await response.json();
+      return retryData || [];
     }
 
-    // For other non-401 errors, handle them as usual
+    // If no refresh needed, handle the normal response
     if (!response.ok && response.status !== 401) {
-
-      // Log the error for non-401 statuses
       console.error(`HTTP Error: ${response.status} - ${response.statusText}`);
-
-      // throw new Error(`HELP HTTP Error: ${response.status} - ${response.statusText}`);
     }
 
     // Handle empty or non-JSON response body
@@ -98,5 +96,9 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
   } catch (error) {
     console.error('Custom fetch error:', error);
     return [];
+  } finally {
+    // Reset the refresh flag once the refresh process is done
+    isRefreshing = false;
+    refreshPromise = null;
   }
 }
