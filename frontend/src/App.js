@@ -1,6 +1,6 @@
 import React, { useState }  from 'react';
 import {  useAuthUser, useIsAuthenticated, useSignOut  } from 'react-auth-kit';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useNavigate } from 'react-router-dom';
 import {
   Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink,
   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
@@ -39,36 +39,18 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   // useSetupAxiosInterceptor(); // This will set up the Axios interceptor
   const { apiRequest } = useApiRequest();
+  const navigate = useNavigate(); // Hook to navigate after login
   
   // Toggle the navigation bar
   const toggle = () => setIsOpen((prevState) => !prevState);
   
   const handleLogout = async () => {
-    
     // Make the logout API call to invalidate the token
     await apiRequest('/api/logout/', {}, { method: 'POST' }); // Adjust the endpoint if needed
-
-
     signOut();  // Sign out the user
-
-    const deleteCookiesByPrefix = (prefix) => {
-      // Loop through all cookies
-      document.cookie.split(';').forEach((cookie) => {
-        const cookieName = cookie.split('=')[0].trim();
-        if (cookieName.startsWith(prefix)) {
-          // Set the expiration date in the past to delete the cookie
-          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-        }
-      });
-    };
-
-    deleteCookiesByPrefix('remember_web_');
-    document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/"; 
-    document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-
     localStorage.removeItem("access_token");
 
-    window.location.href = "/";  // Redirect to home page after logout
+    navigate("/");// Redirect to home page after logout
   };
 
   // Note: <BrowserRouter> is defined in index.js!
@@ -159,8 +141,10 @@ function App() {
       </Navbar>
 
       <Routes>
+        {/* Conditional Routing for / based on Authentication */}
+        <Route path="/" element={isAuthenticated() ? <Dashboard /> : <Welcome />} />
+
         {/* Public Routes */}
-        <Route path="/" element={<Welcome />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
