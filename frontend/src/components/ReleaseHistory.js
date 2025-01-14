@@ -17,7 +17,17 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
-                        <h2>November 14, 2024 - Release 3</h2>
+                        <h2>January 14, 2025 - Release 4</h2>
+                        Added Multi-User Support!  Impacts:
+                        <ul>
+                            <li>Added back end custom user module and added user field to job postings, job sites, and opportunities</li>
+                            <li>Added back end authentication, token refresh, and logout</li>
+                            <li>New Login and Register Pages</li>
+                            <li>New Menu organization dependant on whether logged in or not</li>
+                            <li>Converted all Class Components to Functional Components</li>
+                            <li>Enabled React.Fetch for API Authentication Tokens</li>
+                        </ul>
+                        <h2 className="mt-5">November 14, 2024 - Release 3</h2>
                         <ul>
                             <li>Added Dashboard with dynamically calculated statistics</li>
                             <li>Added Static Boolean Search Page</li>
