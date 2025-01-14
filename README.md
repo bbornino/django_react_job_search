@@ -12,10 +12,12 @@ This project is a Django  application that is developed and tested using:
 - Django 4.2.6
 - React 18.3.1
 - react-data-table-component 7.6.2
+- react-router-dom 7.1.1
+- react-auth-kit 3.1.3
 - bootstrap 5.3.3
 - reactstrap 9.2.2
 - ckeditor5 43.0.0
-- SQLite
+- MariaDB
 
 
 ## Contact the Author

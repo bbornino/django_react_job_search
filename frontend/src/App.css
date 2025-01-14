@@ -65,6 +65,35 @@ ul li.check:before  {
   background-color: bg-white;
 }
 
+/* For centering any container */
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns items at the top */
+  padding-top: 100px; /* Offset from the navbar */
+  height: 100vh; /* Full viewport height */
+}
+
+/* Reusable for any narrow container/card */
+.card-narrow {
+  width: 100%;
+  max-width: 320px; /* You can adjust this to your liking */
+  padding: 20px;
+  border: 1px solid #ddd; /* Optional: Subtle border */
+  border-radius: 8px; /* Optional: Rounded corners */
+}
+
+/* Reusable medium-wide container/card */
+.card-medium {
+  width: 100%;
+  max-width: 600px; /* Medium-wide container */
+  padding: 20px;
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 10px; /* Slightly rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: soft shadow for better contrast */
+  background-color: #fff; /* Optional: White background */
+}
+
 /* Make sure all content containers are distinguishable on a web page even of not focused. */
 .ck.ck-content:not(:focus) {
   border: 1px solid var(--ck-color-base-border);

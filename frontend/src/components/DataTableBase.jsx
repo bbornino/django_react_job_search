@@ -1,27 +1,45 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import DataTable from 'react-data-table-component';
 
 const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
+
 const paginationComponentOptions = {
-	selectAllRowsItem: true,
-	selectAllRowsItemText: 'ALL',
-  };
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'ALL',
+};
 
+function DataTableBase({
+    data = [],
+    loading = false,
+    paginationPerPage = 25,
+    paginationRowsPerPageOptions = [10, 25, 100],
+    ...otherProps
+                }) {
+    const emptyTableMessage = loading ? "Loading Data..." : (data.length ? "" : "No Table Data");
 
-function DataTableBase(props) {
-	const emptyTableMessage = (props.data.length) ? "Loading Data" : "No Table Data";
-
-	return (
-		<DataTable
-			selectableRowsComponentProps={selectProps}
-			paginationComponentOptions={paginationComponentOptions}
-			noDataComponent={emptyTableMessage}
-			paginationPerPage={25}
-			paginationRowsPerPageOptions={[10,25,100]}
-			pagination striped highlightOnHover dense
-			{...props}
-		/>
-	);
+    return (
+        <DataTable
+            selectableRowsComponentProps={selectProps}
+            paginationComponentOptions={paginationComponentOptions}
+            noDataComponent={emptyTableMessage}
+            paginationPerPage={paginationPerPage}
+            paginationRowsPerPageOptions={paginationRowsPerPageOptions}
+            pagination
+            striped
+            highlightOnHover
+            dense
+            data={data}
+            {...otherProps}
+        />
+    );
 }
 
-export default DataTableBase;
+DataTableBase.propTypes = {
+    data: PropTypes.array.isRequired,
+    loading: PropTypes.bool,
+    paginationPerPage: PropTypes.number,
+    paginationRowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
+};
+
+export default memo(DataTableBase);

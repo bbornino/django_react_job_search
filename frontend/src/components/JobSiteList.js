@@ -1,32 +1,34 @@
-import {React, Component} from "react";
-import { Link } from 'react-router-dom'
-import axios from "axios";
+import React, { useEffect, useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useApiRequest } from '../useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDate  } from "../constants";
 
 import DataTableBase from './DataTableBase';
 import {Button, Container, Row, Col} from 'reactstrap';
 
-class JobSiteList extends Component {
+const JobSiteList = () => {
+    const [jobSites, setJobSites] = useState([]);
+    const { apiRequest } = useApiRequest(); 
+    const navigate = useNavigate();
 
-    state = {
-        jobSites: [],
-    };
+    // Memoize the getOpportunities function to avoid re-renders due to function change
+    const getJobSites = useCallback(async () => {
+        const data = await apiRequest(JOB_SITE_API_URL, {method: 'GET'});
+        if (data) {
+            setJobSites(data);
+        } else {
+            console.error('Failed to fetch job sites');
+        }
+    }, [apiRequest] );      // apiRequest is a dependancy
 
-    componentDidMount() {
+    useEffect(() => {
         document.title = "Job Site List - Job Search Tracker";
-        this.resetState();
-    };
+        getJobSites(); // Call the memoized getOpportunities function
+    }, [getJobSites]);
+    
 
-    resetState = () => {
-        this.getJobSites();
-    };
 
-    getJobSites = () => {
-        axios.get(JOB_SITE_API_URL).then(
-            res => this.setState({jobSites:res.data}));
-    };
-
-    columns = [
+    const columns = [
         {
             name: 'Site Name',
             selector: row => row.site_name,
@@ -62,31 +64,30 @@ class JobSiteList extends Component {
         
     ];
 
-    onRowClicked = (row, event) => {
-        window.location = '/job-site-view/' + row.id
+    const onRowClicked = (row, event) => {
+        navigate('/job-site-view/' + row.id);
     };
 
-    render() {
-        const { jobSites } = this.state;
-        return (
-            <Container className="mt-2">
-                <Row className="m-4">
-                    <Col xxl="10" xl="9" lg="9" md="8" sm="5" xs="3">
-                        <h1>All Job Sites</h1>
-                    </Col>
-                    <Col>
-                        <Link to='/job-site-edit'>
-                            <Button color="success" > Create Job Site</Button>
-                        </Link>
-                    </Col>
-                </Row>
-                <DataTableBase  columns={this.columns}
-                                data={jobSites}
-                                defaultSortFieldId="rating"
-                                onRowClicked={this.onRowClicked} />
-            </Container>
-        )
-    }
+
+    return (
+        <Container className="mt-2">
+            <Row className="m-4">
+                <Col xxl="10" xl="9" lg="9" md="8" sm="5" xs="3">
+                    <h1>All Job Sites</h1>
+                </Col>
+                <Col>
+                    <Link to='/job-site-edit'>
+                        <Button color="success" > Create Job Site</Button>
+                    </Link>
+                </Col>
+            </Row>
+            <DataTableBase  columns={columns}
+                            data={jobSites}
+                            defaultSortFieldId="rating"
+                            onRowClicked={onRowClicked} />
+        </Container>
+    )
+
 }
 
 export default JobSiteList;

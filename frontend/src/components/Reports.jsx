@@ -1,9 +1,10 @@
-import {React, Component} from "react";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from 'react-router-dom';
 import { REPORT_API_URL } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
 import DataTableBase from './DataTableBase';
+import { useApiRequest } from "../useApiRequest";
 
 // const isDate = (value) => {
 //       // Check if the value is a string
@@ -22,44 +23,24 @@ import DataTableBase from './DataTableBase';
 //     return !isNaN(date.getTime()) && date.toString() !== 'Invalid Date';
 // };
 
-class Reports extends Component {
-
-    state = {
+const Reports = () => {
+    const [startDate, setStartDate] = useState('');
+    const [report, setReport] = useState({
         report_name: '',
-        start_date: '',
-        
         report_title: '',
         report_columns: [],
         report_data: [],
-    }
+    });
+    const navigate = useNavigate();
+    const { apiRequest } = useApiRequest();
 
-    parseWindowLocationDate = (pathArr) => {
-        var reportDate = '2024-01-01'       // Default Report Date when none set
-        if (pathArr.length > 3) {
-            const rDate = new Date(pathArr[3])
-            if (!isNaN(rDate)) {
-                reportDate = pathArr[3]
-            }
-        }
-        return reportDate
-    }
+    const getReports = useCallback(async (reportName, reportDate) => {
+        setStartDate(reportDate);
 
-    componentDidMount() {
-        
-        const pathArr = window.location.pathname.split('/')
-        if (pathArr.length > 2) {
-            var reportName = pathArr[2]
-            document.title = reportName + " Report - Job Search Tracker";
-            var reportDate = this.parseWindowLocationDate(pathArr)
-            this.getReports(reportName, reportDate);
-        }
-    };
-
-    getReports = (reportName, reportDate) => {
-        this.setState({report_name:reportName, start_date: reportDate});
-        axios.get(REPORT_API_URL + reportName + '/' + reportDate).then( res => {
+        const reportData = await apiRequest(REPORT_API_URL + reportName + '/' + reportDate, {method:'GET'});
+        if (reportData) {
             var tableColumns = [];
-            res.data.report_fields.forEach((fieldInfo) => {
+            reportData.report_fields.forEach((fieldInfo) => {
                 const fieldObj = {
                     name: fieldInfo.field_title,
                     selector: row => {
@@ -76,45 +57,63 @@ class Reports extends Component {
                 tableColumns.push(fieldObj)
             })
 
-            this.setState({ report_data: res.data.report_data, 
-                            report_columns: tableColumns, report_title: res.data.report_name})
-        });
+            setReport({report_data: reportData.report_data, report_name: reportName,
+                report_columns: tableColumns, report_title: reportData.report_name})
+        }
+    }, [apiRequest])
+
+
+    const parseWindowLocationDate = (pathArr) => {
+        var reportDate = '2024-01-01'       // Default Report Date when none set
+        if (pathArr.length > 3) {
+            const rDate = new Date(pathArr[3])
+            if (!isNaN(rDate)) {
+                reportDate = pathArr[3]
+            }
+        }
+        return reportDate
     }
 
-    onChange = e => {
-        this.setState({[e.target.name] : e.target.value});
-    };
+    useEffect(() => {
+        const pathArr = window.location.pathname.split('/')
+        if (pathArr.length > 2) {
+            var reportName = pathArr[2]
+            document.title = reportName + " Report - Job Search Tracker";
+            var reportDate = parseWindowLocationDate(pathArr)
+            getReports(reportName, reportDate);
+        }
+    }, [getReports])
 
-    onUpdateReport = e => {
-        window.location = '/reports/' + this.state.report_name + '/'+ this.state.start_date
+    const onUpdateReport = e => {
+        navigate('/reports/' + report.report_name + '/'+ startDate);
     }
 
-    render() {
-        return (
-            <Container>
-                <Row className="m-4">
-                    <Col lg="9">
-                        <h1>{this.state.report_title}</h1>
-                    </Col>
-                    <Col lg="2">
-                        <FormGroup row>
-                            <Input type="date"
-                                id="start_date"
-                                name="start_date"
-                                onChange={this.onChange}
-                                value={this.state.start_date ?? ''} />
-                        </FormGroup>
-                    </Col>
-                    <Col lg="1">
-                        <Button color="primary" className="m2"
-                                onClick={this.onUpdateReport}>Update</Button>
-                    </Col>
-                </Row>
-                <DataTableBase  columns={this.state.report_columns}
-                                data={this.state.report_data} />
-            </Container>
-        )
-    }
+
+    return (
+        <Container>
+            <Row className="m-4">
+                <Col lg="9">
+                    <h1>{report.report_title}</h1>
+                </Col>
+                <Col lg="2">
+                    <FormGroup row>
+                        <Input type="date"
+                            id="start_date"
+                            name="start_date"
+                            onChange={(e) => setStartDate(e.target.value)}
+                            value={startDate ?? ''} />
+                    </FormGroup>
+                </Col>
+                <Col lg="1">
+                    <Button color="primary" className="m2"
+                            onClick={onUpdateReport}>Update</Button>
+                </Col>
+            </Row>
+            <DataTableBase  columns={report.report_columns}
+                            data={report.report_data} />
+        </Container>
+    )
+
 }
 
 export default Reports;

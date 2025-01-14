@@ -1,5 +1,5 @@
 // Comments section drawn by both Opportunitiy and Job Postings
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
 import { formatDisplayDateTime } from "../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +12,15 @@ function Comments({itemComments, onCommentsSave}) {
     const [commentDateTime, setCommentDateTime] = useState('');
     const [commentType, setCommentType] = useState('');
     const [commentContent, setCommentContent] = useState('');
-    const [theComments, setTheComments] = useState(itemComments);   
+    const [theComments, setTheComments] = useState([]);   
     const [showComments, setShowComments] = useState(false);
+
+    // Synchronize `theComments` state with `itemComments` prop
+    useEffect(() => {
+        if (itemComments) {
+            setTheComments(itemComments);
+        }
+    }, [itemComments]);
 
     const getCommentIdIndex = (commentId) => {
         // the comment ID is not necessarily the same as the array index
@@ -102,7 +109,7 @@ function Comments({itemComments, onCommentsSave}) {
 
         let updatedComments = [];
 
-        if (theComments === null || theComments.length === 0) {
+        if (theComments === undefined || theComments === null || theComments.length === 0) {
             comment.id=0;
             updatedComments.push(comment);
             console.log(updatedComments);
@@ -156,10 +163,10 @@ function Comments({itemComments, onCommentsSave}) {
         commentTypeError.style.display = 'none'
     }
 
-    const commentCount = (itemComments !== null && itemComments.length) ? itemComments.length : 0
+    const commentCount = ( itemComments !== undefined && itemComments !== null && itemComments.length) ? itemComments.length : 0
     const showCommentsButton = 
             <Button color="success" type="button" onClick={onShowEditComments}>
-                Show Comments ( { commentCount} )</Button>
+                Show Comments ({commentCount})</Button>
         
     const editCommentsContent = 
             <Row id="comment_row">
@@ -210,7 +217,7 @@ function Comments({itemComments, onCommentsSave}) {
         </Row>
     
     var commentBlock = '';
-    if (theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
+    if (theComments !== undefined && theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
         commentBlock = theComments.map((comment_row) => (
             <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                 <hr/>
@@ -235,9 +242,14 @@ function Comments({itemComments, onCommentsSave}) {
     
     return (
         <div>
-            {showComments ? editCommentsContent : showCommentsButton}
-            {commentBlock }
-
+            {showComments ? (
+            <>
+                {editCommentsContent}
+                {commentBlock}
+            </>
+            ) : (
+            showCommentsButton
+            )}
         </div>
     )
 }
