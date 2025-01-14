@@ -37,6 +37,8 @@ const About = () => {
                     <ul>
                         <li>Comments - Create, Read, Edit, and Delete</li>
                         <li>Job Opportunity WYSIWYG Editor (CKEditor5)</li>
+                        <li>Reports and Statistics</li>
+                        <li>Multi-User Support</li>
                     </ul>
                     <p>This application is built using the following technologies:</p>
                     <ul>
