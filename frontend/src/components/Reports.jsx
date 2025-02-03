@@ -64,7 +64,7 @@ const Reports = () => {
 
 
     const parseWindowLocationDate = (pathArr) => {
-        var reportDate = '2024-01-01'       // Default Report Date when none set
+        var reportDate = '2024-08-01'       // Default Report Date when none set
         if (pathArr.length > 3) {
             const rDate = new Date(pathArr[3])
             if (!isNaN(rDate)) {
