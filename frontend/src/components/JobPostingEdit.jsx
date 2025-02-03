@@ -5,7 +5,7 @@ import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTi
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faFloppyDisk, faEraser } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./Editor"
 import Comments from "./Comments"
@@ -168,6 +168,44 @@ const JobPostingEdit = () => {
         navigate(-1);       // go back one navigational page
     }
 
+    const clearJobPosting = () => {
+        const descCard = document.getElementById("description_card_body")
+        const ckeContent = descCard.querySelector(".ck-content")
+
+        if (ckeContent !== null) {
+            ckeContent.ckeditorInstance.setData('')
+        }
+
+        setState((prevState) => ({
+            // NOTE: Any attempted setting of defaults here are overwritten by the state = line above!
+            ...prevState,
+            posting_title: '',
+            company_name: '',
+            posting_status: '4 - No Response',
+
+            posting_url_full: '',
+            posting_url_domain: '',
+            posting_password: '',
+
+            pay_range: '',
+            location_city: '',
+            location_type: '',
+            employment_type: '',
+
+            rejected_after_stage: '',
+
+            job_scan_info: '',
+            outreach_info: '',
+            time_spent: '',
+
+            technology_string: '',
+            technology_stack: [],
+            comments: [],
+            posting_application_questions: [],
+            job_description: '',
+        }))
+    }
+
     const createJobPosting = async (e) => {
         e.preventDefault();
         const jobPostingParams = state
@@ -193,10 +231,13 @@ const JobPostingEdit = () => {
                 <Card className="text-dark bg-light m-3">
                     <CardTitle className="mx-4 my-2">
                         <Row className="">
-                            <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
+                            <Col xxl="8" xl="8" lg="7" md="7" sm="5" xs="3">
                                 {state.job_posting_id === 0 ? 'Create' : 'Edit'} Job Posting
                             </Col>
-                            <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
+                            <Col xxl="4" xl="4" lg="5" md="5" sm="7" xs="9" className="pull-right">
+                                <Button color="warning" className="mx-2  pull-right" 
+                                    onClick={clearJobPosting}>
+                                    <FontAwesomeIcon icon={faEraser} /> &nbsp; Clear</Button>
                                 <Button color="danger" className="mx-2  pull-right" 
                                     onClick={onDeleteJobPosting}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
@@ -284,12 +325,15 @@ const JobPostingEdit = () => {
                                         value={state.posting_url_domain || ''}>
                                             <option value="">Select Posting Domain</option>
                                             <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
+                                            <option value="Dice Easy Apply">Dice Easy Apply</option>
                                             <option value="Indeed">Indeed</option>
                                             <option value="Greenhouse">Greenhouse</option>
                                             <option value="My Workday Jobs">My Workday Jobs</option>
                                             <option value="Lever">Lever</option>
+                                            <option value="ICIMS">ICIMS</option>
                                             <option value="JobVite">JobVite</option>
                                             <option value="Bamboo HR">Bamboo HR</option>
+                                            <option value="Breezy HR">Breezy HR</option>
                                             <option value="Cal Careers">Cal Careers</option>
                                             <option value="Custom / In House">Custom / In House</option>
                                             <option value="Other">Other</option>
