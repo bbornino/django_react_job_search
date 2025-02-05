@@ -1,0 +1,39 @@
+# PRODUCTION Docker File
+# 
+
+# First Stage - Build the React App
+FROM node:20 AS react_build
+WORKDIR /app/frontend
+
+# Copy package.json and package-lock.json separately for better caching
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+COPY frontend ./
+RUN npm run build
+
+
+# Stage 2: Setup Django backend
+FROM python:3.12-slim AS backend_build
+WORKDIR /app/backend
+
+# By default, Python buffers stdout and stderr, meaning logs might not appear immediately. 
+# Setting PYTHONUNBUFFERED=1 forces Python to output logs directly, 
+ENV PYTHONUNBUFFERED=1
+
+# Copy backend (with dependancies) and install
+COPY backend/ .
+RUN pip install --upgrade pip && \
+    apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    pkg-config build-essential apt-utils && \
+    pip install --no-cache-dir -r requirements.txt
+
+
+# Final Stage: combine and run
+COPY --from=react_build /app/frontend/build/ /app/backend/staticfiles/
+
+# Expose port if needed (e.g., for Django app)
+EXPOSE 8000
+
+# Define the command to run the application 
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

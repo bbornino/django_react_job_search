@@ -1,0 +1,8 @@
+version: '2'
+syncs:
+  frontend-sync:
+    src: './frontend'
+    dest: '/app/frontend'
+    sync_strategy: 'native_osx'  # Use 'unison' for other OS
+    _run_on_start: true
+    _volume: true

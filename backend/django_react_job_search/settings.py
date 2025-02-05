@@ -125,11 +125,16 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Use MySQL engine for MariaDB compatibility
-        'NAME': 'django_job_search',  # Replace with your actual database name
-        'USER': 'django_app',  # Replace with your MariaDB username
-        'PASSWORD': 'django_app',  # Replace with your MariaDB password
-        'HOST': 'localhost',  # Or use your MariaDB server address (e.g., IP or domain)
-        'PORT': '3306',  # Default MariaDB/MySQL port
+        # 'NAME': 'django_job_search',  
+        # 'USER': 'django_app', 
+        # 'PASSWORD': 'django_app', 
+        # 'HOST': 'localhost',
+        # 'PORT': '3306',
+        'NAME': os.getenv('DB_NAME', 'django_job_search'),
+        'USER': os.getenv('DB_USER', 'django_app'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'django_app'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # Use 'db' in Docker
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',  # Set charset to utf8mb4 for better Unicode support
             'collation': 'utf8mb4_unicode_ci',  # Ensure the collation is utf8mb4-based

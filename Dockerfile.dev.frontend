@@ -1,0 +1,16 @@
+# DEVELOPMENT Frontend Docker File
+# 
+
+# Build the React App
+FROM node:20 AS react_build
+WORKDIR /app/frontend
+
+# Copy package.json and package-lock.json separately for better caching
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+
+# Expose port for React development server  (no need for port on production server)
+EXPOSE 3000
+
+# Define the command to run the React app in development mode (with hot-reloading)
+CMD ["npm", "start"]

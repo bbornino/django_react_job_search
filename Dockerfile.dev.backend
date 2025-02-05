@@ -1,0 +1,18 @@
+# DEVELOPMENT Backend / Django Docker File
+# Setup Django backend
+FROM python:3.12-slim
+WORKDIR /app/backend
+ENV PYTHONUNBUFFERED=1
+COPY backend/requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    pkg-config build-essential apt-utils && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Expose port if needed (e.g., for Django app)
+EXPOSE 8000
+
+# Define the command to run the Django app in development mode 
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

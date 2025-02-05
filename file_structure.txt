@@ -1,0 +1,56 @@
+django_react_job_search/
+├── backend/
+│   ├── django_react_job_search/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   ├── jobsearch/
+│   │   ├── custom_user/
+│   │   │   ├── custom_user_serializer.py 
+│   │   │   ├── custom_user_validators.py 
+│   │   │   ├── custom_user_views.py 
+│   │   │   ├── custom_user.py 
+│   │   ├── dashboard/
+│   │   │   ├── dashboard_serializer.py 
+│   │   │   ├── dashboard_views.py 
+│   │   ├── email_opportunity/
+│   │   │   ├── email_opportunity_serializer.py 
+│   │   │   ├── email_opportunity_views.py 
+│   │   │   ├── email_opportunity.py 
+│   │   ├── job_posting/
+│   │   │   ├── job_posting_serializer.py 
+│   │   │   ├── job_posting_views.py 
+│   │   │   ├── job_posting.py 
+│   │   ├── job_site/
+│   │   │   ├── job_site_serializer.py 
+│   │   │   ├── job_site_views.py 
+│   │   │   ├── job_site.py 
+│   │   ├── migrations/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   ├── .env.production
+│   ├── manage.py
+│   ├── requirements.txt
+├── frontend/
+│   ├── .env.development
+│   ├── .env.production
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── src/
+│   │   ├── components/
+│   │   ├── constants/
+│   │   ├── App.css
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   ├── customFetch.js
+│   │   ├── useApiRequest.js
+│   ├── public/
+│   ├── build/
+├── docker_start_dev_containers.bat
+├── docker-compose.yml
+├── dockerfile.dev.backend
+├── dockerfile.dev.frontend
+├── dockerfile.prod
+├── README.md

@@ -31,7 +31,8 @@ const About = () => {
             <Row>
                 <Col>
                     <p>
-                        The job hunt is exhausting...
+                        The job hunt is exhausting... This application helps track all job postings that 
+                        have been applied to and all of the direct opportunities sent by recruiters.
                     </p>
                     <p>Some of the high-level features of this application include:</p>
                     <ul>
@@ -39,6 +40,7 @@ const About = () => {
                         <li>Job Opportunity WYSIWYG Editor (CKEditor5)</li>
                         <li>Reports and Statistics</li>
                         <li>Multi-User Support</li>
+                        <li>Docker Support</li>
                     </ul>
                     <p>This application is built using the following technologies:</p>
                     <ul>
