@@ -110,7 +110,7 @@ const JobSiteEdit = () => {
     const editJobSite = async (e) => {
         e.preventDefault();
         await apiRequest(JOB_SITE_API_URL + state.job_site_id, state, {method: 'PUT'});
-        navigate('/job-sites');
+        navigate(-1, { state: { refresh: true } });
     }
 
     return (

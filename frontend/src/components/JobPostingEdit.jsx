@@ -213,7 +213,7 @@ const JobPostingEdit = () => {
         jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
         await apiRequest(JOB_POSTING_API_URL, jobPostingParams, {method: 'POST'});
-        navigate(-1);       // go back one navigational page
+        navigate(-1, { state: { refresh: true } });
 
     }
 

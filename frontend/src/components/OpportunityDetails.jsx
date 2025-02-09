@@ -110,7 +110,7 @@ const OpportunityDetails = () => {
       state,  
       { method: 'PUT' }
     );
-    navigate("/opportunities")
+    navigate(-1, { state: { refresh: true } });
   };
 
   const setCommentsCallback = (updatedComments) => {
