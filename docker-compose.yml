@@ -9,11 +9,6 @@ services:
     ports:
       - "8000:8000"  # Exposes the Django backend on port 8000
     environment:
-      - DEBUG=True  # Set any environment variables you want to use in your app
-      - DJANGO_SECRET_KEY=your-secret-key
-      - DB_NAME=django_job_search
-      - DB_USER=django_app
-      - DB_PASSWORD=django_app
       - DB_HOST=host.docker.internal  # This tells Docker to use the laptop's localhost
       - DB_PORT=3306
     container_name: job-search-django-backend-container  # Custom container name for the backend
@@ -26,14 +21,9 @@ services:
     volumes:
       - ./frontend:/app/frontend  # Mounts the frontend directory for live code changes
       - /app/frontend/node_modules  # Avoid overriding node_modules in container
-      # - frontend-sync:/app/frontend  # Use Mutagen for file syncing
     ports:
       - "3000:3000"  # Exposes the React frontend on port 3000
     command: npm start --host 0.0.0.0  # Ensure it binds to all interfaces
     environment:
       - CHOKIDAR_USEPOLLING=true  # Useful for watching file changes inside Docker
     container_name: job-search-react-frontend-container  # Custom container name for the backend
-
-# volumes:
-#   frontend-sync:
-#     driver: mutagen  # Use Mutagen as the driver for syncing
