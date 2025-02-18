@@ -95,6 +95,7 @@ const JobSiteView = () => {
             name: 'Posting Status',
             selector: row => (typeof row?.posting_status === 'string' ? row.posting_status : 'N/A'),
             sortable: true,
+            width: "200px",
         },
         {
             name: 'Applied At',
