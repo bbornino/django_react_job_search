@@ -192,8 +192,6 @@ const JobPostingEdit = () => {
             location_type: '',
             employment_type: '',
 
-            rejected_after_stage: '',
-
             job_scan_info: '',
             outreach_info: '',
             time_spent: '',
