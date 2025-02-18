@@ -4,22 +4,18 @@ Django settings for django_react_job_search project.
 
 from pathlib import Path
 import os
-import environ
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize environment variables from .env file
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-# Optionally, for production, you can specify the file manually:
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env.production'))
+# Load environment variables from .env explicitly
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-DJANGO_ENV = env('DJANGO_ENV', default='production')
-
-# Read the environment variable ENABLE_AUTH, default to True for production
-ENABLE_AUTH = os.getenv('ENABLE_AUTH', 'True') == 'True'
+# Environment settings
+DJANGO_ENV = os.getenv("DJANGO_ENV", "production")
+ENABLE_AUTH = os.getenv("ENABLE_AUTH", "True") == "True"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -59,9 +55,9 @@ MIDDLEWARE = [
 AUTH_USER_MODEL = 'job_search.CustomUser'
 
 # CORS configuration
-CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', False)
-CORS_ALLOW_CREDENTIALS = env.bool('CORS_ALLOW_CREDENTIALS', True)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
+CORS_ORIGIN_ALLOW_ALL = os.getenv('CORS_ORIGIN_ALLOW_ALL', 'False') == 'True'
+CORS_ALLOW_CREDENTIALS = os.getenv('CORS_ALLOW_CREDENTIALS', 'True') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 CORS_ALLOW_HEADERS = [
   'authorization',
   'content-type',
@@ -75,7 +71,9 @@ if CORS_ORIGIN_ALLOW_ALL:
     CORS_ALLOWED_ORIGINS = []
 else:
     # Use specific allowed origins
-    CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000'])
+    # CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')  #Generates a pylint error.  Use below instead.
+    cors_origins = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')
+    CORS_ALLOWED_ORIGINS = cors_origins.split(',')
 
 
 ROOT_URLCONF = 'django_react_job_search.urls'
@@ -106,7 +104,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=18),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
@@ -133,7 +131,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'django_job_search'),
         'USER': os.getenv('DB_USER', 'django_app'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'django_app'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),  # Use 'db' in Docker
+        'HOST': os.getenv('DB_HOST', 'localhost'), 
         'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',  # Set charset to utf8mb4 for better Unicode support
@@ -145,7 +143,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-ENABLE_STRONG_PASSWORDS = env.bool('ENABLE_STRONG_PASSWORDS', default=True)
+ENABLE_STRONG_PASSWORDS = os.getenv('ENABLE_STRONG_PASSWORDS', 'True') == 'True'
 if ENABLE_STRONG_PASSWORDS:
     AUTH_PASSWORD_VALIDATORS = [
         {
@@ -171,15 +169,10 @@ else:
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'America/Los_Angeles'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
