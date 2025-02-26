@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApiRequest } from '../useApiRequest';
 import { JOB_OPPORTUNITY_API_URL, formatDisplayDateTime } from "../constants";
@@ -10,9 +10,13 @@ const OpportunityList = () => {
     const [opportunities, setOpportunities] = useState([]);
     const { apiRequest } = useApiRequest(); 
     const navigate = useNavigate();
+    const hasFetched = useRef(false);  // Track if the request has already been made
 
     // Memoize the getOpportunities function to avoid re-renders due to function change
     const getOpportunities = useCallback(async () => {
+        if (hasFetched.current) return; // Prevent double fetch
+        hasFetched.current = true;
+        
         const data = await apiRequest(
             JOB_OPPORTUNITY_API_URL,
             { method: 'GET' }

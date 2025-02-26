@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback  } from 'react';
+import React, { useState, useEffect, useCallback, useRef   } from 'react';
 import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL } from "../constants";
 import { useApiRequest } from '../useApiRequest'; // Import the hook
@@ -10,10 +10,13 @@ const Dashboard = () => {
     const [activeOpportunities, setActiveOpportunities] = useState([]);
     const [statisticsBlock, setStatisticsBlock] = useState('');
     const { apiRequest } = useApiRequest();
-
-
+    const hasFetchedJobHuntStatistics = useRef(false);  // Track if the request has already been made
+    const hasFetchedActiveJobPostings = useRef(false);  // Track if the request has already been made
+    const hasFetchedActiveOpportunities = useRef(false);  // Track if the request has already been made
 
     const getJobHuntStatistics = useCallback(async () => {
+        if (hasFetchedJobHuntStatistics.current) return; // Prevent double fetch
+        hasFetchedJobHuntStatistics.current = true;
         const response = await apiRequest(`${DASHBOARD_API_URL}`, {method:'GET'});
         if (response) {
             const statistics = response.map((statistics_row) => (
@@ -29,6 +32,8 @@ const Dashboard = () => {
     }, [apiRequest]);
 
     const getActiveJobPostings = useCallback(async () => {
+        if (hasFetchedActiveJobPostings.current) return; // Prevent double fetch
+        hasFetchedActiveJobPostings.current = true;
         const response = await apiRequest(`${JOB_POSTING_API_URL}active`, {method:'GET'});
         if (response) {
             setActiveJobPostings(response);
@@ -36,6 +41,8 @@ const Dashboard = () => {
     }, [apiRequest]);
 
     const getActiveOpportunities = useCallback(async () => {
+        if (hasFetchedActiveOpportunities.current) return; // Prevent double fetch
+        hasFetchedActiveOpportunities.current = true;
         const response = await apiRequest(`${JOB_OPPORTUNITY_API_URL}active`, {method:'GET'});
         if (response) {
             setActiveOpportunities(response);

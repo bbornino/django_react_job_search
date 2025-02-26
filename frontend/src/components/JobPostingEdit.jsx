@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
 import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
@@ -50,8 +50,13 @@ const JobPostingEdit = () => {
 
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
+    const hasFetchedJobSites = useRef(false);  // Track if the request has already been made
+    const hasFetchedJobPosting = useRef(false);  // Track if the request has already been made
 
     const getJobSites = useCallback(async () => {
+        if (hasFetchedJobSites.current) return; // Prevent double fetch
+        hasFetchedJobSites.current = true;
+
         const jobSites = await apiRequest(JOB_SITE_API_URL, {method: 'GET'})
         if (jobSites) {
             setState((prevState) => ({
@@ -62,6 +67,9 @@ const JobPostingEdit = () => {
     }, [apiRequest]);
 
     const getJobPosting = useCallback(async(jobPostingId) => {
+        if (hasFetchedJobPosting.current) return; // Prevent double fetch
+        hasFetchedJobPosting.current = true;
+
         if(!jobPostingId) return;
         const data = await apiRequest(JOB_POSTING_API_URL + jobPostingId, {method: 'GET'});
 

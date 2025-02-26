@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApiRequest } from '../useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
@@ -24,8 +24,13 @@ const JobSiteView = () => {
 
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
+    const hasFetchedJobSite = useRef(false);  // Track if the request has already been made
+    const hasFetchedPostings = useRef(false);  // Track if the request has already been made
 
     const getJobSite = useCallback ( async (jobSiteId) => {
+        if (hasFetchedJobSite.current) return; // Prevent double fetch
+        hasFetchedJobSite.current = true;
+
         if (!jobSiteId) return;
 
         const data = await apiRequest(`${JOB_SITE_API_URL}${jobSiteId}`, {method:'GET'});
@@ -46,6 +51,9 @@ const JobSiteView = () => {
     }, [apiRequest]);
 
     const getJobSitePostings = useCallback(async (jobSiteId) => {
+        if (hasFetchedPostings.current) return; // Prevent double fetch
+        hasFetchedPostings.current = true;
+
         if (!jobSiteId) return;
     
         const data = await apiRequest(JOB_SITE_API_URL + jobSiteId + '/postings', { method: 'GET' });

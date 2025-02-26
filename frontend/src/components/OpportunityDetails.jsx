@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { JOB_OPPORTUNITY_API_URL, formatInputFieldDateTime } from "../constants";
 import { Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from "reactstrap";
@@ -26,9 +26,12 @@ const OpportunityDetails = () => {
 
   const { apiRequest } = useApiRequest();
   const navigate = useNavigate();
+  const hasFetched = useRef(false);  // Track if the request has already been made
 
   // Load opportunity data based on opportunity_id
   const loadOpportunity = useCallback(async (opportunity_id) => {
+    if (hasFetched.current) return; // Prevent double fetch
+        hasFetched.current = true;
     if (!opportunity_id) return;
 
     const data = await apiRequest(
