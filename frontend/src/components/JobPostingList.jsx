@@ -53,25 +53,27 @@ const JobPostingList = () => {
             name: "Posting Status",
             selector: row => row.posting_status,
             sortable: true,
+            width: "200px",
         },
         {
             name: "Posting Stage",
             selector: row => row.rejected_after_stage,
             sortable: true,
+            width: "200px",
         },
         {
             name: "Applied On",
             selector: row => row.applied_at,
             cell: row => formatDisplayDate(row.applied_at),
             sortable: true,
-            width: "150px",
+            width: "130px",
         },
         {
             name: "Rejected On",
             selector: row => row.rejected_at,
             cell: row => formatDisplayDate(row.rejected_at),
             sortable: true,
-            width: "150px",
+            width: "130px",
         },
     ];
 
