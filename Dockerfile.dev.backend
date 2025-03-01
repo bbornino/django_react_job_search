@@ -1,15 +1,22 @@
 # DEVELOPMENT Backend / Django Docker File
 # Setup Django backend
-FROM python:3.12-slim
+FROM python:3.12-alpine
 WORKDIR /app/backend
 ENV PYTHONUNBUFFERED=1
+
+# Install dependencies for MySQL client and other necessary build tools
 COPY backend/requirements.txt .
-# RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --upgrade pip && \
-    apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
-    pkg-config build-essential apt-utils && \
-    pip install --no-cache-dir -r requirements.txt
+RUN apk update && \
+    apk add --no-cache \
+    build-base \
+    mariadb-dev \
+    pkgconfig \
+    && pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    # Remove unnecessary packages to reduce image size
+    && apk del build-base \
+    # Clean up APK cache
+    && rm -rf /var/cache/apk/*
 
 # Expose port if needed (e.g., for Django app)
 EXPOSE 8000

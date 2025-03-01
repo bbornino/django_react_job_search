@@ -2,15 +2,25 @@
 # 
 
 # Build the React App
-FROM node:20 AS react_build
+FROM node:20-alpine AS react_build
 WORKDIR /app/frontend
 
 # Copy package.json and package-lock.json separately for better caching
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install
 
+# Copy the rest of the frontend code
+COPY frontend/ .
+
+# Build the production version of the React app
+RUN NODE_ENV=production npm run build
+
+# Production stage - Use a lightweight web server to serve the built app
+FROM nginx:alpine AS react_prod
+COPY --from=react_build /app/frontend/build /usr/share/nginx/html
+
 # Expose port for React development server  (no need for port on production server)
 EXPOSE 3000
 
-# Define the command to run the React app in development mode (with hot-reloading)
-CMD ["npm", "start"]
+# Use Nginx to serve the app
+CMD ["nginx", "-g", "daemon off;"]
