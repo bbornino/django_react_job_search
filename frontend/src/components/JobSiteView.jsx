@@ -83,8 +83,8 @@ const JobSiteView = () => {
                 ...prevState,
                 job_site_id: jobSiteId,
             }));
-            getJobSite(jobSiteId);
-            getJobSitePostings(jobSiteId);
+            Promise.all([getJobSite(jobSiteId), getJobSitePostings(jobSiteId)])
+            .catch((error) => console.error("Error fetching job site data:", error));
         }
     }, [getJobSite, getJobSitePostings]);
 
