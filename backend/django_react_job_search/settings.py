@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'job_search.middleware.SuppressTokenErrorLoggingMiddleware', 
 ]
 
 AUTH_USER_MODEL = 'job_search.CustomUser'

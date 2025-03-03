@@ -3,7 +3,7 @@ django_react_job_search/
 │   ├── django_react_job_search/
 │   │   ├── settings.py
 │   │   ├── urls.py
-│   ├── jobsearch/
+│   ├── job_search/
 │   │   ├── custom_user/
 │   │   │   ├── custom_user_serializer.py 
 │   │   │   ├── custom_user_validators.py 
@@ -28,6 +28,7 @@ django_react_job_search/
 │   │   ├── admin.py
 │   │   ├── apps.py
 │   │   ├── models.py
+│   │   ├── middleware.py
 │   │   ├── serializers.py
 │   │   ├── views.py
 │   ├── logs/

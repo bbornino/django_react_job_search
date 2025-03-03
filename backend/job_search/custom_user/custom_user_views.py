@@ -1,4 +1,5 @@
 import os
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -15,6 +16,9 @@ from job_search.custom_user.custom_user_serializer import (
     CustomUserSerializer,
     CustomUserListSerializer,
 )
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 DJANGO_ENV = settings.DJANGO_ENV
 
@@ -126,12 +130,14 @@ class TokenRefreshCustomView(TokenRefreshView):
             return super().post(request, *args, **kwargs)
         except TokenError:
             # Catch TokenError if the refresh token is invalid or expired
+            logger.error("Token refresh failed: %s", str(e))
             return Response(
                 {'detail': 'Token refresh failed. Please log in again.'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        except Exception:
+        except Exception as e:
             # General exception handling for any other errors
+            logger.error("Unexpected error during token refresh: %s", str(e))
             return Response(
                 {'detail': 'An unexpected error occurred during token refresh.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
