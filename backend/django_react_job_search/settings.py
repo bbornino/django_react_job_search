@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
+from logging.handlers import TimedRotatingFileHandler
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -210,8 +211,11 @@ LOGGING = {
     "handlers": {
         "file": {
             "level": LOG_LEVEL,
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.TimedRotatingFileHandler",  # Changed to TimedRotatingFileHandler
             "filename": "logs/django.log",  # Make sure this folder exists!
+            "when": "midnight",  # Rotate logs at midnight
+            "interval": 1,  # Rotate every 1 day
+            "backupCount": 30,  # Keep the last 30 days of logs
             "formatter": "verbose",
         },
         "console": {
