@@ -38,11 +38,15 @@ class JobPosting(models.Model):
         comments (JSONField): A JSON array of user comments related to the posting.
         posting_application_questions (JSONField): A JSON array of application questions for the posting.
         job_description (TextField): The full description of the job posting.
+        
+        Indexes:
+        - (user): Optimizes queries filtering by user.
+        - (job_site_id): Improves lookup performance for job sites.
+        - (id) (automatically indexed): The primary key for fast lookups.
     """
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
-        null=True, # Temporary.  To be removed after migration
-        # default=1,  # Set the default user ID
+        null=True,
     )
     job_site_id = models.ForeignKey(JobSite, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=128, default='')
@@ -75,6 +79,12 @@ class JobPosting(models.Model):
 
     # Explicitly define the manager type for linters
     objects: Type[models.Manager] = models.Manager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user"]),  # Index on user for faster queries by user
+            models.Index(fields=["job_site_id"]),  # Index on job site for filtering by site
+        ]
 
     def _str_(self):
         return self.posting_title

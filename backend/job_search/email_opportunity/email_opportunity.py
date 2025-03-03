@@ -23,13 +23,16 @@ class EmailOpportunity(models.Model):
         comments (JSONField): A JSON array to store user comments related to the opportunity.
         job_description (TextField): The full description of the job opportunity as provided in the email.
 
+    Indexes:
+        - (user): Optimizes queries filtering by user.
+        - (id) (automatically indexed): The primary key for fast lookups.
+
     Methods:
         __str__: Returns the job title as the string representation of the object.
     """
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
-        null=True, # Temporary.  To be removed after migration
-        # default=1,  # Set the default user ID
+        null=True,
     )
     job_title = models.CharField(max_length=128)
     opportunity_status = models.CharField(max_length=48)
@@ -46,6 +49,11 @@ class EmailOpportunity(models.Model):
 
     # Explicitly define the manager type for linters
     objects: Type[models.Manager] = models.Manager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user"]),  # Index on user for faster queries by user
+        ]
 
     def _str_(self):
         return self.job_title

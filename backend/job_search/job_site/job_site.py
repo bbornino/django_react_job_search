@@ -22,11 +22,14 @@ class JobSite(models.Model):
 
         headline (CharField): A custom headline or title used for the user's profile on the site.
         description (TextField): An optional detailed description of the user's profile or preferences for the site.
+        
+    Indexes:
+        - (user): Optimizes queries filtering by user.
+        - (id) (automatically indexed): The primary key for fast lookups.
     """
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
-        null=True, # Temporary.  To be removed after migration
-        # default=1,  # Set the default user ID
+        null=True,
     )
     site_name = models.CharField(max_length=64, default='')
     site_url = models.CharField(max_length=2048, default='')
@@ -44,6 +47,11 @@ class JobSite(models.Model):
 
     # Explicitly define the manager type for linters
     objects: Type[models.Manager] = models.Manager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user"]),  # Index on user for faster queries by user
+        ]
 
     def _str_(self):
         return self.site_name
