@@ -30,6 +30,7 @@ django_react_job_search/
 │   │   ├── models.py
 │   │   ├── serializers.py
 │   │   ├── views.py
+│   ├── logs/
 │   ├── .env.production
 │   ├── manage.py
 │   ├── requirements.txt

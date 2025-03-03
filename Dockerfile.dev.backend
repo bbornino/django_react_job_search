@@ -18,6 +18,9 @@ RUN apk update && \
     # Clean up APK cache
     && rm -rf /var/cache/apk/*
 
+# Ensure the logs directory exists in the container
+RUN mkdir -p /backend/logs
+
 # Expose port if needed (e.g., for Django app)
 EXPOSE 8000
 

@@ -122,12 +122,7 @@ SIMPLE_JWT = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Use MySQL engine for MariaDB compatibility
-        # 'NAME': 'django_job_search',  
-        # 'USER': 'django_app', 
-        # 'PASSWORD': 'django_app', 
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.mysql"),  # Use MySQL engine for MariaDB compatibility
         'NAME': os.getenv('DB_NAME', 'django_job_search'),
         'USER': os.getenv('DB_USER', 'django_app'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'django_app'),
@@ -183,3 +178,49 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Authentication is 100% JWT-based (tokens in Authorization headers)
+# Include below line to disable CSRF protection or simply omit
+CSRF_TRUSTED_ORIGINS = []
+
+
+# ==============================
+# LOGGING CONFIGURATION
+# ==============================
+# Django logging setup that reads LOG_LEVEL from .env.
+# Logs are stored in logs/django.log (ensure the 'logs/' directory exists).
+# Adjust log level per environment: DEBUG (dev), INFO (staging), WARNING (prod).
+LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")  # Default to WARNING if not set
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": LOG_LEVEL,
+            "class": "logging.FileHandler",
+            "filename": "logs/django.log",  # Make sure this folder exists!
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": LOG_LEVEL,
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": LOG_LEVEL,
+    },
+}
