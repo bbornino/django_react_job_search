@@ -161,7 +161,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 *.json
-backend/.env.production
 
 
 # Ignore the log files inside the logs directory.
@@ -171,3 +170,4 @@ backend/logs/*.log
 # But allow the logs directory to exist in the repository by adding a placeholder file.
 # The .gitkeep file is a "trick" to make sure Git tracks the empty folder (logs/).
 backend/logs/.gitkeep
+backend/.env.production
