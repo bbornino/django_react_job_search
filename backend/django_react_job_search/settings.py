@@ -11,6 +11,12 @@ from logging.handlers import TimedRotatingFileHandler
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Define log directory
+LOG_DIR = BASE_DIR / "logs"
+
+# Ensure the logs directory exists
+os.makedirs(LOG_DIR, exist_ok=True)
+
 # Load environment variables from .env explicitly
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -22,10 +28,11 @@ ENABLE_AUTH = os.getenv("ENABLE_AUTH", "True") == "True"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mgyu$=!%*u3=b&o9%(4m8)xul*4lj31bfpob%9*fvwkmp6)vxc'
+SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Application definition
 INSTALLED_APPS = [
@@ -211,12 +218,27 @@ LOGGING = {
     "handlers": {
         "file": {
             "level": LOG_LEVEL,
-            "class": "logging.handlers.TimedRotatingFileHandler",  # Changed to TimedRotatingFileHandler
-            "filename": "logs/django.log",  # Make sure this folder exists!
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": str(LOG_DIR / "django.log"), 
             "when": "midnight",  # Rotate logs at midnight
             "interval": 1,  # Rotate every 1 day
-            "backupCount": 30,  # Keep the last 30 days of logs
-            "formatter": "verbose",
+            'backupCount': 30,  # Keep the last 30 days of logs
+            'formatter': 'verbose',
+            'delay': True,
+
+            # When the RotatingFileHandler is used without the delay option, it opens the log file
+            # as soon as the logging configuration is loaded, even before any logging takes place.
+            # This can result in the file being locked for the entire process, preventing log
+            # rotation (or renaming of the log file) because the file is still being held open by
+            # the logging handler.
+
+            # By setting delay: True, the RotatingFileHandler delays the opening of the log file
+            # until the first log message is written. This means the file is not immediately locked
+            # by the handler when the application starts, and it allows log rotation to proceed
+            # without any issues. Essentially, it avoids any conflicts between the log rotation
+            # process and any other process or thread that may want to access the log file
+            # (like Django’s development server, which could be holding the file open).
+
         },
         "console": {
             "level": LOG_LEVEL,
