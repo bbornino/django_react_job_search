@@ -1,3 +1,46 @@
+"""
+Custom views for user authentication, profile management, and registration in the job search 
+application.
+
+This module includes API views for user authentication, JWT token management, user profile 
+management, and user registration. It utilizes Django Rest Framework (DRF) to implement the 
+endpoints and handle responses, including custom views for token refresh and user data management. 
+Each view has specific permissions and input validation to ensure the integrity of user actions.
+
+Modules:
+- `authenticate_user`: Endpoint to authenticate a user and return JWT tokens.
+- `TokenRefreshCustomView`: Custom view for refreshing JWT tokens, with error handling.
+- `logout_user`: Logs out a user by blacklisting the refresh token.
+- `UserProfileView`: Fetches the authenticated user's profile data.
+- `update_user_info`: Allows the authenticated user to update their profile information.
+- `register_user`: Endpoint for user registration with validation and default field assignments.
+- `list_all_users`: Allows an admin user to retrieve a list of all users.
+
+Views Overview:
+1. `authenticate_user`: Authenticates a user based on credentials and returns an access token, 
+    refresh token, and user data upon successful login.
+2. `TokenRefreshCustomView`: Refreshes JWT tokens, with custom error handling for invalid or 
+    expired tokens.
+3. `logout_user`: Invalidates a user's refresh token to log them out.
+4. `UserProfileView`: Provides details about the currently authenticated user's profile.
+5. `update_user_info`: Allows users to update their profile with partial updates.
+6. `register_user`: Registers a new user with the necessary fields and default values for 
+    optional fields.
+7. `list_all_users`: An admin view to list all users in the system.
+
+Logging:
+- Logging is configured to capture errors and exceptions, particularly for token refresh failures.
+
+Permissions:
+- Views like `UserProfileView`, `update_user_info`, and `list_all_users` require specific user 
+    permissions (e.g., authenticated users, admin users).
+
+Error Handling:
+- Appropriate error messages are returned for missing or invalid data, and various exceptions 
+    such as token expiration or failed validation are handled.
+"""
+
+
 import os
 import logging
 from rest_framework.views import APIView

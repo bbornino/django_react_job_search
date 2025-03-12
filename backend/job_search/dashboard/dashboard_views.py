@@ -1,3 +1,40 @@
+"""
+This module defines views related to the dashboard, specifically for retrieving
+dashboard statistics for authenticated users. The views process user-specific
+statistics data and return it as a structured response.
+
+The `dashboard_statistics` view handles the process of retrieving and returning
+dashboard statistics, while the helper functions `getDashboardDateStatistics` and
+`getDashboardDateRangeStatistics` execute raw SQL queries to gather job posting data
+based on specific dates and date ranges.
+
+Functions:
+    dashboard_statistics(request):
+        Retrieves dashboard statistics for the authenticated user.
+        Returns a serialized response with statistics data or a 401 Unauthorized 
+            response if the user is not authenticated.
+        
+    getDashboardDateStatistics(request, startDate):
+        Retrieves statistics for job postings after a specific start date.
+        
+    getDashboardDateRangeStatistics(request, startDate, endDate):
+        Retrieves statistics for job postings between a specific start and end date.
+
+Parameters:
+    request (Request): The HTTP request object, containing user details and request data.
+    startDate (str): A date in YYYY-MM-DD format to filter job postings.
+    endDate (str, optional): A date in YYYY-MM-DD format to filter job postings. Default is None.
+    
+Returns:
+    Response: A Response object containing serialized dashboard statistics data,
+              with either a 200 OK or 204 No Content status.
+
+Raises:
+    None: This module does not raise exceptions directly but will return appropriate
+          HTTP status codes for unauthenticated access or empty reports.
+"""
+
+
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.decorators import api_view

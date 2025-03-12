@@ -1,3 +1,50 @@
+"""
+Job Posting Views Module
+
+This module defines API views for handling job postings in a Django Rest Framework (DRF) 
+application.  It includes endpoints for listing, retrieving, creating, updating, and 
+deleting job postings, as well as fetching job postings for a specific job site and 
+retrieving active job postings.
+
+Views:
+    - `job_site_postings(request, job_site_id)`: Retrieves job postings associated with a 
+        specific job site, ensuring user authentication and authorization.
+    - `job_posting_list(request)`: Handles GET and POST requests for job postings, allowing 
+        users to list and create job postings.
+    - `job_posting_detail(request, pk)`: Manages GET, PUT, and DELETE requests for a specific 
+        job posting, ensuring ownership validation.
+    - `postings_active(request)`: Retrieves active job postings for the authenticated user, 
+        filtering by status.
+
+Dependencies:
+    - `datetime` for handling timestamps.
+    - `rest_framework.response.Response` for API responses.
+    - `rest_framework.decorators.api_view` for defining function-based views.
+    - `rest_framework.status` for HTTP response status codes.
+    - `django.utils.timezone` for handling timezone-aware date/time objects.
+    - `django.db.connection` for database interactions.
+    - `django.shortcuts.get_object_or_404` for safely retrieving objects.
+    - `job_search.utils.dictfetchall` for converting query results to dictionaries.
+    - `job_search.job_site.job_site.JobSite` model for job site data.
+    - `job_search.job_posting.job_posting.JobPosting` model for job postings.
+    - `job_search.job_posting.job_posting_serializer` module for serializing job postings.
+
+Authentication:
+    - All views require user authentication.
+    - Unauthorized requests receive a 401 Unauthorized response.
+    - Access control ensures users can only view or modify their own job postings.
+
+Error Handling:
+    - Returns 401 Unauthorized for unauthenticated users.
+    - Returns 403 Forbidden if a user attempts to access another user's job postings.
+    - Returns 404 Not Found if the requested job posting or job site does not exist.
+    - Returns 400 Bad Request if request data is invalid during creation or update operations.
+
+Notes:
+    - Debugging logs user authentication status, user ID, and username for debugging purposes.
+    - Uses Django ORM queries to filter job postings based on user authentication and status.
+"""
+
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.decorators import api_view

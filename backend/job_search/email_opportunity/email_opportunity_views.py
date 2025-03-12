@@ -1,3 +1,22 @@
+"""
+This module contains views for handling EmailOpportunity objects in a job search application.
+
+It includes endpoints for creating, retrieving, updating, and deleting EmailOpportunity objects, 
+as well as for retrieving active EmailOpportunities associated with the authenticated user. 
+
+The views ensure that only the authenticated user can access and modify their own EmailOpportunity 
+objects, with appropriate permissions and status codes for each action.
+
+Available endpoints:
+- email_opportunity_list: Handles GET and POST requests for listing and creating EmailOpportunity objects.
+- email_opportunity_detail: Handles GET, PUT, and DELETE requests for specific EmailOpportunity objects.
+- email_opportunity_active: Retrieves all active EmailOpportunity objects for the authenticated user.
+
+Permissions:
+- All views require the user to be authenticated.
+- Some views restrict access to only the authenticated user who owns the EmailOpportunity object.
+"""
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status

@@ -1,9 +1,43 @@
+"""
+Views for handling JobSite-related API requests.
+
+This module provides API endpoints for managing job sites, including listing,
+retrieving, creating, updating, and deleting job sites. It supports caching
+to optimize performance and logging for debugging.
+
+Endpoints:
+    - `job_site_list`: Handles listing job sites for the authenticated user
+      and adding new job sites.
+    - `job_site_detail`: Manages retrieving, updating, and deleting a specific
+      job site.
+
+Authentication:
+    - All endpoints require user authentication.
+    - Users can only access, modify, or delete their own job sites.
+
+Caching:
+    - GET requests utilize Django's caching framework to store job site data for
+      one hour, reducing database queries and improving response times.
+
+Logging:
+    - Logs cache hits and misses.
+    - Tracks API activity for debugging and monitoring.
+
+Raises:
+    - 401 Unauthorized: If the user is not authenticated.
+    - 403 Forbidden: If the user attempts to access or modify another user's job site.
+    - 400 Bad Request: If provided data is invalid during POST or PUT requests.
+    - 204 No Content: If a PUT or DELETE request is successful.
+"""
+
+import logging
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
-import logging
+
 from job_search.job_site.job_site import JobSite
 from job_search.job_site.job_site_serializer import (
     JobSiteSerializer,
@@ -37,15 +71,17 @@ def job_site_list(request):
         - Returns a 400 Bad Request response if the POST data is invalid.
 
     Debugging:
-        Prints user information to the console for debugging purposes (should be removed in production).
+        Prints user information to the console for debugging purposes 
+        (should be removed in production).
     """
     print(f"User Info: {request.user}")
     print(f"Is Authenticated: {request.user.is_authenticated}")
     print(f"User ID: {request.user.id}")
     print(f"User Username: {request.user.username}")
-    
+
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Authentication credentials were not provided."},
+                        status=status.HTTP_401_UNAUTHORIZED)
 
     cache_key = f"job_sites_{request.user.id}"  # Unique cache key per user
     logger.info("Checking cache for key: %s", cache_key)  # Log cache check
@@ -59,11 +95,11 @@ def job_site_list(request):
         logger.info("Cache miss - querying database for job sites.")  # Log cache miss
         data = JobSite.objects.filter(user=request.user)
         serializer = JobSiteListSerializer(data, context={"request": request}, many=True)
-        
+
         # ✅ Store data in cache
         cache.set(cache_key, serializer.data, timeout=3600)  # Cache for 1 hour
         logger.info("Cached job site data for key: %s", cache_key)
-        
+
         return Response(serializer.data)
 
     elif request.method == "POST":
@@ -73,7 +109,8 @@ def job_site_list(request):
 
             # Update the cache with the new data
             data = JobSite.objects.filter(user=request.user)
-            updated_serializer = JobSiteListSerializer(data, context={"request": request}, many=True)
+            updated_serializer = JobSiteListSerializer(data,
+                                                       context={"request": request}, many=True)
             cache.set(cache_key, updated_serializer.data, timeout=3600)
             logger.info("Job site added - updated cache for key: %s", cache_key)
 
@@ -122,7 +159,7 @@ def job_site_detail(request, pk):
     """
 
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, 
+        return Response({"detail": "Authentication credentials were not provided."},
                         status=status.HTTP_401_UNAUTHORIZED)
 
     cache_key = f"job_site_{pk}"  # Unique cache key per job site
@@ -130,7 +167,8 @@ def job_site_detail(request, pk):
 
     job_site = get_object_or_404(JobSite, pk=pk)
     if job_site.user != request.user:
-        return Response({"detail": "You do not have permission to access this resource."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "You do not have permission to access this resource."},
+                        status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":
         cached_data = cache.get(cache_key)
@@ -155,7 +193,7 @@ def job_site_detail(request, pk):
     elif request.method == "PUT":
         job_site = get_object_or_404(JobSite, pk=pk)
         if job_site.user != request.user:
-            return Response({"detail": "You do not have permission to access this resource."}, 
+            return Response({"detail": "You do not have permission to access this resource."},
                                 status=status.HTTP_403_FORBIDDEN)
 
         serializer = JobSiteSerializer(job_site, data=request.data, context={"request": request})
@@ -173,7 +211,8 @@ def job_site_detail(request, pk):
     elif request.method == "DELETE":
         job_site = get_object_or_404(JobSite, pk=pk)
         if job_site.user != request.user:
-            return Response({"detail": "You do not have permission to access this resource."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"detail": "You do not have permission to access this resource."},
+                            status=status.HTTP_403_FORBIDDEN)
 
         job_site.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

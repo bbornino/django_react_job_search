@@ -1,3 +1,50 @@
+"""
+JobPosting model for tracking job applications.
+
+This module defines the JobPosting model, which represents job listings that 
+a user applies to via various job sites. It includes details such as company 
+name, job title, application status, URLs, salary range, and metadata related 
+to the job search process.
+
+Classes:
+    - JobPosting: A Django model representing a job posting, with fields 
+      for company details, job application status, timestamps, job descriptions, 
+      and technology stack.
+
+Model Fields:
+    - user (ForeignKey): The user (CustomUser) who applied for the job.
+    - job_site_id (ForeignKey): The job site (JobSite) where the job is listed.
+    - company_name (CharField): Name of the company offering the job.
+    - posting_title (CharField): Title of the job posting.
+    - posting_status (CharField): Current status of the application.
+    - posting_url_full (CharField): Full URL of the job posting.
+    - posting_url_domain (CharField): Short domain name or URL of the job site.
+    - posting_password (CharField): Optional password for accessing the job posting.
+    - pay_range (CharField): Salary range listed in the job posting.
+    - location_type (CharField): Type of work location (e.g., remote, hybrid, on-site).
+    - location_city (CharField): City where the job is located.
+    - employment_type (CharField): Type of employment (e.g., full-time, part-time, contract).
+    - applied_at (DateTimeField): Timestamp when the user applied to the job.
+    - interviewed_at (DateTimeField): Timestamp when the user was interviewed.
+    - rejected_at (DateTimeField): Timestamp when the user was rejected.
+    - rejected_after_stage (CharField): Stage after which the user was rejected.
+    - job_scan_info (CharField): Metadata or scan info related to the job posting.
+    - outreach_info (CharField): Information about outreach efforts for this posting.
+    - time_spent (IntegerField): Time spent on job application or preparation (in minutes).
+    - technology_string (CharField): String summarizing required technologies.
+    - technology_stack (JSONField): JSON list of technologies required for the job.
+    - comments (JSONField): JSON list of user comments about the posting.
+    - posting_application_questions (JSONField): JSON list of application questions.
+    - job_description (TextField): Full job description.
+
+Indexes:
+    - (user): Optimizes queries filtering by user.
+    - (job_site_id): Improves lookup performance for job sites.
+
+Methods:
+    - __str__(): Returns the job posting title as a string representation.
+"""
+
 from datetime import datetime
 from typing import Type
 from django.db import models

@@ -1,3 +1,25 @@
+"""
+This module defines the DashboardStatisticsSerializer, which provides a structured representation
+of job posting statistics data for use in a dashboard.
+
+The serializer processes and formats data related to job postings, including the total count of postings, 
+the number of postings with responses, and the date information in both raw and formatted forms.
+
+Attributes:
+    total_count (IntegerField): The total number of job postings.
+    response_count (IntegerField): The number of job postings with a response,
+        excluding 'No Response' and 'Rejected' statuses.
+    raw_date (DateField): The raw date input in YYYY-MM-DD format.
+    formatted_date (CharField): A human-readable format of the date.
+
+Methods:
+    to_representation(instance):
+        Converts the raw_date field from a string in YYYY-MM-DD format to a Python date object for accurate representation.
+        
+    create(validated_data):
+        Raises NotImplementedError since object creation is not supported for this serializer.
+"""
+
 from datetime import datetime
 from rest_framework import serializers
 

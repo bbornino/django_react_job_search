@@ -1,4 +1,26 @@
-# custom_user_validators.py
+"""
+This module contains custom validators for user input validation, specifically
+focused on enforcing strong password rules.
+
+Classes:
+    StrongPasswordValidator:
+        A validator that ensures passwords meet specific strength requirements,
+        including length, character diversity (lowercase, uppercase, digit, and special characters),
+        and a minimum length of 12 characters.
+
+Attributes:
+    regex (str): A regular expression pattern used to check the strength of the password.
+    message (str): The message to be displayed when the password does not meet the strength requirements.
+
+Methods:
+    validate(password: str, user: Optional[CustomUser] = None):
+        Validates the provided password against the strength requirements. If the password
+        does not match the regex pattern, a `ValidationError` is raised.
+    
+    get_help_text() -> str:
+        Returns the validation message explaining the password strength requirements.
+"""
+
 import re
 from django.core.exceptions import ValidationError
 
