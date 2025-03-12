@@ -166,6 +166,8 @@ cython_debug/
 # Ignore the log files inside the logs directory.
 # We do NOT want to commit log files themselves to Git, just the empty directory.
 backend/logs/*.log
+backend/logs/*.log.*
+
 
 # But allow the logs directory to exist in the repository by adding a placeholder file.
 # The .gitkeep file is a "trick" to make sure Git tracks the empty folder (logs/).
