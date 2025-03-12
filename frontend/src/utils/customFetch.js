@@ -1,4 +1,4 @@
-import { TOKEN_REFRESH_API_URL } from "./constants";
+import { TOKEN_REFRESH_API_URL } from "../constants";
 
 export async function customFetch(url, options = {}, accessToken, refreshToken, navigate) {
   let isRefreshing = false; // Track if the token refresh process is ongoing

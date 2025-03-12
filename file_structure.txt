@@ -21,10 +21,12 @@ django_react_job_search/
 │   │   │   ├── job_posting_views.py 
 │   │   │   ├── job_posting.py 
 │   │   ├── job_site/
+│   │   │   ├── __init__.py 
 │   │   │   ├── job_site_serializer.py 
 │   │   │   ├── job_site_views.py 
 │   │   │   ├── job_site.py 
 │   │   ├── migrations/
+│   │   ├── __init__.py
 │   │   ├── admin.py
 │   │   ├── apps.py
 │   │   ├── models.py
@@ -32,7 +34,9 @@ django_react_job_search/
 │   │   ├── serializers.py
 │   │   ├── views.py
 │   ├── logs/
+│   ├── __init__.py
 │   ├── .env.production
+│   ├── .pylintrc
 │   ├── manage.py
 │   ├── requirements.txt
 ├── frontend/
@@ -43,11 +47,18 @@ django_react_job_search/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── constants/
+│   │   ├── utils/
+│   │   │   ├── axios.js
+│   │   │   ├── axiosInstance.js
+│   │   │   ├── customFetch.js
+│   │   │   ├── reportWebVitals.js
+│   │   │   ├── useApiRequest.js
 │   │   ├── App.css
 │   │   ├── App.js
+│   │   ├── App.test.js
+│   │   ├── index.css
 │   │   ├── index.js
-│   │   ├── customFetch.js
-│   │   ├── useApiRequest.js
+│   │   ├── setupTests.js
 │   ├── public/
 │   ├── build/
 ├── docker_start_dev_containers.bat

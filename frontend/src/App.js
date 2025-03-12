@@ -7,8 +7,7 @@ import {
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-// import { customFetch } from './axiosInstance'; // Import the hook
-import { useApiRequest } from "./useApiRequest";
+import { useApiRequest } from "./utils/useApiRequest";
 
 import Welcome from "./components/Welcome";
 import About from "./components/About";

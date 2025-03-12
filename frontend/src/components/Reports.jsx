@@ -4,7 +4,7 @@ import { REPORT_API_URL } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
 import DataTableBase from './DataTableBase';
-import { useApiRequest } from "../useApiRequest";
+import { useApiRequest } from "../utils/useApiRequest";
 
 // const isDate = (value) => {
 //       // Check if the value is a string

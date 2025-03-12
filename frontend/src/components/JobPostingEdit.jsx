@@ -9,7 +9,7 @@ import { faTrash, faFloppyDisk, faEraser } from '@fortawesome/free-solid-svg-ico
 
 import Editor from "./Editor"
 import Comments from "./Comments"
-import { useApiRequest } from "../useApiRequest";
+import { useApiRequest } from "../utils/useApiRequest";
 
 const JobPostingEdit = () => {
 
