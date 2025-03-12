@@ -195,6 +195,35 @@ CSRF_TRUSTED_ORIGINS = []
 
 
 # ==============================
+# Django's caching configuration.
+# We are using LocMemCache, an in-memory cache that is local to the Django process.
+# This does not require an external caching service like Redis or Memcached.
+# ==============================
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",  # Stores cached data in memory
+        "LOCATION": "unique-default-cache",  # A unique identifier for this cache instance
+        "TIMEOUT": 86400,  # Cache expiration time in seconds (1 day)
+        # OPTIONS allows us to control cache behavior:
+        "OPTIONS": {
+            "MAX_ENTRIES": 10000  # Limit the cache to approximately 10,000 entries
+        },
+    }
+}
+
+# Notes:
+# - LocMemCache is **not shared between processes**, meaning each Django worker
+#   has its own isolated cache. This is fine for our use case since we are not
+#   caching highly volatile data.
+# - If we need caching that is shared across multiple Django processes, we
+#   would need to use a database-backed or external caching solution.
+# - Cached data will be automatically evicted once the limit (MAX_ENTRIES) is reached,
+#   using a least-recently-used (LRU) eviction policy.
+
+
+
+# ==============================
 # LOGGING CONFIGURATION
 # ==============================
 # Django logging setup that reads LOG_LEVEL from .env.
