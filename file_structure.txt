@@ -46,6 +46,32 @@ django_react_job_search/
 │   ├── package-lock.json
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── static/
+│   │   │   │   ├── About.jsx
+│   │   │   │   ├── BooleanSearch.jsx
+│   │   │   │   ├── FinancialAssistance.jsx
+│   │   │   │   ├── JobHuntCompanies.jsx
+│   │   │   │   ├── JobHuntTips.jsx
+│   │   │   │   ├── Secret.jsx
+│   │   │   │   ├── ReleaseHistory.js
+│   │   │   │   ├── Welcome.jsx
+│   │   │   ├── Comments.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── DataTableBase.jsx
+│   │   │   ├── Editor.js
+│   │   │   ├── JobPostingEdit.jsx
+│   │   │   ├── JobPostingList.jsx
+│   │   │   ├── JobSiteEdit.jsx
+│   │   │   ├── JobSiteList.js
+│   │   │   ├── JobSiteView.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── OpportunityDetails.jsx
+│   │   │   ├── OpportunityList.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Reports.jsx
+│   │   │   ├── UserManagement.jsx
+│   │   │   ├── UserProfileEdit.jsx
 │   │   ├── constants/
 │   │   ├── utils/
 │   │   │   ├── axios.js

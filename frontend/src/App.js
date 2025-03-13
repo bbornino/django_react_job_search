@@ -10,12 +10,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { useApiRequest } from "./utils/useApiRequest";
 
-import Welcome from "./components/Welcome";
-import About from "./components/About";
-import JobHuntTips from "./components/JobHuntTips";
-import ReleaseHistory from "./components/ReleaseHistory";
-import FinancialAssistance from "./components/FinancialAssistance";
-import BooleanSearch from "./components/BooleanSearch";
+// Static Components / Pages
+import Welcome from "./components/static/Welcome";
+import About from "./components/static/About";
+import BooleanSearch from "./components/static/BooleanSearch";
+import FinancialAssistance from "./components/static/FinancialAssistance";
+import JobHuntTips from "./components/static/JobHuntTips";
+import JobHuntCompanies from './components/static/JobHuntCompanies';
+import ReleaseHistory from "./components/static/ReleaseHistory";
+import Secret from "./components/static/Secret";
+
 import Login from "./components/Login";
 import Register from './components/Register';
 
@@ -29,7 +33,7 @@ import JobPostingEdit from "./components/JobPostingEdit";
 import OpportunityList from "./components/OpportunityList";
 import OpportunityDetails from "./components/OpportunityDetails";
 import Reports from "./components/Reports";
-import Secret from "./components/Secret";
+
 
 console.log(process.env.NODE_ENV);  // Should log "development"
 
@@ -90,6 +94,7 @@ function App() {
               <DropdownMenu end>
                 <DropdownItem tag={Link} to="/about">About</DropdownItem>
                 <DropdownItem tag={Link} to="/job-hunt-tips">Job Hunt Tips</DropdownItem>
+                <DropdownItem tag={Link} to="/job-hunt-companies">Job Hunt Companies</DropdownItem>
                 <DropdownItem tag={Link} to="/boolean-search">Boolean Search</DropdownItem>
                 <DropdownItem tag={Link} to="/financial-assistance">Financial Assistance Programs</DropdownItem>
                 <DropdownItem divider />
@@ -123,6 +128,7 @@ function App() {
             <NavItem><NavLink href="/">Welcome</NavLink></NavItem>
             <NavItem><NavLink href="/about">About</NavLink></NavItem>
             <NavItem><NavLink href="/job-hunt-tips">Job Hunt Tips</NavLink></NavItem>
+            <NavItem><NavLink href="/job-hunt-companies">Job Hunt Companies</NavLink></NavItem>
             <NavItem><NavLink href="/boolean-search">Boolean Search</NavLink></NavItem>
             <NavItem><NavLink href="/financial-assistance">Financial Assistance Programs</NavLink></NavItem>
             <NavItem><NavLink href="/release-history">Release History</NavLink></NavItem>
@@ -166,6 +172,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
         <Route path="/job-hunt-tips" element={<JobHuntTips />} />
+        <Route path="/job-hunt-companies" element={<JobHuntCompanies />} />
         <Route path="/release-history" element={<ReleaseHistory />} />
         <Route path="/financial-assistance" element={<FinancialAssistance />} />
         <Route path="/boolean-search" element={<BooleanSearch />} />
