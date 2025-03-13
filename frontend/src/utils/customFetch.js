@@ -31,11 +31,9 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     };
 
-    // Ensure the body is correctly included for POST/PUT methods
-    const body =
-      (options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE')
-        ? JSON.stringify(options.body)
-        : null;
+    // Ensure the body is correctly included for appropriate methods
+    const methodsWithBody = ['POST', 'PUT', 'PATCH', 'DELETE'];
+    const body = methodsWithBody.includes(options.method) ? JSON.stringify(options.body) : null;
 
     let response = await fetch(url, {
       ...options,
