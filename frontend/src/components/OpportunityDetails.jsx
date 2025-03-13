@@ -4,8 +4,8 @@ import { JOB_OPPORTUNITY_API_URL, formatInputFieldDateTime } from "../constants"
 import { Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import Editor from "./Editor";
-import Comments from "./Comments";
+import Editor from "./shared/Editor";
+import Comments from "./shared/Comments";
 import { useApiRequest } from "../utils/useApiRequest";
 
 const OpportunityDetails = () => {

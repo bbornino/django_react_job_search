@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faEraser } from '@fortawesome/free-solid-svg-icons'
 
-import Editor from "./Editor"
-import Comments from "./Comments"
+import Editor from "./shared/Editor"
+import Comments from "./shared/Comments"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const JobPostingEdit = () => {

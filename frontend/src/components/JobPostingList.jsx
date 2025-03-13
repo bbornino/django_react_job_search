@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_POSTING_API_URL, formatDisplayDate } from "../constants";
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import {Container, Row, Col, Input, Button, InputGroup} from 'reactstrap';
 
 const JobPostingList = () => {

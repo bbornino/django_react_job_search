@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL } from "../constants";
 import { useApiRequest } from '../utils/useApiRequest'; // Import the hook
 import { formatDisplayDate } from '../constants'; 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 
 const Dashboard = () => {
     const [activeJobPostings, setActiveJobPostings] = useState([]);

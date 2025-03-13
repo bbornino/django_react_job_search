@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_OPPORTUNITY_API_URL, formatDisplayDateTime } from "../constants";
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import { Button, Container, Row, Col } from 'reactstrap';
 
 const OpportunityList = () => {

@@ -46,6 +46,11 @@ django_react_job_search/
 │   ├── package-lock.json
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── shared/
+│   │   │   │   ├── Comments.jsx
+│   │   │   │   ├── DataTableBase.jsx
+│   │   │   │   ├── Editor.jsx
+│   │   │   │   ├── ProtectedRoute.jsx
 │   │   │   ├── static/
 │   │   │   │   ├── About.jsx
 │   │   │   │   ├── BooleanSearch.jsx
@@ -60,22 +65,15 @@ django_react_job_search/
 │   │   │   │   ├── Register.jsx
 │   │   │   │   ├── UserManagement.jsx
 │   │   │   │   ├── UserProfileEdit.jsx
-│   │   │   ├── Comments.jsx
 │   │   │   ├── Dashboard.jsx
-│   │   │   ├── DataTableBase.jsx
-│   │   │   ├── Editor.js
 │   │   │   ├── JobPostingEdit.jsx
 │   │   │   ├── JobPostingList.jsx
 │   │   │   ├── JobSiteEdit.jsx
 │   │   │   ├── JobSiteList.js
 │   │   │   ├── JobSiteView.jsx
-
 │   │   │   ├── OpportunityDetails.jsx
 │   │   │   ├── OpportunityList.jsx
-│   │   │   ├── ProtectedRoute.jsx
-
 │   │   │   ├── Reports.jsx
-
 │   │   ├── constants/
 │   │   ├── utils/
 │   │   │   ├── axios.js

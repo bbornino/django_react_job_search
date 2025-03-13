@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { REPORT_API_URL } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import { useApiRequest } from "../utils/useApiRequest";
 
 // const isDate = (value) => {

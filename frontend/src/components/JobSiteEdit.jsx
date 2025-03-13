@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
-import Editor from "./Editor"
+import Editor from "./shared/Editor"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const JobSiteEdit = () => {

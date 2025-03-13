@@ -1,7 +1,7 @@
 // Comments section drawn by both Opportunitiy and Job Postings
 import React, {useState, useEffect} from 'react';
 import {FormGroup, Input, Label, Button, Row, Col} from 'reactstrap';
-import { formatDisplayDateTime } from "../constants";
+import { formatDisplayDateTime } from "../../constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons'
 

@@ -5,7 +5,7 @@ import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../c
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 

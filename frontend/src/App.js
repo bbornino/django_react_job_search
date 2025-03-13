@@ -27,7 +27,7 @@ import UserManagement from './components/user/UserManagement';
 import UserProfileEdit from './components/user/UserProfileEdit';
 
 
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
 import Dashboard from "./components/Dashboard";
 import JobSiteList from "./components/JobSiteList";
 import JobSiteView from "./components/JobSiteView";
