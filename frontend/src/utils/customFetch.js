@@ -90,6 +90,12 @@ export async function customFetch(url, options = {}, accessToken, refreshToken, 
 
     // Parse and return JSON data
     const data = await response.json();
+
+    // If the request method is PATCH, return both status and data
+    if (options.method === 'PATCH') {
+      return { status: response.status, data: data };
+    }
+
     return data || [];
   } catch (error) {
     console.error('Custom fetch error:', error);
