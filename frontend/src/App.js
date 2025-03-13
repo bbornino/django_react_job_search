@@ -20,8 +20,12 @@ import JobHuntCompanies from './components/static/JobHuntCompanies';
 import ReleaseHistory from "./components/static/ReleaseHistory";
 import Secret from "./components/static/Secret";
 
-import Login from "./components/Login";
-import Register from './components/Register';
+// User Components / Pages
+import Login from "./components/user/Login";
+import Register from './components/user/Register';
+import UserManagement from './components/user/UserManagement';
+import UserProfileEdit from './components/user/UserProfileEdit';
+
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./components/Dashboard";

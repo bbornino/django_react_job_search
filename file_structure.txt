@@ -55,6 +55,11 @@ django_react_job_search/
 │   │   │   │   ├── Secret.jsx
 │   │   │   │   ├── ReleaseHistory.js
 │   │   │   │   ├── Welcome.jsx
+│   │   │   ├── user/
+│   │   │   │   ├── Login.jsx
+│   │   │   │   ├── Register.jsx
+│   │   │   │   ├── UserManagement.jsx
+│   │   │   │   ├── UserProfileEdit.jsx
 │   │   │   ├── Comments.jsx
 │   │   │   ├── Dashboard.jsx
 │   │   │   ├── DataTableBase.jsx
@@ -64,14 +69,13 @@ django_react_job_search/
 │   │   │   ├── JobSiteEdit.jsx
 │   │   │   ├── JobSiteList.js
 │   │   │   ├── JobSiteView.jsx
-│   │   │   ├── Login.jsx
+
 │   │   │   ├── OpportunityDetails.jsx
 │   │   │   ├── OpportunityList.jsx
 │   │   │   ├── ProtectedRoute.jsx
-│   │   │   ├── Register.jsx
+
 │   │   │   ├── Reports.jsx
-│   │   │   ├── UserManagement.jsx
-│   │   │   ├── UserProfileEdit.jsx
+
 │   │   ├── constants/
 │   │   ├── utils/
 │   │   │   ├── axios.js
