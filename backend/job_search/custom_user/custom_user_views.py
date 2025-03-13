@@ -291,7 +291,7 @@ class UserProfileView(APIView):
         }
         return Response(user_data, status=status.HTTP_200_OK)
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_user_info(request):
     """
@@ -328,12 +328,27 @@ def update_user_info(request):
             "email": ["Enter a valid email address."]
         }
     """
+    # Convert empty strings in date fields to None
+    if 'dashboard_first_date' in request.data and request.data['dashboard_first_date'] == '':
+        request.data['dashboard_first_date'] = None
+    if 'dashboard_second_date' in request.data and request.data['dashboard_second_date'] == '':
+        request.data['dashboard_second_date'] = None
+
+    # Convert empty bio to None (if you want to treat empty bio as None in the database)
+    if 'bio' in request.data and request.data['bio'] == '':
+        request.data['bio'] = None
+    
     user = request.user
-    serializer = CustomUserSerializer(user, data=request.data, partial=True)  # Allow partial updates
+    serializer = CustomUserSerializer(user, data=request.data, partial=True) # Allow partial updates
+
+    logger.debug("Updating User Info: %s", dict(request.data))
 
     if serializer.is_valid():
         serializer.save()
         return Response({'message': 'User info updated successfully.'}, status=status.HTTP_200_OK)
+
+    # Log the validation errors if the serializer is invalid
+    logger.debug("Validation errors: %s", {serializer.errors})
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

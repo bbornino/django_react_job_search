@@ -198,6 +198,7 @@ function App() {
         <Route path="/opportunity-details/:id" element={<ProtectedRoute element={<OpportunityDetails />} />} />
         <Route path="/reports" element={<ProtectedRoute element={<Reports />} />} />
         <Route path="/reports/:reportType/:referenceDate?" element={<ProtectedRoute element={<Reports />} />} />
+        <Route path="/edit-profile" element={<ProtectedRoute element={<UserProfileEdit />} />} />
       </Routes>
     </div>
   );
