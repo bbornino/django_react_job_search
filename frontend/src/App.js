@@ -1,6 +1,7 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect }  from 'react';
 import {  useAuthUser, useIsAuthenticated, useSignOut  } from 'react-auth-kit';
-import { Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { Route, Routes, Link, useNavigate, useLocation } from 'react-router-dom';
+import { initGA, logPageView } from './utils/analytics';
 import {
   Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink,
   UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
@@ -30,6 +31,8 @@ import OpportunityDetails from "./components/OpportunityDetails";
 import Reports from "./components/Reports";
 import Secret from "./components/Secret";
 
+console.log(process.env.NODE_ENV);  // Should log "development"
+
 
 function App() {
   const isAuthenticated = useIsAuthenticated(); // Hook to check if user is authenticated
@@ -38,8 +41,22 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   // useSetupAxiosInterceptor(); // This will set up the Axios interceptor
   const { apiRequest } = useApiRequest();
-  const navigate = useNavigate(); // Hook to navigate after login
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Initialize GA once and log page view for route changes
+    initGA();  // Run once on mount
+    
+    const handleRouteChange = () => {
+      logPageView();  // Track page views on route change
+    };
   
+    // Subscribe to route changes (no need for location.listen in react-router-dom v6)
+    handleRouteChange(); // Log the page view when the app first loads
+
+  }, [location]);  // Add 'location' to the dependency array
+
   // Toggle the navigation bar
   const toggle = () => setIsOpen((prevState) => !prevState);
   
