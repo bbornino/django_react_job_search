@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo  } from "react";
+import React, { useState, useEffect, useMemo  } from "react";
 import { useNavigate } from 'react-router-dom';
-import {  useAuthUser, useIsAuthenticated, useSignOut  } from 'react-auth-kit';
+import {  useAuthUser } from 'react-auth-kit';
 import {Form, FormGroup, FormText, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody, CardFooter} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -61,12 +61,15 @@ const UserProfileEdit = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(user)
             });
-            if (!response.ok) {
-                throw new Error('Failed to update profile');
+
+            // Check for success status
+            if (response.status === 200) {
+                console.log('Profile updated successfully');
+                navigate('/dashboard');
+            } else {
+                console.error('Failed to update profile:', response.data);
             }
-            
-            console.log('Profile updated successfully');
-            // navigate('/profile');  // Redirect to profile page or another desired page
+
           } catch (err) {
             console.error('Error updating profile:', err);
           }
