@@ -98,6 +98,13 @@ class JobHuntCompanies extends Component {
                         </ul>
                     </Col>
                 </Row>
+
+                <Row>
+                    <Col>
+                        <p>Also check out a site created by somebody on <a href="https://www.reddit.com/r/leetcode/comments/1j3dsmn/i_built_a_faang_job_board_only_jobs_scraped_in/" 
+                        >r/LeetCode</a>: <a href="https://topjobstoday.com"></a>Top Jobs Today</p>
+                    </Col>
+                </Row>
             </Container>
         )
     }
