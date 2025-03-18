@@ -42,6 +42,7 @@ django_react_job_search/
 ├── frontend/
 │   ├── .env.development
 │   ├── .env.production
+│   ├── default.conf        # for nginx
 │   ├── package.json
 │   ├── package-lock.json
 │   ├── src/
@@ -89,9 +90,5 @@ django_react_job_search/
 │   │   ├── setupTests.js
 │   ├── public/
 │   ├── build/
-├── docker_start_dev_containers.bat
-├── docker-compose.yml
-├── dockerfile.dev.backend
-├── dockerfile.dev.frontend
 ├── dockerfile.prod
 ├── README.md
