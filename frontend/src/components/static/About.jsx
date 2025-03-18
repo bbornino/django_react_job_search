@@ -52,13 +52,17 @@ const About = () => {
                             <li>CK Editor 5</li>
                             <li>Font Awesome</li>
                             <li>React-auth-kit</li>
+                            <li>Google Analytics</li>
                         </ul>
                         <li>Python Django REST framework</li>
                         <ul>
                             <li>CORSheaders</li>
                             <li>REST Framework Simple JWT (and Tokens)</li>
+                            <li>Django Logging</li>
+                            <li>Django Core Cache: LocMemCache </li>
                         </ul>
-                        <li>Database: sqlite, which can easily be migrated to MariaDB or AWS Aurora...</li>
+                        <li>Database: AWS LightSail WordPress MariaDB</li>
+                        <li>Docker: Nginx & Gunicorn</li>
                     </ul>
                 </Col>
             </Row>

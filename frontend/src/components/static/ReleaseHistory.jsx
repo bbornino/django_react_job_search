@@ -17,6 +17,16 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
+                        <h2>March 18, 2025 - Release 5</h2>
+                        <ul>
+                            <li>Docker and Web Server Support (Nginx + Gunicorn)</li>
+                            <li>Enabled Users to edit their name and password</li>
+                            <li>Google Analytics</li>
+                            <li>Added Job Site Cache</li>
+                            <li>Enabled Django Logging</li>
+                            <li>Moved to Production Database</li>
+                            <li>Reduced Back end Requests (once instead of double render twice)</li>
+                        </ul>
                         <h2>January 14, 2025 - Release 4</h2>
                         Added Multi-User Support!  Impacts:
                         <ul>
