@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 import { Link } from 'react-router-dom';
 import {Container, Row, Col} from 'reactstrap';
 
 export default function Welcome() {
+    // Effect to manage focus when the component mounts/unmounts
+    useEffect(() => {
+        document.title = "Welcome - Job Search Tracker";
+    }, []); // Empty array to run on mount/unmount only
+
   return (
     <Container className="d-flex justify-content-center align-items-start vh-100" style={{ marginTop: '5%' }}>
       <div className="p-4 border rounded shadow-lg text-center" style={{ maxWidth: '500px', width: '100%' }}>

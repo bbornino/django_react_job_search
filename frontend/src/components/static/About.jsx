@@ -8,6 +8,7 @@ const About = () => {
     // Effect to manage focus when the component mounts/unmounts
     useEffect(() => {
         // Track the currently focused element
+        document.title = "About this Application - Job Search Tracker";
         const activeElement = document.activeElement;
         activeElementRef.current = activeElement;
 
