@@ -17,7 +17,7 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
-                        <h2>March 18, 2025 - Release 5</h2>
+                        <h2>March 20, 2025 - Release 5</h2>
                         <ul>
                             <li>Docker and Web Server Support (Nginx + Gunicorn)</li>
                             <li>Enabled Users to edit their name and password</li>
