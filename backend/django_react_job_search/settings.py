@@ -251,7 +251,7 @@ LOGGING = {
             "filename": str(LOG_DIR / "django.log"), 
             "when": "midnight",  # Rotate logs at midnight
             "interval": 1,  # Rotate every 1 day
-            'backupCount': 30,  # Keep the last 30 days of logs
+            'backupCount': 10,  # Keep the last 10 days of logs
             'formatter': 'verbose',
             'delay': True,
 
@@ -273,6 +273,14 @@ LOGGING = {
             "level": LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "simple",
+        },
+    },
+        "loggers": {
+        # Log database queries
+        "django.db.backends": {
+            "level": LOG_LEVEL,  # You can adjust this to INFO or ERROR as needed
+            "handlers": ["file", "console"],  # Log to both file and console
+            "propagate": False,  # Prevent it from propagating to the root logger
         },
     },
     "root": {
