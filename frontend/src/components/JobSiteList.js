@@ -1,18 +1,22 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useApiRequest } from '../useApiRequest';
+import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDate  } from "../constants";
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import {Button, Container, Row, Col} from 'reactstrap';
 
 const JobSiteList = () => {
     const [jobSites, setJobSites] = useState([]);
     const { apiRequest } = useApiRequest(); 
     const navigate = useNavigate();
+    const hasFetched = useRef(false);  // Track if the request has already been made
 
     // Memoize the getOpportunities function to avoid re-renders due to function change
     const getJobSites = useCallback(async () => {
+        if (hasFetched.current) return; // Prevent double fetch
+        hasFetched.current = true;
+        
         const data = await apiRequest(JOB_SITE_API_URL, {method: 'GET'});
         if (data) {
             setJobSites(data);

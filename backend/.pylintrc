@@ -1,0 +1,10 @@
+# .pylintrc configuration file
+
+[MASTER]
+# Disable line-too-long warnings specifically for migration files
+# This will apply to all files in the migrations folder
+ignore=migrations
+
+# Other default configurations can remain as they are, or you can customize them
+# Example: Uncomment below to adjust line length for other files
+# max-line-length=100

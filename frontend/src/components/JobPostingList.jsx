@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useApiRequest } from '../useApiRequest';
+import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_POSTING_API_URL, formatDisplayDate } from "../constants";
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import {Container, Row, Col, Input, Button, InputGroup} from 'reactstrap';
 
 const JobPostingList = () => {
@@ -15,8 +15,12 @@ const JobPostingList = () => {
     });
     const { apiRequest } = useApiRequest(); 
     const navigate = useNavigate();
+    const hasFetched = useRef(false);  // Track if the request has already been made
 
     const getJobPostings = useCallback(async () => {
+        if (hasFetched.current) return; // Prevent double fetch
+        hasFetched.current = true;
+        
         const data = await apiRequest(JOB_POSTING_API_URL, {method:'GET'});
         if(data) {
             setJobPostings(data);
@@ -49,25 +53,27 @@ const JobPostingList = () => {
             name: "Posting Status",
             selector: row => row.posting_status,
             sortable: true,
+            width: "200px",
         },
         {
             name: "Posting Stage",
             selector: row => row.rejected_after_stage,
             sortable: true,
+            width: "200px",
         },
         {
             name: "Applied On",
             selector: row => row.applied_at,
             cell: row => formatDisplayDate(row.applied_at),
             sortable: true,
-            width: "150px",
+            width: "130px",
         },
         {
             name: "Rejected On",
             selector: row => row.rejected_at,
             cell: row => formatDisplayDate(row.rejected_at),
             sortable: true,
-            width: "150px",
+            width: "130px",
         },
     ];
 

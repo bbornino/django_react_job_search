@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { REPORT_API_URL } from "../constants";
 
 import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
-import DataTableBase from './DataTableBase';
-import { useApiRequest } from "../useApiRequest";
+import DataTableBase from './shared/DataTableBase';
+import { useApiRequest } from "../utils/useApiRequest";
 
 // const isDate = (value) => {
 //       // Check if the value is a string
@@ -64,7 +64,7 @@ const Reports = () => {
 
 
     const parseWindowLocationDate = (pathArr) => {
-        var reportDate = '2024-01-01'       // Default Report Date when none set
+        var reportDate = '2024-08-01'       // Default Report Date when none set
         if (pathArr.length > 3) {
             const rDate = new Date(pathArr[3])
             if (!isNaN(rDate)) {

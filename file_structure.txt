@@ -1,0 +1,94 @@
+django_react_job_search/
+├── backend/
+│   ├── django_react_job_search/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   ├── job_search/
+│   │   ├── custom_user/
+│   │   │   ├── custom_user_serializer.py 
+│   │   │   ├── custom_user_validators.py 
+│   │   │   ├── custom_user_views.py 
+│   │   │   ├── custom_user.py 
+│   │   ├── dashboard/
+│   │   │   ├── dashboard_serializer.py 
+│   │   │   ├── dashboard_views.py 
+│   │   ├── email_opportunity/
+│   │   │   ├── email_opportunity_serializer.py 
+│   │   │   ├── email_opportunity_views.py 
+│   │   │   ├── email_opportunity.py 
+│   │   ├── job_posting/
+│   │   │   ├── job_posting_serializer.py 
+│   │   │   ├── job_posting_views.py 
+│   │   │   ├── job_posting.py 
+│   │   ├── job_site/
+│   │   │   ├── __init__.py 
+│   │   │   ├── job_site_serializer.py 
+│   │   │   ├── job_site_views.py 
+│   │   │   ├── job_site.py 
+│   │   ├── migrations/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── middleware.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   ├── logs/
+│   ├── __init__.py
+│   ├── .env.production
+│   ├── .pylintrc
+│   ├── manage.py
+│   ├── requirements.txt
+├── frontend/
+│   ├── .env.development
+│   ├── .env.production
+│   ├── default.conf        # for nginx
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── shared/
+│   │   │   │   ├── Comments.jsx
+│   │   │   │   ├── DataTableBase.jsx
+│   │   │   │   ├── Editor.jsx
+│   │   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── static/
+│   │   │   │   ├── About.jsx
+│   │   │   │   ├── BooleanSearch.jsx
+│   │   │   │   ├── FinancialAssistance.jsx
+│   │   │   │   ├── JobHuntCompanies.jsx
+│   │   │   │   ├── JobHuntTips.jsx
+│   │   │   │   ├── Secret.jsx
+│   │   │   │   ├── ReleaseHistory.js
+│   │   │   │   ├── Welcome.jsx
+│   │   │   ├── user/
+│   │   │   │   ├── Login.jsx
+│   │   │   │   ├── Register.jsx
+│   │   │   │   ├── UserManagement.jsx
+│   │   │   │   ├── UserProfileEdit.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── JobPostingEdit.jsx
+│   │   │   ├── JobPostingList.jsx
+│   │   │   ├── JobSiteEdit.jsx
+│   │   │   ├── JobSiteList.js
+│   │   │   ├── JobSiteView.jsx
+│   │   │   ├── OpportunityDetails.jsx
+│   │   │   ├── OpportunityList.jsx
+│   │   │   ├── Reports.jsx
+│   │   ├── constants/
+│   │   ├── utils/
+│   │   │   ├── axios.js
+│   │   │   ├── axiosInstance.js
+│   │   │   ├── customFetch.js
+│   │   │   ├── reportWebVitals.js
+│   │   │   ├── useApiRequest.js
+│   │   ├── App.css
+│   │   ├── App.js
+│   │   ├── App.test.js
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   ├── setupTests.js
+│   ├── public/
+│   ├── build/
+├── dockerfile.prod
+├── README.md

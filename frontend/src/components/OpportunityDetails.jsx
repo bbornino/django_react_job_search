@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { JOB_OPPORTUNITY_API_URL, formatInputFieldDateTime } from "../constants";
 import { Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import Editor from "./Editor";
-import Comments from "./Comments";
-import { useApiRequest } from "../useApiRequest";
+import Editor from "./shared/Editor";
+import Comments from "./shared/Comments";
+import { useApiRequest } from "../utils/useApiRequest";
 
 const OpportunityDetails = () => {
   const [state, setState] = useState({
@@ -26,9 +26,12 @@ const OpportunityDetails = () => {
 
   const { apiRequest } = useApiRequest();
   const navigate = useNavigate();
+  const hasFetched = useRef(false);  // Track if the request has already been made
 
   // Load opportunity data based on opportunity_id
   const loadOpportunity = useCallback(async (opportunity_id) => {
+    if (hasFetched.current) return; // Prevent double fetch
+        hasFetched.current = true;
     if (!opportunity_id) return;
 
     const data = await apiRequest(
@@ -110,7 +113,7 @@ const OpportunityDetails = () => {
       state,  
       { method: 'PUT' }
     );
-    navigate("/opportunities")
+    navigate(-1, { state: { refresh: true } });
   };
 
   const setCommentsCallback = (updatedComments) => {

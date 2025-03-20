@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useApiRequest } from '../useApiRequest';
+import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
 import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import DataTableBase from './DataTableBase';
+import DataTableBase from './shared/DataTableBase';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 
@@ -24,8 +24,13 @@ const JobSiteView = () => {
 
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
+    const hasFetchedJobSite = useRef(false);  // Track if the request has already been made
+    const hasFetchedPostings = useRef(false);  // Track if the request has already been made
 
     const getJobSite = useCallback ( async (jobSiteId) => {
+        if (hasFetchedJobSite.current) return; // Prevent double fetch
+        hasFetchedJobSite.current = true;
+
         if (!jobSiteId) return;
 
         const data = await apiRequest(`${JOB_SITE_API_URL}${jobSiteId}`, {method:'GET'});
@@ -46,6 +51,9 @@ const JobSiteView = () => {
     }, [apiRequest]);
 
     const getJobSitePostings = useCallback(async (jobSiteId) => {
+        if (hasFetchedPostings.current) return; // Prevent double fetch
+        hasFetchedPostings.current = true;
+
         if (!jobSiteId) return;
     
         const data = await apiRequest(JOB_SITE_API_URL + jobSiteId + '/postings', { method: 'GET' });
@@ -75,8 +83,8 @@ const JobSiteView = () => {
                 ...prevState,
                 job_site_id: jobSiteId,
             }));
-            getJobSite(jobSiteId);
-            getJobSitePostings(jobSiteId);
+            Promise.all([getJobSite(jobSiteId), getJobSitePostings(jobSiteId)])
+            .catch((error) => console.error("Error fetching job site data:", error));
         }
     }, [getJobSite, getJobSitePostings]);
 
@@ -95,6 +103,7 @@ const JobSiteView = () => {
             name: 'Posting Status',
             selector: row => (typeof row?.posting_status === 'string' ? row.posting_status : 'N/A'),
             sortable: true,
+            width: "200px",
         },
         {
             name: 'Applied At',

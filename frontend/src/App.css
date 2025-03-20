@@ -65,6 +65,10 @@ ul li.check:before  {
   background-color: bg-white;
 }
 
+.card-footer {
+  background-color: white; /* Match footer background to body */
+}
+
 /* For centering any container */
 .centered-container {
   display: flex;

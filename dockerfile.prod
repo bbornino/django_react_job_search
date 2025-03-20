@@ -1,0 +1,46 @@
+# PRODUCTION Dockerfile
+
+# First Stage - Build the React App
+FROM node:20 AS react_build
+WORKDIR /app/frontend
+
+# Copy package.json and package-lock.json separately for better caching
+COPY frontend/package.json frontend/package-lock.json ./
+ENV NODE_PATH=src
+RUN npm install
+COPY frontend ./
+RUN npm run build
+
+# Stage 2: Setup Django backend
+FROM python:3.12-alpine AS final
+WORKDIR /app/backend
+
+# Set Python to not buffer stdout/stderr (for logging in Docker)
+ENV PYTHONUNBUFFERED=1
+
+# Install dependencies for MySQL client and other necessary build tools
+COPY backend/. .
+RUN apk update && \
+    apk add --no-cache build-base mariadb-dev pkgconfig nginx \
+    && pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    # Remove unnecessary packages to reduce image size
+    && apk del build-base \
+    # Clean up APK cache
+    && rm -rf /var/cache/apk/*
+
+# Ensure the logs directory exists in the container
+RUN mkdir -p /backend/logs
+
+# Copy from previous build stages
+COPY --from=react_build /app/frontend/build/ /app/backend/staticfiles/
+
+# Copy Nginx configuration for production (Ensure you have this file available)
+COPY /frontend/default.conf /etc/nginx/http.d/default.conf
+
+# Expose ports
+EXPOSE 80 8000
+
+# Start Nginx and Gunicorn in the background
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]
+

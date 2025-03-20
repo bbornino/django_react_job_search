@@ -7,8 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
-import Editor from "./Editor"
-import { useApiRequest } from "../useApiRequest";
+import Editor from "./shared/Editor"
+import { useApiRequest } from "../utils/useApiRequest";
 
 const JobSiteEdit = () => {
 
@@ -110,7 +110,7 @@ const JobSiteEdit = () => {
     const editJobSite = async (e) => {
         e.preventDefault();
         await apiRequest(JOB_SITE_API_URL + state.job_site_id, state, {method: 'PUT'});
-        navigate('/job-sites');
+        navigate(-1, { state: { refresh: true } });
     }
 
     return (
