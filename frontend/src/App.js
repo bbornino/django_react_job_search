@@ -191,6 +191,7 @@ function App() {
         <Route path="/job-site-edit" element={<ProtectedRoute element={<JobSiteEdit />} />} />
         <Route path="/job-site-edit/:id" element={<ProtectedRoute element={<JobSiteEdit />} />} />
         <Route path="/job-postings" element={<ProtectedRoute element={<JobPostingList />} />} />
+        <Route path="/job-posting-new/" element={<ProtectedRoute element={<JobPostingEdit />} />} />
         <Route path="/job-posting-new/:id" element={<ProtectedRoute element={<JobPostingEdit />} />} />
         <Route path="/job-posting-edit/:id" element={<ProtectedRoute element={<JobPostingEdit />} />} />
         <Route path="/opportunities" element={<ProtectedRoute element={<OpportunityList />} />} />
