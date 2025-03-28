@@ -62,7 +62,7 @@ def email_opportunity_list(request):
 
     if request.method == 'GET':
         data = EmailOpportunity.objects.filter(user=request.user)
-        serializer = EmailOpportunitySerializer(data, context={'request': request}, many=True)
+        serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
