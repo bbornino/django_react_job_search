@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSignIn } from "react-auth-kit";  // Correct hook to handle login
 import axios from "axios";
@@ -10,6 +10,11 @@ const Login = () => {
   const [error, setError] = useState(""); // Error handling state
   const navigate = useNavigate(); // Hook to navigate after login
   const signIn = useSignIn(); // Use useSignIn hook to handle login
+
+    // Effect to manage focus when the component mounts/unmounts
+    useEffect(() => {
+        document.title = "Welcome - Job Search Tracker";
+    }, []); // Empty array to run on mount/unmount only
 
   const handleLogin = async (e) => {
     e.preventDefault();
