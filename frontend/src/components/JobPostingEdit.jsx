@@ -536,7 +536,7 @@ const JobPostingEdit = () => {
                                         type="text" required
                                         id="technology_string"
                                         name="technology_string"
-                                        maxLength={128}
+                                        maxLength={512}
                                         onChange={handleInputChange}
                                         value={state.technology_string || ''}
                                     />
