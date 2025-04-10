@@ -533,7 +533,7 @@ const JobPostingEdit = () => {
                                 <FormGroup>
                                     <Label for="technology_string">Technology</Label>
                                     <Input
-                                        type="text" required
+                                        type="textarea" required
                                         id="technology_string"
                                         name="technology_string"
                                         maxLength={512}
