@@ -92,3 +92,5 @@ django_react_job_search/
 │   ├── build/
 ├── dockerfile.prod
 ├── README.md
+├── init.sh                  # Certificate generation script
+├── renew.sh                 # Certificate renewal script

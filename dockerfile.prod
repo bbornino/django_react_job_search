@@ -21,9 +21,9 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies for MySQL client and other necessary build tools
 COPY backend/. .
 RUN apk update && \
-    apk add --no-cache build-base mariadb-dev pkgconfig nginx \
+    apk add --no-cache build-base mariadb-dev pkgconfig nginx certbot py3-pip dcron \
     && pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir certbot-nginx -r requirements.txt \
     # Remove unnecessary packages to reduce image size
     && apk del build-base \
     # Clean up APK cache
@@ -38,9 +38,21 @@ COPY --from=react_build /app/frontend/build/ /app/backend/staticfiles/
 # Copy Nginx configuration for production (Ensure you have this file available)
 COPY /frontend/default.conf /etc/nginx/http.d/default.conf
 
+# Copy the init.sh and renew.sh scripts into the container
+COPY init.sh /usr/local/bin/init.sh
+COPY renew.sh /usr/local/bin/renew.sh
+
+# Give execute permissions to the scripts
+RUN chmod +x /usr/local/bin/init.sh /usr/local/bin/renew.sh
+
+# Set up cron job for certificate renewal
+RUN echo "0 0 * * * /usr/local/bin/renew.sh && nginx -s reload" > /etc/cron.d/certbot-renewal && \
+    chmod 0644 /etc/cron.d/certbot-renewal && \
+    crontab /etc/cron.d/certbot-renewal
+
 # Expose ports
 EXPOSE 80 8000
 
 # Start Nginx and Gunicorn in the background
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "/usr/local/bin/init.sh && gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]
 
