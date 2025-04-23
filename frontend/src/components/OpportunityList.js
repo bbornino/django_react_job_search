@@ -46,8 +46,18 @@ const OpportunityList = () => {
             sortable: true,
         },
         {
-            name: 'Status',
-            selector: row => row.opportunity_status,
+            name: 'Recruiter Name',
+            selector: row => String(row.recruiter_name),
+            sortable: true,
+        },
+        {
+            name: 'Recruiter Company',
+            selector: row => String(row.recruiter_company),
+            sortable: true,
+        },
+        {
+            name: 'City',
+            selector: row => row.location_city,
             sortable: true,
         },
         {

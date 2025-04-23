@@ -32,4 +32,4 @@ class EmailOpportunitySerializer(serializers.ModelSerializer):
 class EmailOpportunityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailOpportunity
-        fields = ('id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at')
+        fields = ('id', 'recruiter_name', 'job_title', 'opportunity_status', 'recruiter_company', 'location_city', 'email_received_at')
