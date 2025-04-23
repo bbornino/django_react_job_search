@@ -9,6 +9,8 @@ import { faTrash, faFloppyDisk, faEraser, faArrowTurnUp } from '@fortawesome/fre
 
 import Editor from "./shared/Editor"
 import Comments from "./shared/Comments"
+import DeleteConfirmationModal from "./shared/ConfirmationDeleteModal"
+import ClearConfirmationModal from "./shared/ConfirmationClearModal"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const JobPostingEdit = () => {
@@ -48,10 +50,15 @@ const JobPostingEdit = () => {
         job_sites: [],
     });
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showClearModal, setShowClearModal] = useState(false);
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
     const hasFetchedJobSites = useRef(false);  // Track if the request has already been made
     const hasFetchedJobPosting = useRef(false);  // Track if the request has already been made
+
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
+    const toggleClearModal = () => setShowClearModal(!showClearModal);
 
     const getJobSites = useCallback(async () => {
         if (hasFetchedJobSites.current) return; // Prevent double fetch
@@ -208,7 +215,7 @@ const JobPostingEdit = () => {
             technology_stack: [],
             comments: [],
             posting_application_questions: [],
-            job_description: '',
+            job_description: 'TBD',
         }))
     }
 
@@ -220,7 +227,7 @@ const JobPostingEdit = () => {
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
         await apiRequest(JOB_POSTING_API_URL, jobPostingParams, {method: 'POST'});
 
-        window.location = document.referrer;    // Forces a data refresh
+        navigate(-1);     // Forces a data refresh
     }
 
     const editJobPosting = async (e) => {
@@ -228,7 +235,7 @@ const JobPostingEdit = () => {
         const jobPostingData = state;
         await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, {method: 'PUT'});
 
-        window.location = document.referrer;    // Forces a data refresh
+        navigate(-1);     // Forces a data refresh
     }
 
 
@@ -570,7 +577,17 @@ const JobPostingEdit = () => {
                     </CardBody>
                 </Card>
             </Form>
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                toggle={toggleDeleteModal}
+                onDelete={onDeleteJobPosting}
+            />
 
+            <ClearConfirmationModal
+                isOpen={showClearModal}
+                toggle={toggleClearModal}
+                onClear={clearJobPosting}
+            />
         </Container>
     )
 

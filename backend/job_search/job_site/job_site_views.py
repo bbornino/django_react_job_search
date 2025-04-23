@@ -215,4 +215,15 @@ def job_site_detail(request, pk):
                             status=status.HTTP_403_FORBIDDEN)
 
         job_site.delete()
+        
+        # Invalidate individual job site cache
+        cache_key_detail = f"job_site_{pk}"
+        cache.delete(cache_key_detail)
+        logger.info("Deleted job site - invalidated cache for key: %s", cache_key_detail)
+
+        # Invalidate the job site list cache for the user
+        cache_key_list = f"job_sites_{request.user.id}"
+        cache.delete(cache_key_list)
+        logger.info("Deleted job site - invalidated list cache for key: %s", cache_key_list)
+        
         return Response(status=status.HTTP_204_NO_CONTENT)

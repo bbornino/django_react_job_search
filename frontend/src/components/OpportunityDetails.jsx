@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import Editor from "./shared/Editor";
 import Comments from "./shared/Comments";
+import DeleteConfirmationModal from "./shared/ConfirmationDeleteModal"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const OpportunityDetails = () => {
@@ -27,6 +28,9 @@ const OpportunityDetails = () => {
   const { apiRequest } = useApiRequest();
   const navigate = useNavigate();
   const hasFetched = useRef(false);  // Track if the request has already been made
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
 
   // Load opportunity data based on opportunity_id
   const loadOpportunity = useCallback(async (opportunity_id) => {
@@ -131,7 +135,8 @@ const OpportunityDetails = () => {
                 <strong>Opportunity Details</strong>
               </Col>
               <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
-                <Button color="danger" className="mx-2 pull-right" onClick={handleDeleteOpportunity}>
+                <Button color="danger" className="mx-2 pull-right" 
+                  onClick={() => setShowDeleteModal(true)}>
                   <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete
                 </Button>
                 <Button color="primary" type="submit" className="mx-2 pull-right">
@@ -303,6 +308,11 @@ const OpportunityDetails = () => {
           </CardBody>
         </Card>
       </Form>
+      <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                toggle={toggleDeleteModal}
+                onDelete={handleDeleteOpportunity}
+            />
     </Container>
   );
 };

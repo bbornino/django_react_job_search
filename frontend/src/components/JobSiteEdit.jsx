@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./shared/Editor"
+import DeleteConfirmationModal from "./shared/ConfirmationDeleteModal"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const JobSiteEdit = () => {
@@ -29,6 +30,8 @@ const JobSiteEdit = () => {
 
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
 
     // Load job site data based on job_site_id
     const getJobSite = useCallback(async (job_site_id) => {
@@ -127,7 +130,7 @@ const JobSiteEdit = () => {
                             </Col>
                             <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
                                 <Button color="danger" className="mx-2 pull-right" 
-                                        onClick={onDeleteJobSite}>
+                                        onClick={() => setShowDeleteModal(true)}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete
                                 </Button>
                                 <Button color="primary" type="submit" 
@@ -261,6 +264,11 @@ const JobSiteEdit = () => {
                     </CardBody>
                 </Card>
             </Form>
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                toggle={toggleDeleteModal}
+                onDelete={onDeleteJobSite}
+            />
         </Container>
     )
 

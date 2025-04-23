@@ -49,6 +49,9 @@ django_react_job_search/
 │   │   ├── components/
 │   │   │   ├── shared/
 │   │   │   │   ├── Comments.jsx
+│   │   │   │   ├── ConfirmationModal.jsx
+│   │   │   │   ├── ConfirmationDeleteModal.jsx
+│   │   │   │   ├── ConfirmationClearModal.jsx
 │   │   │   │   ├── DataTableBase.jsx
 │   │   │   │   ├── Editor.jsx
 │   │   │   │   ├── ProtectedRoute.jsx
