@@ -113,7 +113,8 @@ const OpportunityDetails = () => {
       state,  
       { method: 'PUT' }
     );
-    navigate(-1, { state: { refresh: true } });
+    
+    window.location = document.referrer;    // Forces a data refresh
   };
 
   const setCommentsCallback = (updatedComments) => {

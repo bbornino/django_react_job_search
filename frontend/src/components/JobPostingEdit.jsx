@@ -219,15 +219,16 @@ const JobPostingEdit = () => {
         jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
         await apiRequest(JOB_POSTING_API_URL, jobPostingParams, {method: 'POST'});
-        navigate(-1, { state: { refresh: true } });
 
+        window.location = document.referrer;    // Forces a data refresh
     }
 
     const editJobPosting = async (e) => {
         e.preventDefault();
         const jobPostingData = state;
         await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, {method: 'PUT'});
-        navigate(-1);       // go back one navigational page
+
+        window.location = document.referrer;    // Forces a data refresh
     }
 
 
