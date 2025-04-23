@@ -5,7 +5,7 @@ import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTi
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faFloppyDisk, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faFloppyDisk, faEraser, faArrowTurnUp } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./shared/Editor"
 import Comments from "./shared/Comments"
@@ -237,17 +237,26 @@ const JobPostingEdit = () => {
                 <Card className="text-dark bg-light m-3">
                     <CardTitle className="mx-4 my-2">
                         <Row className="">
-                            <Col xxl="8" xl="8" lg="7" md="7" sm="5" xs="3">
+                            <Col xxl="7" xl="6" lg="5" md="12" sm="12" xs="12">
                                 {state.job_posting_id === 0 ? 'Create' : 'Edit'} Job Posting
                             </Col>
-                            <Col xxl="4" xl="4" lg="5" md="5" sm="7" xs="9" className="pull-right">
-                                <Button color="warning" className="mx-2  pull-right" 
-                                    onClick={clearJobPosting}>
+                            <Col xxl="5" xl="6" lg="7" md="12" sm="12" xs="12" className="text-md-end mt-2 mt-lg-0">
+                                <Button 
+                                    color="secondary" style={{ height: '45px' }} 
+                                    className="mx-2 mb-2 mb-lg-0 " 
+                                    onClick={() => navigate(-1)}>
+                                    <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: 'rotate(-90deg)' }}/> &nbsp; Back
+                                </Button>
+                                <Button color="warning" style={{ height: '45px' }} 
+                                    className="mx-2 mb-2 mb-lg-0 " 
+                                    onClick={() => setShowClearModal(true)}>
                                     <FontAwesomeIcon icon={faEraser} /> &nbsp; Clear</Button>
-                                <Button color="danger" className="mx-2  pull-right" 
-                                    onClick={onDeleteJobPosting}>
+                                <Button color="danger" style={{ height: '45px' }}
+                                    className="mx-2 mb-2 mb-lg-0 t" 
+                                    onClick={() => setShowDeleteModal(true)}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
-                                <Button color="primary" type="submit" className="mx-2 pull-right">
+                                <Button color="primary" type="submit" style={{ height: '45px' }}
+                                    className="mx-2 mb-2 mb-lg-0 ">
                                     <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save</Button>
                             </Col>
                         </Row>
