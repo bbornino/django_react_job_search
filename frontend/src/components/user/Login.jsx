@@ -4,12 +4,20 @@ import { useSignIn } from "react-auth-kit";  // Correct hook to handle login
 import axios from "axios";
 import { Container, Form, Card, CardTitle, CardBody, CardFooter, FormGroup, Label, Input } from "reactstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
 const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState(""); // Error handling state
   const navigate = useNavigate(); // Hook to navigate after login
   const signIn = useSignIn(); // Use useSignIn hook to handle login
+
+  const handlePasswordToggle = () => {
+    setShowPassword((prevState) => !prevState);
+};
 
     // Effect to manage focus when the component mounts/unmounts
     useEffect(() => {
@@ -76,11 +84,23 @@ const Login = () => {
             </FormGroup>
             <FormGroup>
               <Label>Password</Label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="input-group">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                    className="input-group-text"
+                    onClick={handlePasswordToggle}
+                    style={{ cursor: "pointer" }}
+                >
+                    <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                    />
+                </span>
+              </div>
+              
             </FormGroup>
             {error && <p style={{ color: "red" }}>{error}</p>} {/* Show error message */}
           </CardBody>
