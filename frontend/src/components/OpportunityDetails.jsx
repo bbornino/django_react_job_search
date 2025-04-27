@@ -118,7 +118,8 @@ const OpportunityDetails = () => {
       { method: 'PUT' }
     );
     
-    window.location = document.referrer;    // Forces a data refresh
+    navigate(-1);  // Forces a data refresh
+    // navigate(-1, { state: { refresh: true } });
   };
 
   const setCommentsCallback = (updatedComments) => {
@@ -131,15 +132,15 @@ const OpportunityDetails = () => {
         <Card className="text-dark bg-light m-3">
           <CardTitle className="mx-4 my-2">
             <Row>
-              <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
+              <Col md="7" sm="5">
                 <strong>Opportunity Details</strong>
               </Col>
-              <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
-                <Button color="danger" className="mx-2 pull-right" 
+              <Col md="5" sm="7" className="text-end">
+                <Button color="danger" className="mx-2" 
                   onClick={() => setShowDeleteModal(true)}>
                   <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete
                 </Button>
-                <Button color="primary" type="submit" className="mx-2 pull-right">
+                <Button color="primary" type="submit" className="mx-2">
                   <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save
                 </Button>
               </Col>
