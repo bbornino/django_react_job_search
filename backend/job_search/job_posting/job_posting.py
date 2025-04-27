@@ -122,7 +122,7 @@ class JobPosting(models.Model):
     technology_stack = models.JSONField(default=list, blank=True, null=True)
     comments = models.JSONField(default=list, blank=True, null=True)
     posting_application_questions = models.JSONField(default=list, blank=True, null=True)
-    job_description = models.TextField()
+    job_description = models.TextField(default='', blank=True, null=True)
 
     # Explicitly define the manager type for linters
     objects: Type[models.Manager] = models.Manager()
