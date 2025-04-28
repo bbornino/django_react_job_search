@@ -147,7 +147,7 @@ const JobSiteView = () => {
                         <Col xl="10" md="9" sm="8" xs="6">
                             <h1>{state.site_name}</h1>
                         </Col>
-                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                        <Col xl="2" md="3" sm="4" xs="6" className="text-end">
                             <Button color="success" type="button"
                                     className="m-2"
                                     onClick={onEditClicked}>
@@ -210,10 +210,10 @@ const JobSiteView = () => {
             <Card className="text-dark bg-light m-3">
                 <CardTitle className="mx-2 my-1">
                     <Row className="m-1">
-                        <Col xl="10" md="9" sm="8" xs="6" >
+                        <Col xs="8" >
                             <h3>Job Site Postings Applied</h3>
                         </Col>
-                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                        <Col xs="4" className="text-end">
                             <Button color="success" type="button"
                                     onClick={onNewPostingClicked}>
                                 <FontAwesomeIcon icon={faSquarePlus} /> &nbsp; Add New
