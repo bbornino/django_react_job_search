@@ -553,7 +553,7 @@ const JobPostingEdit = () => {
                                         type="textarea" required
                                         id="technology_string"
                                         name="technology_string"
-                                        maxLength={512}
+                                        maxLength={512} rows={4} style={{ resize: 'vertical' }}
                                         onChange={handleInputChange}
                                         value={state.technology_string || ''}
                                     />
