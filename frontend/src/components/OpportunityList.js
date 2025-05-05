@@ -41,8 +41,8 @@ const OpportunityList = () => {
             sortable: true,
         },
         {
-            name: 'Recruiter Name',
-            selector: row => String(row.recruiter_name),
+            name: 'Opportunity Status',
+            selector: row => String(row.opportunity_status),
             sortable: true,
         },
         {
