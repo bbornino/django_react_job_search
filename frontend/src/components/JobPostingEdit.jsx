@@ -353,6 +353,7 @@ const JobPostingEdit = () => {
                                             <option value="Greenhouse">Greenhouse</option>
                                             <option value="My Workday Jobs">My Workday Jobs</option>
                                             <option value="Lever">Lever</option>
+                                            <option value="Ashby HQ">Ashby HQ</option>
                                             <option value="ICIMS">ICIMS</option>
                                             <option value="JobVite">JobVite</option>
                                             <option value="Bamboo HR">Bamboo HR</option>
