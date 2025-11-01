@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Container, Row, Col} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 
 class ReleaseHistory extends Component {
     componentDidMount() {
@@ -17,10 +17,12 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
-                        <h2>April 27, 2025 - Release 5.1</h2>
+                        <h2>November 1, 2025 - Release 5.2</h2>
                         <ul>
                             <li>Add Opportunity Status to List View</li>
-                            <li>Add SSL Certificate Support</li>
+                            <li>Add Preliminary SSL Certificate Support</li>
+                            <li>Job Posting Edit Field adjustments</li>
+                            <li>Add two new statistics rows to Dashboard</li>
                             {/* <li>On Save, when navigating to calling page, refresh page data</li> */}
 
                         </ul>
