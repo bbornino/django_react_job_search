@@ -227,7 +227,7 @@ const JobPostingEdit = () => {
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
         await apiRequest(JOB_POSTING_API_URL, jobPostingParams, {method: 'POST'});
 
-        navigate(-1);     // Forces a data refresh
+        navigate(-1);
     }
 
     const editJobPosting = async (e) => {
@@ -235,7 +235,7 @@ const JobPostingEdit = () => {
         const jobPostingData = state;
         await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, {method: 'PUT'});
 
-        navigate(-1);     // Forces a data refresh
+        navigate(-1);
     }
 
 
@@ -314,7 +314,7 @@ const JobPostingEdit = () => {
                                             <option value="4 - No Response">4 - No Response</option>
                                             <option value="3 - Rejected">3 - Rejected</option>
                                             <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
-                                            <option value="2.4 - Post Interview Declined">2.4 - Post Interview Silence</option>
+                                            <option value="2.4 - Post Interview Silence">2.4 - Post Interview Silence</option>
                                             <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
                                             <option value="1 - Actively Engaged">1 - Actively Engaged</option>
                                     </Input>
@@ -419,8 +419,10 @@ const JobPostingEdit = () => {
                                         value={state.employment_type || ''} >
                                             <option value="">Select Type</option>
                                             <option value="Full-time">Full-time</option>
+                                            <option value="Part-time">Part-time</option>
                                             <option value="Freelance">Freelance</option>
                                             <option value="Contract">Contract</option>
+                                            <option value="Temporary">Temporary</option>
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -554,7 +556,7 @@ const JobPostingEdit = () => {
                                         type="textarea" required
                                         id="technology_string"
                                         name="technology_string"
-                                        maxLength={512} rows={4} style={{ resize: 'vertical' }}
+                                        maxLength={1028} rows={6} style={{ resize: 'vertical' }}
                                         onChange={handleInputChange}
                                         value={state.technology_string || ''}
                                     />
