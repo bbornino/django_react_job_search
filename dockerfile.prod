@@ -54,5 +54,7 @@ RUN echo "0 0 * * * /usr/local/bin/renew.sh && nginx -s reload" > /etc/cron.d/ce
 EXPOSE 80 8000
 
 # Start Nginx and Gunicorn in the background
-CMD ["sh", "-c", "/usr/local/bin/init.sh && gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]
+# CMD ["sh", "-c", "/usr/local/bin/init.sh && gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]
 
+# Skip Certbot
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 django_react_job_search.wsgi:application & nginx -g 'daemon off;'"]

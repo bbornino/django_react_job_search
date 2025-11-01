@@ -4,11 +4,11 @@
 crond
 
 # Check if certificate already exists
-if [ ! -f "/etc/letsencrypt/live/bornino.net/fullchain.pem" ]; then
+if [ ! -f "/etc/letsencrypt/live/job-app-tracker.bornino.net/fullchain.pem" ]; then
     echo "No SSL certificate found, generating one using Certbot..."
     
     # Run Certbot to generate the certificate
-    certbot --nginx -d bornino.net --non-interactive --agree-tos --email brianbornino@gmail.com
+    certbot --nginx -d job-app-tracker.bornino.net --non-interactive --agree-tos --email brianbornino@gmail.com
     # The --non-interactive flag ensures Certbot runs without requiring user input
     # The --agree-tos flag automatically agrees to Let's Encrypt's terms of service.
     

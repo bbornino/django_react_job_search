@@ -17,6 +17,25 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
+                        <h2>April 27, 2025 - Release 5.1</h2>
+                        <ul>
+                            <li>Add Opportunity Status to List View</li>
+                            <li>Add SSL Certificate Support</li>
+                            {/* <li>On Save, when navigating to calling page, refresh page data</li> */}
+
+                        </ul>
+                        <h2>April 27, 2025 - Release 5.1</h2>
+                        <ul>
+                            <li>Set Default Report Date to January 1, 2025</li>
+                            <li>Add Opportunity City Location and Recruiter Company to List View</li>
+                            <li>Add Confirmation Modal for Delete and Clear Buttons</li>
+                            {/* <li>On Save, when navigating to calling page, refresh page data</li> */}
+                            {/* <li>Add New Job Posting (no ID) route back to react router</li> */}
+                            {/* <li>Allow Max Job Posting Edit Tech String Length and make text area</li> */}
+                            {/* <li>Email Opportunity List: less data (retrieve only necesary columns)</li> */}
+                            {/* <li>Correct Page Titles (Login, index.html)</li> */}
+                            {/* <li>Show Comments in date acending order</li> */}
+                        </ul>
                         <h2>March 20, 2025 - Release 5</h2>
                         <ul>
                             <li>Docker and Web Server Support (Nginx + Gunicorn)</li>
