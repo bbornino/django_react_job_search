@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef  } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
-import {Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
+import { Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,7 +40,7 @@ const JobPostingEdit = () => {
         job_scan_info: '',
         outreach_info: '',
         time_spent: '',
-        
+
         technology_string: '',
         technology_stack: [],
         comments: [],
@@ -64,7 +64,7 @@ const JobPostingEdit = () => {
         if (hasFetchedJobSites.current) return; // Prevent double fetch
         hasFetchedJobSites.current = true;
 
-        const jobSites = await apiRequest(JOB_SITE_API_URL, {method: 'GET'})
+        const jobSites = await apiRequest(JOB_SITE_API_URL, { method: 'GET' })
         if (jobSites) {
             setState((prevState) => ({
                 ...prevState,
@@ -73,12 +73,12 @@ const JobPostingEdit = () => {
         }
     }, [apiRequest]);
 
-    const getJobPosting = useCallback(async(jobPostingId) => {
+    const getJobPosting = useCallback(async (jobPostingId) => {
         if (hasFetchedJobPosting.current) return; // Prevent double fetch
         hasFetchedJobPosting.current = true;
 
-        if(!jobPostingId) return;
-        const data = await apiRequest(JOB_POSTING_API_URL + jobPostingId, {method: 'GET'});
+        if (!jobPostingId) return;
+        const data = await apiRequest(JOB_POSTING_API_URL + jobPostingId, { method: 'GET' });
 
         if (data) {
             setState((prevState) => ({
@@ -99,7 +99,7 @@ const JobPostingEdit = () => {
                 employment_type: data.employment_type,
 
                 applied_at: formatInputFieldDateTime(data.applied_at),
-                interviewed_at:  formatInputFieldDateTime(data.interviewed_at),
+                interviewed_at: formatInputFieldDateTime(data.interviewed_at),
                 rejected_at: formatInputFieldDateTime(data.rejected_at),
                 rejected_after_stage: data.rejected_after_stage,
 
@@ -124,37 +124,39 @@ const JobPostingEdit = () => {
                 if (ckeContent !== null) {
                     ckeContent.ckeditorInstance.setData(data.job_description)
                 }
-              }, 100); 
+            }, 100);
         }
     }, [apiRequest]);
 
     useEffect(() => {
         document.title = "Job Posting Edit - Job Search Tracker";
         const pathArr = window.location.pathname.split('/')
-        
+
         if (pathArr[1] === "job-posting-new") {
             // Set the applied at date time to now, in correct format
             var currentdate = new Date().toLocaleDateString('en-CA')
-            var currenttime = new Date().toLocaleTimeString('en-US', 
-                    { hour12: false, 
-                        hour: "numeric", 
-                        minute: "numeric"})
+            var currenttime = new Date().toLocaleTimeString('en-US',
+                {
+                    hour12: false,
+                    hour: "numeric",
+                    minute: "numeric"
+                })
 
-            
+
             // use value to set the job_site_id IF recieved a job_site_id
-            if(pathArr[2]) {
+            if (pathArr[2]) {
                 setState((prevState) => ({
                     ...prevState,
-                    job_site_id:pathArr[2], 
+                    job_site_id: pathArr[2],
                     applied_at: currentdate + 'T' + currenttime,
                 }))
             }
-            
+
         } else {
             // NOT new.  Use as the posting id
             setState((prevState) => ({
                 ...prevState,
-                job_posting_id:pathArr[2]
+                job_posting_id: pathArr[2]
             }))
             getJobPosting(pathArr[2]);
         }
@@ -179,7 +181,7 @@ const JobPostingEdit = () => {
     }
 
     const onDeleteJobPosting = async () => {
-        await apiRequest(JOB_POSTING_API_URL  + state.job_posting_id, state, { method: 'DELETE' });
+        await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, state, { method: 'DELETE' });
         navigate(-1);       // go back one navigational page
     }
 
@@ -217,6 +219,7 @@ const JobPostingEdit = () => {
             posting_application_questions: [],
             job_description: 'TBD',
         }))
+        setShowClearModal(false);
     }
 
     const createJobPosting = async (e) => {
@@ -225,17 +228,44 @@ const JobPostingEdit = () => {
 
         jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
-        await apiRequest(JOB_POSTING_API_URL, jobPostingParams, {method: 'POST'});
+        // debugger
+        try {
+            const response = await apiRequest(JOB_POSTING_API_URL, jobPostingParams, { method: 'POST' });
 
-        navigate(-1);
+            if (!response.ok) {
+                console.error('Failed to create job posting:', response);
+                alert(`Failed to create job posting: ${response}`);
+                return;
+            } else {
+                console.log(`Job posting "${state.company_name}" - "${state.posting_title}" created successfully!`);
+                navigate(-1);
+            }
+
+        } catch (err) {
+            alert(`Error creating job posting: ${err}`);
+        }
+
+
     }
 
     const editJobPosting = async (e) => {
         e.preventDefault();
         const jobPostingData = state;
-        await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, {method: 'PUT'});
+        // debugger
+        try {
+            const response = await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, { method: 'PUT' });
 
-        navigate(-1);
+            if (!response.ok) {
+                console.error('Failed to edit job posting:', response);
+                alert(`Failed to edit job posting: ${response}`);
+                return;
+            } else {
+                console.log(`Job posting "${state.company_name}" - "${state.posting_title}" edited successfully!`);
+                navigate(-1);
+            }
+        } catch (err) {
+            alert(`Error edit job posting: ${err}`);
+        }
     }
 
 
@@ -249,18 +279,18 @@ const JobPostingEdit = () => {
                                 {state.job_posting_id === 0 ? 'Create' : 'Edit'} Job Posting
                             </Col>
                             <Col xxl="5" xl="6" lg="7" md="12" sm="12" xs="12" className="text-md-end mt-2 mt-lg-0">
-                                <Button 
-                                    color="secondary" style={{ height: '45px' }} 
-                                    className="mx-2 mb-2 mb-lg-0 " 
+                                <Button
+                                    color="secondary" style={{ height: '45px' }}
+                                    className="mx-2 mb-2 mb-lg-0 "
                                     onClick={() => navigate(-1)}>
-                                    <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: 'rotate(-90deg)' }}/> &nbsp; Back
+                                    <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: 'rotate(-90deg)' }} /> &nbsp; Back
                                 </Button>
-                                <Button color="warning" style={{ height: '45px' }} 
-                                    className="mx-2 mb-2 mb-lg-0 " 
+                                <Button color="warning" style={{ height: '45px' }}
+                                    className="mx-2 mb-2 mb-lg-0 "
                                     onClick={() => setShowClearModal(true)}>
                                     <FontAwesomeIcon icon={faEraser} /> &nbsp; Clear</Button>
                                 <Button color="danger" style={{ height: '45px' }}
-                                    className="mx-2 mb-2 mb-lg-0 t" 
+                                    className="mx-2 mb-2 mb-lg-0 t"
                                     onClick={() => setShowDeleteModal(true)}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
                                 <Button color="primary" type="submit" style={{ height: '45px' }}
@@ -293,12 +323,12 @@ const JobPostingEdit = () => {
                                         name="job_site_id"
                                         onChange={handleInputChange}
                                         value={state.job_site_id || ''}>
-                                            <option value="">Select Job Site</option>
-                                            {state.job_sites.map((option) => (
-                                                <option key={option.id} value={option.id}>
-                                                    {option.site_name}
-                                                </option>
-                                                ))}
+                                        <option value="">Select Job Site</option>
+                                        {state.job_sites.map((option) => (
+                                            <option key={option.id} value={option.id}>
+                                                {option.site_name}
+                                            </option>
+                                        ))}
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -311,12 +341,12 @@ const JobPostingEdit = () => {
                                         name="posting_status"
                                         onChange={handleInputChange}
                                         value={state.posting_status || ''}>
-                                            <option value="4 - No Response">4 - No Response</option>
-                                            <option value="3 - Rejected">3 - Rejected</option>
-                                            <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
-                                            <option value="2.4 - Post Interview Silence">2.4 - Post Interview Silence</option>
-                                            <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
-                                            <option value="1 - Actively Engaged">1 - Actively Engaged</option>
+                                        <option value="4 - No Response">4 - No Response</option>
+                                        <option value="3 - Rejected">3 - Rejected</option>
+                                        <option value="2.5 - Post Interview Declined">2.5 - Post Interview Declined</option>
+                                        <option value="2.4 - Post Interview Silence">2.4 - Post Interview Silence</option>
+                                        <option value="2 - Awaiting Feedback">2 - Awaiting Feedback</option>
+                                        <option value="1 - Actively Engaged">1 - Actively Engaged</option>
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -346,23 +376,23 @@ const JobPostingEdit = () => {
                                         name="posting_url_domain"
                                         onChange={handleInputChange}
                                         value={state.posting_url_domain || ''}>
-                                            <option value="">Select Posting Domain</option>
-                                            <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
-                                            <option value="Dice Easy Apply">Dice Easy Apply</option>
-                                            <option value="Indeed">Indeed</option>
-                                            <option value="Greenhouse">Greenhouse</option>
-                                            <option value="My Workday Jobs">My Workday Jobs</option>
-                                            <option value="Lever">Lever</option>
-                                            <option value="Ashby HQ">Ashby HQ</option>
-                                            <option value="ICIMS">ICIMS</option>
-                                            <option value="JobVite">JobVite</option>
-                                            <option value="Bamboo HR">Bamboo HR</option>
-                                            <option value="Breezy HR">Breezy HR</option>
-                                            <option value="Cal Careers">Cal Careers</option>
-                                            <option value="Custom / In House">Custom / In House</option>
-                                            <option value="Other">Other</option>
+                                        <option value="">Select Posting Domain</option>
+                                        <option value="LinkedIn Easy Apply">LinkedIn Easy Apply</option>
+                                        <option value="Dice Easy Apply">Dice Easy Apply</option>
+                                        <option value="Indeed">Indeed</option>
+                                        <option value="Greenhouse">Greenhouse</option>
+                                        <option value="My Workday Jobs">My Workday Jobs</option>
+                                        <option value="Lever">Lever</option>
+                                        <option value="Ashby HQ">Ashby HQ</option>
+                                        <option value="ICIMS">ICIMS</option>
+                                        <option value="JobVite">JobVite</option>
+                                        <option value="Bamboo HR">Bamboo HR</option>
+                                        <option value="Breezy HR">Breezy HR</option>
+                                        <option value="Cal Careers">Cal Careers</option>
+                                        <option value="Custom / In House">Custom / In House</option>
+                                        <option value="Other">Other</option>
                                     </Input>
-                                    
+
                                 </FormGroup>
                             </Col>
                             <Col lg="2" md="6">
@@ -417,12 +447,12 @@ const JobPostingEdit = () => {
                                         name="employment_type"
                                         onChange={handleInputChange}
                                         value={state.employment_type || ''} >
-                                            <option value="">Select Type</option>
-                                            <option value="Full-time">Full-time</option>
-                                            <option value="Part-time">Part-time</option>
-                                            <option value="Freelance">Freelance</option>
-                                            <option value="Contract">Contract</option>
-                                            <option value="Temporary">Temporary</option>
+                                        <option value="">Select Type</option>
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Part-time">Part-time</option>
+                                        <option value="Freelance">Freelance</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Temporary">Temporary</option>
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -448,10 +478,10 @@ const JobPostingEdit = () => {
                                         name="location_type"
                                         onChange={handleInputChange}
                                         value={state.location_type || ''}>
-                                            <option value="">Select Type</option>
-                                            <option value="Remote">Remote</option>
-                                            <option value="Hybrid">Hybrid</option>
-                                            <option value="On-Site">On-Site</option>
+                                        <option value="">Select Type</option>
+                                        <option value="Remote">Remote</option>
+                                        <option value="Hybrid">Hybrid</option>
+                                        <option value="On-Site">On-Site</option>
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -502,12 +532,12 @@ const JobPostingEdit = () => {
                                         name="rejected_after_stage"
                                         onChange={handleInputChange}
                                         value={state.rejected_after_stage || ''}>
-                                            <option value="Application Submission">Application Submission</option>
-                                            <option value="Screening">Screening</option>
-                                            <option value="HR Interview">HR Interview</option>
-                                            <option value="Code Test">Code Test</option>
-                                            <option value="Hiring Manager Interview">Hiring Manager Interview</option>
-                                            <option value="Team Interview">Team Interview</option>
+                                        <option value="Application Submission">Application Submission</option>
+                                        <option value="Screening">Screening</option>
+                                        <option value="HR Interview">HR Interview</option>
+                                        <option value="Code Test">Code Test</option>
+                                        <option value="Hiring Manager Interview">Hiring Manager Interview</option>
+                                        <option value="Team Interview">Team Interview</option>
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -529,7 +559,7 @@ const JobPostingEdit = () => {
                                 <FormGroup>
                                     <Label for="job_scan_info">Job Scan Percent</Label>
                                     <Input
-                                        type="text" 
+                                        type="text"
                                         id="job_scan_info"
                                         name="job_scan_info"
                                         onChange={handleInputChange}
@@ -540,10 +570,10 @@ const JobPostingEdit = () => {
                             <Col xl="2" lg="3" md="4">
                                 <FormGroup>
                                     <Label for="time_spent">Time Spent (minutes)</Label>
-                                    <Input  type="number" required
-                                            name="time_spent" id="time_spent"
-                                            onChange={handleInputChange}
-                                            value={state.time_spent || ''}
+                                    <Input type="number" required
+                                        name="time_spent" id="time_spent"
+                                        onChange={handleInputChange}
+                                        value={state.time_spent || ''}
                                     />
                                 </FormGroup>
                             </Col>
@@ -568,15 +598,15 @@ const JobPostingEdit = () => {
                 <Card id="comments_card" className="text-dark bg-light m-3">
                     <CardTitle className="mx-4 my-2" ><strong>Job Posting Comments</strong></CardTitle>
                     <CardBody className="bg-white">
-                        <Comments itemComments={state.comments || []} 
-                                    onCommentsSave={setCommentsCallback} />
+                        <Comments itemComments={state.comments || []}
+                            onCommentsSave={setCommentsCallback} />
                     </CardBody>
                 </Card>
                 <Card id="description_card" className="text-dark bg-light m-3">
                     <CardTitle className="mx-4 my-2"><strong>Job Posting Description</strong></CardTitle>
                     <CardBody className="bg-white" id="description_card_body">
-                        <Editor editorText={state.job_description || ''} 
-                                onEditorChange={onEditorChange} ></Editor>
+                        <Editor editorText={state.job_description || ''}
+                            onEditorChange={onEditorChange} ></Editor>
                     </CardBody>
                 </Card>
             </Form>
