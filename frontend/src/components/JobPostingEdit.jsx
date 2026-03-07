@@ -238,6 +238,7 @@ const JobPostingEdit = () => {
             if (!response.ok) {
                 console.error('Failed to create job posting:', response);
                 alert(`Failed to create job posting: ${response}`);
+                setIsSubmitting(false);
                 return;
             } else {
                 console.log(`Job posting "${state.company_name}" - "${state.posting_title}" created successfully!`);
@@ -245,6 +246,7 @@ const JobPostingEdit = () => {
             }
 
         } catch (err) {
+            setIsSubmitting(false);
             alert(`Error creating job posting: ${err}`);
         }
 
@@ -263,12 +265,14 @@ const JobPostingEdit = () => {
             if (!response.ok) {
                 console.error('Failed to edit job posting:', response);
                 alert(`Failed to edit job posting: ${response}`);
+                setIsSubmitting(false);
                 return;
             } else {
                 console.log(`Job posting "${state.company_name}" - "${state.posting_title}" edited successfully!`);
                 navigate(-1);
             }
         } catch (err) {
+            setIsSubmitting(false);
             alert(`Error edit job posting: ${err}`);
         }
     }
@@ -298,7 +302,9 @@ const JobPostingEdit = () => {
                                     className="mx-2 mb-2 mb-lg-0 t"
                                     onClick={() => setShowDeleteModal(true)}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete</Button>
-                                <Button color="primary" type="submit" style={{ height: '45px' }}
+                                <Button color="primary" type="submit"
+                                    style={{ height: '45px' }}
+                                    disabled={isSubmitting}
                                     className="mx-2 mb-2 mb-lg-0 ">
                                     <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save</Button>
                             </Col>
