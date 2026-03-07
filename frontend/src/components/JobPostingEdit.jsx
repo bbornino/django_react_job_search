@@ -52,6 +52,7 @@ const JobPostingEdit = () => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showClearModal, setShowClearModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
     const hasFetchedJobSites = useRef(false);  // Track if the request has already been made
@@ -224,6 +225,8 @@ const JobPostingEdit = () => {
 
     const createJobPosting = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const jobPostingParams = state
 
         jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
@@ -250,6 +253,8 @@ const JobPostingEdit = () => {
 
     const editJobPosting = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const jobPostingData = state;
         // debugger
         try {
