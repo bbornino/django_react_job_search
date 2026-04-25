@@ -5,7 +5,8 @@ export const JOB_SITE_API_URL = BASE_API_URL + 'job_site/';
 export const JOB_POSTING_API_URL = BASE_API_URL + 'job_posting/';
 export const DASHBOARD_API_URL = BASE_API_URL + 'dashboard/';
 export const REPORT_API_URL = BASE_API_URL + 'report/';
-export const TOKEN_REFRESH_API_URL = BASE_API_URL + 'token/refresh/'; 
+export const DROPDOWN_OPTIONS_API_URL = BASE_API_URL + 'dropdown_options/';
+export const TOKEN_REFRESH_API_URL = BASE_API_URL + 'token/refresh/';
 
 export const formatInputFieldDateTime = (originalDateTime) => {
     if (originalDateTime === null) return null;
@@ -32,20 +33,22 @@ export const formatDisplayDateTime = (rawDate) => {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-        hour12:true,
-        hour:'numeric',
-        minute:'numeric'})
+        hour12: true,
+        hour: 'numeric',
+        minute: 'numeric'
+    })
     return theDate
 }
 
 // return: Sep 10, 2024
 export const formatDisplayDate = (rawDate) => {
     if (rawDate === undefined || rawDate === null) return null;
-    
+
     const theDate = new Date(rawDate).toLocaleString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'})
+        day: 'numeric'
+    })
     return theDate
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { JOB_POSTING_API_URL, JOB_SITE_API_URL, formatInputFieldDateTime } from "../constants";
+import { JOB_POSTING_API_URL, DROPDOWN_OPTIONS_API_URL, formatInputFieldDateTime } from "../constants";
 import { Form, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -48,6 +48,10 @@ const JobPostingEdit = () => {
         job_description: 'TBD',
 
         job_sites: [],
+        location_types: [],
+        employment_types: [],
+        recruitment_stages: [],
+        listing_sources: [],
     });
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -65,13 +69,35 @@ const JobPostingEdit = () => {
         if (hasFetchedJobSites.current) return; // Prevent double fetch
         hasFetchedJobSites.current = true;
 
-        const jobSites = await apiRequest(JOB_SITE_API_URL, { method: 'GET' })
-        if (jobSites) {
+        const dropdownOptions = await apiRequest(DROPDOWN_OPTIONS_API_URL, { method: 'GET' })
+
+        if (dropdownOptions) {
+            var sites = dropdownOptions.job_sites.slice()
+                .sort((a, b) => a.order - b.order)
+                .map(site => ({ id: site.id, site_name: site.site_name }))
+            var locationTypes = dropdownOptions.dropdown_options.location_type.slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(type => ({ id: type.id, name: type.name }))
+            var employmentTypes = dropdownOptions.dropdown_options.employment_type.slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(type => ({ id: type.id, name: type.name }))
+            var recruitmentStages = dropdownOptions.dropdown_options.recruitment_stage.slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(type => ({ id: type.id, name: type.name }))
+            var listingSources = dropdownOptions.dropdown_options.application_source.slice()
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map(type => ({ id: type.id, name: type.name }))
+
             setState((prevState) => ({
                 ...prevState,
-                job_sites: jobSites
+                location_types: locationTypes,
+                employment_types: employmentTypes,
+                recruitment_stages: recruitmentStages,
+                listing_sources: listingSources,
+                job_sites: sites
             }))
         }
+
     }, [apiRequest]);
 
     const getJobPosting = useCallback(async (jobPostingId) => {
@@ -223,57 +249,47 @@ const JobPostingEdit = () => {
         setShowClearModal(false);
     }
 
-    const createJobPosting = async (e) => {
+    const createJobPosting = (e) => {
         e.preventDefault();
-        if (isSubmitting) return;
-        setIsSubmitting(true);
-        const jobPostingParams = state
 
+        const jobPostingParams = { ...state };
         jobPostingParams.interviewed_at = jobPostingParams.interviewed_at === '' ? null : jobPostingParams.interviewed_at
         jobPostingParams.rejected_at = jobPostingParams.rejected_at === '' ? null : jobPostingParams.rejected_at
-        // debugger
-        try {
-            const response = await apiRequest(JOB_POSTING_API_URL, jobPostingParams, { method: 'POST' });
 
-            if (!response.ok) {
-                console.error('Failed to create job posting:', response);
-                alert(`Failed to create job posting: ${response}`);
-                setIsSubmitting(false);
-                return;
-            } else {
-                console.log(`Job posting "${state.company_name}" - "${state.posting_title}" created successfully!`);
-                navigate(-1);
-            }
-
-        } catch (err) {
-            setIsSubmitting(false);
-            alert(`Error creating job posting: ${err}`);
-        }
-
-
+        submitJobPosting({
+            url: JOB_POSTING_API_URL,
+            method: 'POST',
+            payload: jobPostingParams
+        })
     }
 
-    const editJobPosting = async (e) => {
+    const editJobPosting = (e) => {
         e.preventDefault();
+
+        const jobPostingParams = { ...state };
+        submitJobPosting({
+            url: JOB_POSTING_API_URL + state.job_posting_id,
+            method: 'PUT',
+            payload: jobPostingParams
+        })
+    }
+
+    const submitJobPosting = async ({ url, method, payload }) => {
+
         if (isSubmitting) return;
         setIsSubmitting(true);
-        const jobPostingData = state;
-        // debugger
-        try {
-            const response = await apiRequest(JOB_POSTING_API_URL + state.job_posting_id, jobPostingData, { method: 'PUT' });
 
-            if (!response.ok) {
-                console.error('Failed to edit job posting:', response);
-                alert(`Failed to edit job posting: ${response}`);
-                setIsSubmitting(false);
-                return;
-            } else {
-                console.log(`Job posting "${state.company_name}" - "${state.posting_title}" edited successfully!`);
-                navigate(-1);
-            }
+        debugger;
+        try {
+            await apiRequest(url, payload, { method: method });
+
+            console.log(`Job posting "${state.company_name}" - "${state.posting_title}" ${method === 'POST' ? 'created' : 'edited'} successfully!`);
+            navigate(-1);
         } catch (err) {
             setIsSubmitting(false);
-            alert(`Error edit job posting: ${err}`);
+            console.error(`Failed to ${method === 'POST' ? 'create' : 'edit'} job posting:`, err);
+            alert(`Error ${method === 'POST' ? 'creating' : 'editing'} job posting: ${err}`);
+            return;
         }
     }
 
@@ -459,11 +475,11 @@ const JobPostingEdit = () => {
                                         onChange={handleInputChange}
                                         value={state.employment_type || ''} >
                                         <option value="">Select Type</option>
-                                        <option value="Full-time">Full-time</option>
-                                        <option value="Part-time">Part-time</option>
-                                        <option value="Freelance">Freelance</option>
-                                        <option value="Contract">Contract</option>
-                                        <option value="Temporary">Temporary</option>
+                                        {state.employment_types.map((option) => (
+                                            <option key={option.id} value={option.name}>
+                                                {option.name}
+                                            </option>
+                                        ))}
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -490,9 +506,11 @@ const JobPostingEdit = () => {
                                         onChange={handleInputChange}
                                         value={state.location_type || ''}>
                                         <option value="">Select Type</option>
-                                        <option value="Remote">Remote</option>
-                                        <option value="Hybrid">Hybrid</option>
-                                        <option value="On-Site">On-Site</option>
+                                        {state.location_types.map((option) => (
+                                            <option key={option.id} value={option.name}>
+                                                {option.name}
+                                            </option>
+                                        ))}
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -543,12 +561,17 @@ const JobPostingEdit = () => {
                                         name="rejected_after_stage"
                                         onChange={handleInputChange}
                                         value={state.rejected_after_stage || ''}>
-                                        <option value="Application Submission">Application Submission</option>
+                                        {state.recruitment_stages.map((option) => (
+                                            <option key={option.id} value={option.name}>
+                                                {option.name}
+                                            </option>
+                                        ))}
+                                        {/* <option value="Application Submission">Application Submission</option>
                                         <option value="Screening">Screening</option>
                                         <option value="HR Interview">HR Interview</option>
                                         <option value="Code Test">Code Test</option>
                                         <option value="Hiring Manager Interview">Hiring Manager Interview</option>
-                                        <option value="Team Interview">Team Interview</option>
+                                        <option value="Team Interview">Team Interview</option> */}
                                     </Input>
                                 </FormGroup>
                             </Col>
@@ -592,7 +615,7 @@ const JobPostingEdit = () => {
                         <Row id="technology_string_row">
                             <Col lg="12" md="12">
                                 <FormGroup>
-                                    <Label for="technology_string">Technology</Label>
+                                    <Label for="technology_string">Qualifications & Technology</Label>
                                     <Input
                                         type="textarea" required
                                         id="technology_string"
