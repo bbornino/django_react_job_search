@@ -176,6 +176,8 @@ def job_posting_list(request):
             "posting_title",
             "posting_status",
             "rejected_after_stage",
+            "location_type",
+            "location_city",
             "applied_at",
             "rejected_at",
         ).filter(user=request.user)

@@ -62,6 +62,18 @@ const JobPostingList = () => {
             width: "200px",
         },
         {
+            name: "Location Type",
+            selector: row => row.location_type,
+            sortable: true,
+            width: "130px",
+        },
+        {
+            name: "Location City",
+            selector: row => row.location_city,
+            sortable: true,
+            width: "200px",
+        },
+        {
             name: "Applied On",
             selector: row => row.applied_at,
             cell: row => formatDisplayDate(row.applied_at),
@@ -110,7 +122,7 @@ const JobPostingList = () => {
     }
 
     return (
-        <Container>
+        <Container fluid className="full-width-page">
             <Row className="m-4 align-items-center">
                 <Col xl="4" sm="6" >
                     <h1>All Job Postings</h1>
