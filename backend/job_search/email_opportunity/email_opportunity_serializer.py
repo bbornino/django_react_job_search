@@ -1,8 +1,8 @@
 """
 Serializers for the EmailOpportunity model.
 
-This module defines serializers for the EmailOpportunity model, which 
-represents job opportunities received via email. These serializers 
+This module defines serializers for the EmailOpportunity model, which
+represents job opportunities received via email. These serializers
 handle data serialization and deserialization for API responses.
 
 Classes:
@@ -24,12 +24,24 @@ Serializers:
 from rest_framework import serializers
 from job_search.email_opportunity.email_opportunity import EmailOpportunity
 
+
 class EmailOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailOpportunity
-        fields = '__all__'
+        fields = "__all__"
+
 
 class EmailOpportunityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailOpportunity
-        fields = ('id', 'recruiter_name', 'job_title', 'opportunity_status', 'recruiter_company', 'location_city', 'email_received_at')
+        fields = (
+            "id",
+            "recruiter_name",
+            "job_title",
+            "opportunity_status",
+            "recruiter_company",
+            "location_city",
+            "location_type",
+            "employment_type",
+            "email_received_at",
+        )

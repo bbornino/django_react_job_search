@@ -8,7 +8,7 @@ import { Button, Container, Row, Col } from 'reactstrap';
 
 const OpportunityList = () => {
     const [opportunities, setOpportunities] = useState([]);
-    const { apiRequest } = useApiRequest(); 
+    const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
     const hasFetched = useRef(false);  // Track if the request has already been made
 
@@ -16,7 +16,7 @@ const OpportunityList = () => {
     const getOpportunities = useCallback(async () => {
         if (hasFetched.current) return; // Prevent double fetch
         hasFetched.current = true;
-        
+
         const data = await apiRequest(
             JOB_OPPORTUNITY_API_URL,
             { method: 'GET' }
@@ -61,6 +61,18 @@ const OpportunityList = () => {
             sortable: true,
         },
         {
+            name: 'Type',
+            selector: row => row.location_type,
+            sortable: true,
+            width: "120px",
+        },
+        {
+            name: 'Employment Type',
+            selector: row => row.employment_type,
+            sortable: true,
+            width: "150px",
+        },
+        {
             name: "Received At",
             selector: row => row.email_received_at,
             cell: row => formatDisplayDateTime(row.email_received_at),
@@ -75,7 +87,7 @@ const OpportunityList = () => {
     };
 
     return (
-        <Container className="mt-2">
+        <Container fluid className="full-width-page">
             <Row className="m-4">
                 <Col xxl="10" xl="9" lg="9" md="8" sm="5" xs="3">
                     <h1>All Opportunities</h1>
@@ -88,12 +100,12 @@ const OpportunityList = () => {
                     </Link>
                 </Col>
             </Row>
-            <DataTableBase 
-                columns={columns} 
-                data={opportunities} 
+            <DataTableBase
+                columns={columns}
+                data={opportunities}
                 defaultSortFieldId="email_received_at"
                 defaultSortAsc={false}
-                onRowClicked={onRowClicked} 
+                onRowClicked={onRowClicked}
             />
         </Container>
     );
