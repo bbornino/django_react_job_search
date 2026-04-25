@@ -12,6 +12,10 @@ django_react_job_search/
 │   │   ├── dashboard/
 │   │   │   ├── dashboard_serializer.py 
 │   │   │   ├── dashboard_views.py 
+│   │   ├── dropdown_option/
+│   │   │   ├── dropdown_serializer.py 
+│   │   │   ├── dropdown_views.py 
+│   │   │   ├── dropdown_option.py 
 │   │   ├── email_opportunity/
 │   │   │   ├── email_opportunity_serializer.py 
 │   │   │   ├── email_opportunity_views.py 
@@ -47,6 +51,8 @@ django_react_job_search/
 │   ├── package-lock.json
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── config/
+│   │   │   │   ├── DropdownOptionsEdit.jsx
 │   │   │   ├── shared/
 │   │   │   │   ├── Comments.jsx
 │   │   │   │   ├── ConfirmationModal.jsx
