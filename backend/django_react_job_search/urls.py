@@ -18,7 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from rest_framework_simplejwt.views import TokenObtainPairView
-from job_search.dashboard.dashboard_views import dashboard_statistics
+from job_search.dashboard.dashboard_views import (
+    dashboard_statistics,
+    dashboard_report_segments,
+)
 from job_search.email_opportunity.email_opportunity_views import (
     email_opportunity_list,
     email_opportunity_detail,
@@ -63,7 +66,9 @@ urlpatterns = [
         r"^api/report/(?P<report_type>\w+)/?(?P<reference_date>\d{4}-\d{2}-\d{2})?/?$",
         job_postings_report,
     ),
-    re_path(r"^api/dashboard/$", dashboard_statistics),
+    path("api/dashboard/", dashboard_statistics),
+    path("api/dashboard/segments/", dashboard_report_segments),
+    path("api/dashboard/segments/<int:pk>/", dashboard_report_segments),
     # Custom User Endpoints
     path("api/auth/register/", register_user, name="register_user"),
     path("api/auth/login/", authenticate_user, name="authenticate_user"),

@@ -1,4 +1,7 @@
 """
+FILE: job_search/dashboard/dashboard_views.py
+MODULE: dashboard
+
 This module defines views related to the dashboard, specifically for retrieving
 dashboard statistics for authenticated users. The views process user-specific
 statistics data and return it as a structured response.
@@ -35,13 +38,21 @@ Raises:
 """
 
 from datetime import datetime
+import logging
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
 from django.db import connection
-from job_search.dashboard.dashboard_serializer import DashboardStatisticsSerializer
+from django.db.models import F
+from job_search.dashboard.dashboard_serializer import (
+    DashboardStatisticsSerializer,
+    DashboardReportSegmentSerializer,
+)
+from job_search.dashboard.dashboard_report import DashboardReportSegment
 from job_search.utils import dictfetchall
+
+logger = logging.getLogger(__name__)  # Set up logging for this module
 
 
 @api_view(["GET"])
@@ -67,10 +78,18 @@ def dashboard_statistics(request):
         None: This view does not raise any exceptions directly, but will handle
               unauthenticated access by returning a 401 Unauthorized response.
     """
-    print(f"User Info: {request.user}")
-    print(f"Is Authenticated: {request.user.is_authenticated}")
-    print(f"User ID: {request.user.id}")
-    print(f"User Username: {request.user.username}")
+    logger.info(
+        "User Info: %s",
+        request.user.id if request.user.is_authenticated else "Anonymous",
+    )
+    logger.info("Is Authenticated: %s", request.user.is_authenticated)
+    logger.info(
+        "User ID: %s", request.user.id if request.user.is_authenticated else "N/A"
+    )
+    logger.info(
+        "User Username: %s",
+        request.user.username if request.user.is_authenticated else "N/A",
+    )
 
     if not request.user.is_authenticated:
         return Response(
@@ -79,11 +98,34 @@ def dashboard_statistics(request):
         )
 
     report = []
-    report.append(getDashboardDateStatistics(request, "2024-03-01"))
-    report.append(getDashboardDateRangeStatistics(request, "2024-03-01", "2024-07-01"))
-    report.append(getDashboardDateRangeStatistics(request, "2024-07-01", "2025-03-31"))
-    report.append(getDashboardDateRangeStatistics(request, "2025-03-31", "2025-08-31"))
-    report.append(getDashboardDateStatistics(request, "2025-11-01"))
+
+    segments = DashboardReportSegment.objects.filter(user=request.user).order_by(
+        "start_date", F("end_date").asc(nulls_first=True)
+    )
+    print(f"Report segments: {segments}")
+
+    for segment in segments:
+        if segment.end_date:
+            report.append(
+                getDashboardDateRangeStatistics(
+                    request,
+                    segment.start_date.strftime("%Y-%m-%d"),
+                    segment.end_date.strftime("%Y-%m-%d"),
+                    label=segment.name,
+                )
+            )
+        else:
+            report.append(
+                getDashboardDateStatistics(
+                    request, segment.start_date.strftime("%Y-%m-%d"), label=segment.name
+                )
+            )
+
+    # report.append(getDashboardDateStatistics(request, "2024-03-01"))
+    # report.append(getDashboardDateRangeStatistics(request, "2024-03-01", "2024-07-01"))
+    # report.append(getDashboardDateRangeStatistics(request, "2024-07-01", "2025-03-31"))
+    # report.append(getDashboardDateRangeStatistics(request, "2025-03-31", "2025-08-31"))
+    # report.append(getDashboardDateStatistics(request, "2025-11-01"))
 
     serialized_data = DashboardStatisticsSerializer(report, many=True).data
     return Response(
@@ -92,7 +134,7 @@ def dashboard_statistics(request):
     )
 
 
-def getDashboardDateStatistics(request, startDate):
+def getDashboardDateStatistics(request, start_date, label=""):
 
     sql_query = """
             SELECT
@@ -105,19 +147,20 @@ def getDashboardDateStatistics(request, startDate):
             WHERE applied_at >= %s AND user_id = %s
         """
     with connection.cursor() as cursor:
-        cursor.execute(sql_query, [startDate or "2024-01-01", request.user.id])
+        cursor.execute(sql_query, [start_date or "2024-01-01", request.user.id])
         report_data = dictfetchall(cursor)
 
     report_row = report_data[0]
-    report_row["raw_date"] = startDate
-    report_row["formatted_date"] = datetime.strptime(startDate, "%Y-%m-%d").strftime(
-        "%B %d, %Y"
+    report_row["raw_date"] = start_date
+    report_row["formatted_date"] = (
+        datetime.strptime(start_date, "%Y-%m-%d").strftime("%B %d, %Y") + " to now"
     )
+    report_row["label"] = label
 
     return report_row
 
 
-def getDashboardDateRangeStatistics(request, startDate, endDate):
+def getDashboardDateRangeStatistics(request, start_date, end_date, label=""):
 
     sql_query = """
             SELECT
@@ -132,16 +175,99 @@ def getDashboardDateRangeStatistics(request, startDate, endDate):
     with connection.cursor() as cursor:
         cursor.execute(
             sql_query,
-            [startDate or "2024-01-01", endDate or "2024-07-01", request.user.id],
+            [start_date or "2024-01-01", end_date or "2024-07-01", request.user.id],
         )
         report_data = dictfetchall(cursor)
 
     report_row = report_data[0]
-    report_row["raw_date"] = startDate
+    report_row["raw_date"] = start_date
     report_row["formatted_date"] = (
-        datetime.strptime(startDate, "%Y-%m-%d").strftime("%B %d, %Y")
+        datetime.strptime(start_date, "%Y-%m-%d").strftime("%B %d, %Y")
         + " to "
-        + datetime.strptime(endDate, "%Y-%m-%d").strftime("%B %d, %Y")
+        + datetime.strptime(end_date, "%Y-%m-%d").strftime("%B %d, %Y")
     )
+    report_row["label"] = label
 
     return report_row
+
+
+@api_view(["GET", "POST", "PATCH", "DELETE"])
+def dashboard_report_segments(request, pk=None):
+    if not request.user.is_authenticated:
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+    if request.method == "POST":
+        serializer = DashboardReportSegmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            logger.info("Dashboard report segment created: %s", serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        logger.info("Failed to create dashboard report segment: %s", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "DELETE":
+        # print(f"Deleting dashboard report segment for pk: {pk}")
+        logger.info("Deleting dashboard report segment for pk: %s", pk)
+
+        try:
+            segment = DashboardReportSegment.objects.get(pk=pk, user=request.user)
+        except DashboardReportSegment.DoesNotExist:
+            # print(f"Dashboard report segment not found for pk: {pk}")
+            logger.error("Dashboard report segment not found for pk: %s", pk)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        segment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == "PATCH":
+        # print(f"Updating dashboard report segment for pk: {pk}")
+        logger.info("Updating dashboard report segment for pk: %s", pk)
+        try:
+            segment = DashboardReportSegment.objects.get(pk=pk, user=request.user)
+        except DashboardReportSegment.DoesNotExist:
+            # print(f"Dashboard report segment not found for pk: {pk}")
+            logger.error("Dashboard report segment not found for pk: %s", pk)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DashboardReportSegmentSerializer(
+            segment, data=request.data, partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            # print(f"Dashboard report segment updated for pk: {pk}")
+            logger.info("Dashboard report segment updated for pk: %s", pk)
+            return Response(serializer.data)
+
+        # print(f"Dashboard report segment serializer not valid: {pk}")
+        logger.error("Dashboard report segment serializer not valid for pk: %s", pk)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "GET":
+        # print(f"Getting report segments for pk: {pk}")
+        logger.info("Getting report segments for pk: %s", pk)
+
+        if pk is not None:
+            try:
+                segment = DashboardReportSegment.objects.get(pk=pk, user=request.user)
+            except DashboardReportSegment.DoesNotExist:
+                # print(f"Dashboard report segment not found for pk: {pk}")
+                logger.info("Dashboard report segment not found for pk: %s", pk)
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializer = DashboardReportSegmentSerializer(segment)
+            # print(f"Dashboard report segment retrieved for pk: {pk}")
+            logger.info("Dashboard report segment retrieved: %s", serializer.data)
+            return Response(serializer.data)
+
+        segments = DashboardReportSegment.objects.filter(user=request.user).order_by(
+            "start_date", F("end_date").asc(nulls_first=True)
+        )
+        serializer = DashboardReportSegmentSerializer(segments, many=True)
+        # print(f"Retrieving all dashboard report segments: {serializer.data}")
+        logger.info("Retrieving all dashboard report segments: %s", serializer.data)
+        return Response(serializer.data)
