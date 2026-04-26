@@ -1,5 +1,6 @@
 // frontend/src/components/config/DropdownOptionsEdit.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+// import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Table, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,7 +17,7 @@ const DropdownOptionsEdit = () => {
     const [editingId, setEditingId] = useState(null);
     const [editOption, setEditOption] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
-    const hasFetchedOptions = useRef(false);  // Track if the request has already been made
+    // const hasFetchedOptions = useRef(false);  // Track if the request has already been made
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [optionToDelete, setOptionToDelete] = useState(null);
     const [newOption, setNewOption] = useState({
@@ -33,14 +34,45 @@ const DropdownOptionsEdit = () => {
     const url = `${DROPDOWN_OPTIONS_API_URL}?category=${dbCategory}`;
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
 
+    // Effect #1: Reset UI state when the category changes
+    // --------------------------------------------------
+    // This runs immediately on route change.
+    // We intentionally DO NOT clear dropdownOptions here,
+    // so the previous data remains visible until the new fetch completes.
+    // This avoids a jarring "empty table" flicker between navigations.
+    //
+    // This effect is only responsible for UI state that should not carry over
+    // between categories (editing state, form inputs, etc.)
     useEffect(() => {
-        if (hasFetchedOptions.current) return; // Prevent double fetch
-        hasFetchedOptions.current = true;
+        setEditingId(null);
+        setEditOption(null);
+        setNewOption({
+            name: "",
+            sort_order: 0,
+            is_active: true
+        });
+    }, [category]);
+
+    // Effect #2: Fetch data when the category changes
+    // ----------------------------------------------
+    // This runs after the category changes and retrieves fresh data.
+    // Keeping this separate from the reset logic makes the flow predictable:
+    //
+    // 1. Category changes
+    // 2. UI state resets immediately (above)
+    // 3. Data fetch runs and replaces dropdownOptions when complete
+    //
+    // We allow this to run on every category change instead of blocking it,
+    // because preventing re-fetching caused stale data bugs.
+    useEffect(() => {
+        // if (hasFetchedOptions.current) return; // Prevent double fetch
+        // hasFetchedOptions.current = true;
+        // Preventing Double Fetch results in the page not updating when changing categories. 
+        // So we will allow it to fetch every time the category changes, which is not often.
 
         const fetchDropdownOptions = async () => {
             if (!category) return;
             const options = await apiRequest(url, { method: 'GET' });
-            // debugger;
             setDropdownOptions(options);
         };
         fetchDropdownOptions();
@@ -312,7 +344,7 @@ const DropdownOptionsEdit = () => {
                                 </Label>
                             </FormGroup>
                         </Col>
-                        <Col md={2} className="d-flex align-items-end">
+                        <Col md={2} className="d-flex align-items-center">
                             <Button color="primary" onClick={handleAddOption} disabled={isAdding}>
                                 Add
                             </Button>
