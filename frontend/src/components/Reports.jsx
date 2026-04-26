@@ -92,7 +92,7 @@ const Reports = () => {
 
 
     return (
-        <Container>
+        <Container fluid className="full-width-page">
             <Row className="m-4">
                 <Col lg="9">
                     <h1>{report.report_title}</h1>
