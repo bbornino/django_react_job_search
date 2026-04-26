@@ -19,6 +19,7 @@ Classes:
 """
 
 from django.db import models
+from job_search.models import CustomUser
 
 
 class DropdownOptionCategories:
@@ -75,6 +76,12 @@ class DropdownOption(models.Model):
             Inactive values are hidden but retained for historical integrity.
     """
 
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+
     category = models.CharField(
         max_length=50,
         db_index=True,
@@ -93,7 +100,7 @@ class DropdownOption(models.Model):
     )
 
     class Meta:
-        db_table = "dropdown_options"
+        db_table = "job_search_dropdown_options"
         ordering = ["sort_order", "id"]
         indexes = [
             models.Index(fields=["category", "is_active"]),
