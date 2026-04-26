@@ -19,7 +19,8 @@ import {
   faLocationDot,
   faDiagramProject,
   faRightFromBracket,
-  faSliders
+  faSliders,
+  faTableList,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Static Components / Pages
@@ -51,7 +52,7 @@ import OpportunityDetails from "./components/OpportunityDetails";
 import Reports from "./components/Reports";
 
 import DropdownOptionsEdit from "./components/config/DropdownOptionsEdit";
-
+import DashboardReportConfigEdit from "./components/config/DashboardReportConfigEdit";
 
 console.log(process.env.NODE_ENV);  // Should log "development"
 
@@ -163,6 +164,8 @@ function App() {
                 <DropdownMenu end>
                   <DropdownItem tag={Link} to="/edit-profile">
                     <FontAwesomeIcon icon={faUser} className="me-2" />Edit Profile</DropdownItem>
+                  <DropdownItem tag={Link} to="/edit-dashboard-report">
+                    <FontAwesomeIcon icon={faTableList} className="me-2" />Edit Dashboard Report</DropdownItem>
                   <DropdownItem divider />
 
                   <DropdownItem header>
@@ -233,6 +236,7 @@ function App() {
         <Route path="/reports" element={<ProtectedRoute element={<Reports />} />} />
         <Route path="/reports/:reportType/:referenceDate?" element={<ProtectedRoute element={<Reports />} />} />
         <Route path="/edit-profile" element={<ProtectedRoute element={<UserProfileEdit />} />} />
+        <Route path="/edit-dashboard-report" element={<ProtectedRoute element={<DashboardReportConfigEdit />} />} />
       </Routes>
     </div>
   );
