@@ -1,5 +1,5 @@
 // frontend/src/components/config/DropdownOptionsEdit.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Table, FormGroup, Input, Label, Button, Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,6 +16,7 @@ const DropdownOptionsEdit = () => {
     const [editingId, setEditingId] = useState(null);
     const [editOption, setEditOption] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
+    const hasFetchedOptions = useRef(false);  // Track if the request has already been made
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [optionToDelete, setOptionToDelete] = useState(null);
     const [newOption, setNewOption] = useState({
@@ -33,6 +34,9 @@ const DropdownOptionsEdit = () => {
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
 
     useEffect(() => {
+        if (hasFetchedOptions.current) return; // Prevent double fetch
+        hasFetchedOptions.current = true;
+
         const fetchDropdownOptions = async () => {
             if (!category) return;
             const options = await apiRequest(url, { method: 'GET' });
@@ -49,7 +53,6 @@ const DropdownOptionsEdit = () => {
 
     const handleAddOption = async () => {
         if (isAdding) return; // 🚫 prevent double click
-
 
         if (newOption.name && newOption.sort_order !== 0) {
             try {
@@ -70,14 +73,13 @@ const DropdownOptionsEdit = () => {
         }
     };
 
-    const onDeleteJobPosting = async () => {
+    const onDeleteDropdownOption = async () => {
         if (!optionToDelete) return;
 
         try {
             await apiRequest(
                 `${DROPDOWN_OPTIONS_API_URL}${optionToDelete.id}/`,
-                null, // no body for DELETE
-                { method: 'DELETE' }
+                null, { method: 'DELETE' }
             );
 
             setDropdownOptions(prev =>
@@ -322,7 +324,7 @@ const DropdownOptionsEdit = () => {
             <DeleteConfirmationModal
                 isOpen={showDeleteModal}
                 toggle={toggleDeleteModal}
-                onDelete={onDeleteJobPosting}
+                onDelete={onDeleteDropdownOption}
             />
         </Container>
     );
