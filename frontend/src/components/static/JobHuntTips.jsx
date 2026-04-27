@@ -70,6 +70,19 @@ class JobHuntTips extends Component {
                                 located in unfriendly states!</li>
                             <li className="check"> Does the company allow for gig work on the side (to offset lower pay?)?</li>
                         </List>
+
+                        <br/>
+                        <h2>Networking Tips</h2>
+                        <p>I don't tend to volunteer this, but I'm autistic.  Networking can be... challenging.  
+                            Here are some wonderful resources and articles that I've found that help.
+                            Over the years, I have stuck with the tried and true Dice.com for my industry news.</p>
+                        <List type="unstyled" >
+                            <li> <a href="https://www.dice.com/career-advice/how-to-network-in-tech-when-you-dont-know-anyone">
+                                    How to Network in Tech When You Don’t Know Anyone</a> 
+                             </li>
+                            <li><a href="https://www.dice.com/career-advice/are-python-certifications-worth-it-in-2025-what-you-need-to-know">
+                            Are Python Certifications Worth It in 2025? What You Need to Know</a></li>
+                        </List>
                     </Col>
                 </Row>
 

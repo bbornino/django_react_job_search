@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
 import Editor from "./shared/Editor"
+import DeleteConfirmationModal from "./shared/ConfirmationDeleteModal"
 import { useApiRequest } from "../utils/useApiRequest";
 
 const JobSiteEdit = () => {
@@ -29,6 +30,8 @@ const JobSiteEdit = () => {
 
     const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
 
     // Load job site data based on job_site_id
     const getJobSite = useCallback(async (job_site_id) => {
@@ -110,7 +113,8 @@ const JobSiteEdit = () => {
     const editJobSite = async (e) => {
         e.preventDefault();
         await apiRequest(JOB_SITE_API_URL + state.job_site_id, state, {method: 'PUT'});
-        navigate(-1, { state: { refresh: true } });
+
+        window.location = document.referrer;    // Forces a data refresh
     }
 
     return (
@@ -119,18 +123,18 @@ const JobSiteEdit = () => {
                 <Card className="text-dark bg-light m-3">
                     <CardTitle className="mx-4 my-2">
                         <Row>
-                            <Col xxl="9" xl="8" lg="8" md="7" sm="5" xs="3">
+                            <Col md="7" sm="5" xs="3">
                                 <strong>
                                     {state.job_site_id === 0 ? 'Create ' : 'Edit '}
                                         Job Site</strong>
                             </Col>
-                            <Col xxl="3" xl="4" lg="4" md="5" sm="7" xs="9" className="pull-right">
-                                <Button color="danger" className="mx-2 pull-right" 
-                                        onClick={onDeleteJobSite}>
+                            <Col md="5" sm="7" xs="9" className="text-sm-end">
+                                <Button color="danger" className="mx-2 text-end" 
+                                        onClick={() => setShowDeleteModal(true)}>
                                     <FontAwesomeIcon icon={faTrash} /> &nbsp; Delete
                                 </Button>
                                 <Button color="primary" type="submit" 
-                                        className="mx-2 pull-right" >
+                                        className="mx-2 text-end" >
                                     <FontAwesomeIcon icon={faFloppyDisk} /> &nbsp; Save
                                 </Button>
                             </Col>
@@ -260,6 +264,11 @@ const JobSiteEdit = () => {
                     </CardBody>
                 </Card>
             </Form>
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                toggle={toggleDeleteModal}
+                onDelete={onDeleteJobSite}
+            />
         </Container>
     )
 

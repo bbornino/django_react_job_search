@@ -1,19 +1,19 @@
 """
 Job Posting Views Module
 
-This module defines API views for handling job postings in a Django Rest Framework (DRF) 
-application.  It includes endpoints for listing, retrieving, creating, updating, and 
-deleting job postings, as well as fetching job postings for a specific job site and 
+This module defines API views for handling job postings in a Django Rest Framework (DRF)
+application.  It includes endpoints for listing, retrieving, creating, updating, and
+deleting job postings, as well as fetching job postings for a specific job site and
 retrieving active job postings.
 
 Views:
-    - `job_site_postings(request, job_site_id)`: Retrieves job postings associated with a 
+    - `job_site_postings(request, job_site_id)`: Retrieves job postings associated with a
         specific job site, ensuring user authentication and authorization.
-    - `job_posting_list(request)`: Handles GET and POST requests for job postings, allowing 
+    - `job_posting_list(request)`: Handles GET and POST requests for job postings, allowing
         users to list and create job postings.
-    - `job_posting_detail(request, pk)`: Manages GET, PUT, and DELETE requests for a specific 
+    - `job_posting_detail(request, pk)`: Manages GET, PUT, and DELETE requests for a specific
         job posting, ensuring ownership validation.
-    - `postings_active(request)`: Retrieves active job postings for the authenticated user, 
+    - `postings_active(request)`: Retrieves active job postings for the authenticated user,
         filtering by status.
 
 Dependencies:
@@ -50,7 +50,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django.utils import timezone
-from django.db import connection
+from django.db import connection, DataError, IntegrityError
 from django.shortcuts import get_object_or_404
 from job_search.utils import dictfetchall
 from job_search.job_site.job_site import JobSite
@@ -69,29 +69,29 @@ def job_site_postings(request, job_site_id):
     Retrieves job postings associated with a specific job site, accessible only by the owner.
 
     - For GET requests:
-        Fetches a list of job postings for the job site with the given job_site_id, ensuring the user 
-        is authenticated and authorized to access the data.
+        Fetches a list of job postings for the job site with the given job_site_id, ensuring the
+        user is authenticated and authorized to access the data.
 
     Args:
         request: The HTTP request object, containing user data, method, and any posted data.
         job_site_id: The ID of the job site whose associated job postings are to be retrieved.
 
     Returns:
-        Response: A Response object containing a serialized list of job postings associated with 
-                  the job site, or an error message if the user is unauthorized or the job posting 
+        Response: A Response object containing a serialized list of job postings associated with
+                  the job site, or an error message if the user is unauthorized or the job posting
                   is not found.
 
     Raises:
         - Returns a 401 Unauthorized response if the user is not authenticated.
         - Returns a 403 Forbidden response if the user does not have permission to access the job postings.
         - Returns a 404 Not Found response if no job posting exists for the provided job_site_id.
-    
+
     Notes:
         - This view is read-only and only allows GET requests to fetch job postings.
         - The user must be the owner of the job posting to view the data.
-        - The response data includes a filtered list of job postings, showing `id`, `company_name`, 
+        - The response data includes a filtered list of job postings, showing `id`, `company_name`,
           `posting_title`, `posting_status`, and `applied_at` fields.
-    
+
     Debugging:
         - The function ensures user authentication and authorization before retrieving job postings.
     """
@@ -99,15 +99,21 @@ def job_site_postings(request, job_site_id):
     print(f"Is Authenticated: {request.user.is_authenticated}")
     print(f"User ID: {request.user.id}")
     print(f"User Username: {request.user.username}")
-    
+
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
     # Retrieve the Job Site to ensure that the user is the owner
     job_site = get_object_or_404(JobSite, pk=job_site_id)
     if job_site.user != request.user:
-        return Response({"detail": "You do not have permission to access this resource."}, status=status.HTTP_403_FORBIDDEN)
-    
+        return Response(
+            {"detail": "You do not have permission to access this resource."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
     if request.method == "GET":
         data = JobPosting.objects.filter(job_site_id=job_site_id).values(
             "id", "company_name", "posting_title", "posting_status", "applied_at"
@@ -124,7 +130,7 @@ def job_posting_list(request):
     Handles GET and POST requests for job postings for an authenticated user.
 
     - For GET requests:
-        Fetches a list of job postings for the authenticated user, including details such as the 
+        Fetches a list of job postings for the authenticated user, including details such as the
         company name, posting title, status, and other relevant information.
 
     - For POST requests:
@@ -136,8 +142,8 @@ def job_posting_list(request):
     Returns:
         Response: A Response object containing either:
             - A list of serialized job postings for GET requests, or
-            - A status indicating the success or failure of the POST request (201 Created on success, 
-              or 400 Bad Request with error details if the data is invalid).
+            - A status indicating the success or failure of the POST request (201 Created on
+              success, or 400 Bad Request with error details if the data is invalid).
 
     Raises:
         - Returns a 401 Unauthorized response if the user is not authenticated.
@@ -147,19 +153,22 @@ def job_posting_list(request):
         - GET requests retrieve job postings for the authenticated user, filtering them by the user.
         - POST requests allow the creation of a new job posting, linking it to the authenticated user.
         - The view prints debugging information about the authenticated user to the console (for debugging purposes).
-    
+
     Debugging:
         - The function prints user information (e.g., user ID, username, authentication status) for debugging purposes.
     """
-    
+
     print(f"User Info: {request.user}")
     print(f"Is Authenticated: {request.user.is_authenticated}")
     print(f"User ID: {request.user.id}")
     print(f"User Username: {request.user.username}")
-    
+
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
-    
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
     if request.method == "GET":
         data = JobPosting.objects.values(
             "id",
@@ -167,6 +176,8 @@ def job_posting_list(request):
             "posting_title",
             "posting_status",
             "rejected_after_stage",
+            "location_type",
+            "location_city",
             "applied_at",
             "rejected_at",
         ).filter(user=request.user)
@@ -178,8 +189,20 @@ def job_posting_list(request):
     elif request.method == "POST":
         serializer = JobPostingSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(status=status.HTTP_201_CREATED)
+            try:
+                serializer.save(user=request.user)
+                return Response(status=status.HTTP_201_CREATED)
+            except DataError as e:
+                # Return the actual DB error to frontend
+                return Response(
+                    {"detail": "Database error: " + str(e)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            except IntegrityError as e:
+                return Response(
+                    {"detail": "Integrity error: " + str(e)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -205,8 +228,8 @@ def job_posting_detail(request, pk):
     Returns:
         Response: A Response object containing either:
             - A serialized job posting for GET requests.
-            - A status indicating the success or failure of the PUT or DELETE request (204 No Content on success, 
-              or 400 Bad Request with error details if the data is invalid).
+            - A status indicating the success or failure of the PUT or DELETE request (204 No
+              Content on success, or 400 Bad Request with error details if the data is invalid).
 
     Raises:
         - Returns a 401 Unauthorized response if the user is not authenticated.
@@ -219,14 +242,20 @@ def job_posting_detail(request, pk):
         - DELETE requests allow the authenticated user to delete their job posting.
 
     """
-    
+
     # Ensure the user is authenticated
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
     job_posting = get_object_or_404(JobPosting, pk=pk)
     if job_posting.user != request.user:
-        return Response({"detail": "You do not have permission to access this resource."}, status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {"detail": "You do not have permission to access this resource."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     if request.method == "GET":
         serializer = JobPostingSerializer(job_posting, context={"request": request})
@@ -250,31 +279,33 @@ def postings_active(request):
     """
     Retrieves the active job postings for the authenticated user.
 
-    Filters the job postings based on their status ('Actively Engaged' or 'Awaiting Feedback') 
-    and ensures they belong to the authenticated user. If no active postings are found, 
-    the response will return a status of HTTP 204 (No Content). Otherwise, it returns 
+    Filters the job postings based on their status ('Actively Engaged' or 'Awaiting Feedback')
+    and ensures they belong to the authenticated user. If no active postings are found,
+    the response will return a status of HTTP 204 (No Content). Otherwise, it returns
     a list of the active postings serialized for the response.
 
     Args:
         request: The HTTP request object containing user data and request parameters.
 
     Returns:
-        Response: A Response object containing either a list of job postings or 
+        Response: A Response object containing either a list of job postings or
                   a status indicating no content found (HTTP 204).
-    
+
     Raises:
         HTTP 401 Unauthorized: If the user is not authenticated.
     """
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."},
-                        status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
     included_statuses = ["1 - Actively Engaged", "2 - Awaiting Feedback"]
     # excluded_statuses = ['4 - No Response', '3 - Rejected']
     # or .exclude(posting_status__in=excluded_statuses)
     data = JobPosting.objects.filter(
-        posting_status__in=included_statuses, 
-        user=request.user).values(
+        posting_status__in=included_statuses, user=request.user
+    ).values(
         "id",
         "company_name",
         "posting_title",
@@ -303,7 +334,7 @@ def job_postings_report(request, report_type, reference_date=None):
     2. Postings Per Site.
     3. Applications Per Week.
 
-    The function ensures the user is authenticated and handles the report generation logic 
+    The function ensures the user is authenticated and handles the report generation logic
     by executing raw SQL queries and formatting the results based on the requested report type.
 
     Args:
@@ -312,8 +343,8 @@ def job_postings_report(request, report_type, reference_date=None):
             - 'postingsAppliedSince': Report for postings applied since a reference date.
             - 'perSite': Report for the number of postings per site.
             - 'perWeek': Report for the number of applications per week.
-        reference_date (str, optional): The reference date to filter the report. Should be in ISO format (YYYY-MM-DD). 
-            If not provided, the report will not be date-filtered.
+        reference_date (str, optional): The reference date to filter the report. Should be in
+            ISO format (YYYY-MM-DD). If not provided, the report will not be date-filtered.
 
     Returns:
         Response: A Response object containing the generated report data.
@@ -336,10 +367,12 @@ def job_postings_report(request, report_type, reference_date=None):
     print(f"job_postings_report User ID: {request.user.id}")
     print(f"job_postings_report User Username: {request.user.username}")
 
-     # Ensure the user is authenticated
+    # Ensure the user is authenticated
     if not request.user.is_authenticated:
-        return Response({"detail": "Authentication credentials were not provided."},
-                        status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Authentication credentials were not provided."},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
     valid_report_types = ["postingsAppliedSince", "perSite", "perWeek"]
     if report_type not in valid_report_types:
@@ -388,6 +421,16 @@ def job_postings_report(request, report_type, reference_date=None):
                 "sortable": True,
             },
             {
+                "field_title": "Posting Location",
+                "field_name": "location_city",
+                "sortable": True,
+            },
+            {
+                "field_title": "Location Type",
+                "field_name": "location_type",
+                "sortable": True,
+            },
+            {
                 "field_title": "Posting Status",
                 "field_name": "posting_status",
                 "sortable": True,
@@ -401,7 +444,9 @@ def job_postings_report(request, report_type, reference_date=None):
         ]
 
         sql_query = """
-            SELECT p.id, p.company_name, p.posting_title, p.posting_status, p.applied_at, p.rejected_after_stage, s.site_name, s.id as site_id
+            SELECT p.id, p.company_name, p.posting_title, p.posting_status, 
+                p.location_type, p.location_city,
+                p.applied_at, p.rejected_after_stage, s.site_name, s.id as site_id
             FROM job_search_jobposting p
             JOIN job_search_jobsite s ON p.job_site_id_id = s.id
             WHERE p.applied_at >= %s

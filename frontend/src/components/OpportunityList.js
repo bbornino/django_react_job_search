@@ -8,7 +8,7 @@ import { Button, Container, Row, Col } from 'reactstrap';
 
 const OpportunityList = () => {
     const [opportunities, setOpportunities] = useState([]);
-    const { apiRequest } = useApiRequest(); 
+    const { apiRequest } = useApiRequest();
     const navigate = useNavigate();
     const hasFetched = useRef(false);  // Track if the request has already been made
 
@@ -16,7 +16,7 @@ const OpportunityList = () => {
     const getOpportunities = useCallback(async () => {
         if (hasFetched.current) return; // Prevent double fetch
         hasFetched.current = true;
-        
+
         const data = await apiRequest(
             JOB_OPPORTUNITY_API_URL,
             { method: 'GET' }
@@ -41,14 +41,36 @@ const OpportunityList = () => {
             sortable: true,
         },
         {
+            name: 'Opportunity Status',
+            selector: row => String(row.opportunity_status),
+            sortable: true,
+        },
+        {
             name: 'Recruiter Name',
             selector: row => String(row.recruiter_name),
             sortable: true,
         },
         {
-            name: 'Status',
-            selector: row => row.opportunity_status,
+            name: 'Recruiter Company',
+            selector: row => String(row.recruiter_company),
             sortable: true,
+        },
+        {
+            name: 'City',
+            selector: row => row.location_city,
+            sortable: true,
+        },
+        {
+            name: 'Type',
+            selector: row => row.location_type,
+            sortable: true,
+            width: "120px",
+        },
+        {
+            name: 'Employment Type',
+            selector: row => row.employment_type,
+            sortable: true,
+            width: "150px",
         },
         {
             name: "Received At",
@@ -65,7 +87,7 @@ const OpportunityList = () => {
     };
 
     return (
-        <Container className="mt-2">
+        <Container fluid className="full-width-page">
             <Row className="m-4">
                 <Col xxl="10" xl="9" lg="9" md="8" sm="5" xs="3">
                     <h1>All Opportunities</h1>
@@ -78,12 +100,12 @@ const OpportunityList = () => {
                     </Link>
                 </Col>
             </Row>
-            <DataTableBase 
-                columns={columns} 
-                data={opportunities} 
+            <DataTableBase enableExport
+                columns={columns}
+                data={opportunities}
                 defaultSortFieldId="email_received_at"
                 defaultSortAsc={false}
-                onRowClicked={onRowClicked} 
+                onRowClicked={onRowClicked}
             />
         </Container>
     );

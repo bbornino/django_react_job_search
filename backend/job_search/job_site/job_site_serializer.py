@@ -1,40 +1,44 @@
 """
 Serializers for the JobSite model.
 
-This module defines serializers for the `JobSite` model, used to convert 
+This module defines serializers for the `JobSite` model, used to convert
 database objects into JSON representations and vice versa.
 
 Classes:
     - JobSiteSerializer: Serializes all fields of the `JobSite` model.
-    - JobSiteListSerializer: Provides a lightweight serialization 
+    - JobSiteListSerializer: Provides a lightweight serialization
       with selected fields for listing job sites.
 
 Example Usage:
     serializer = JobSiteSerializer(instance=job_site)
     serialized_data = serializer.data
 """
+
 from rest_framework import serializers
 from job_search.job_site.job_site import JobSite
+
 
 class JobSiteSerializer(serializers.ModelSerializer):
     """
     Serializer for the `JobSite` model to convert it into a JSON representation.
 
-    This serializer includes all fields from the `JobSite` model, enabling 
+    This serializer includes all fields from the `JobSite` model, enabling
     conversion of the full model object to and from JSON format.
 
     Fields:
         - All fields from the `JobSite` model.
     """
+
     class Meta:
         model = JobSite
-        fields = '__all__'
+        fields = "__all__"
+
 
 class JobSiteListSerializer(serializers.ModelSerializer):
     """
     Serializer for listing `JobSite` instances with selected fields.
 
-    This lightweight serializer includes only specific fields that are 
+    This lightweight serializer includes only specific fields that are
     relevant for listing job sites, rather than serializing the full model.
 
     Fields:
@@ -45,7 +49,41 @@ class JobSiteListSerializer(serializers.ModelSerializer):
         - last_visited_at (DateTimeField): Timestamp of when the site was last visited.
         - headline (CharField): Custom headline associated with the job site.
     """
+
     class Meta:
         model = JobSite
-        fields = ('id', 'site_name', 'site_url', 'rating',
-                  'last_visited_at', 'headline')
+        fields = (
+            "id",
+            "site_name",
+            "site_url",
+            "rating",
+            "last_visited_at",
+            "headline",
+        )
+
+
+class JobSiteDropdownSerializer(serializers.ModelSerializer):
+    """
+    Lightweight serializer for JobSite dropdown usage.
+
+    This serializer is used specifically for populating UI select inputs
+    (e.g., job posting forms). It returns only the minimal fields required
+    for display and ordering.
+
+    Notes:
+        - The `rating` field is exposed as `order` and used for sorting.
+        - Lower values indicate higher priority in dropdown ordering.
+        - This serializer intentionally excludes all non-essential JobSite
+          metadata to minimize payload size and simplify UI consumption.
+
+    Fields:
+        - id (IntegerField): Unique identifier for the job site.
+        - site_name (CharField): Display name shown in dropdown.
+        - order (IntegerField): Sort priority derived from `rating`.
+    """
+
+    order = serializers.IntegerField(source="rating")
+
+    class Meta:
+        model = JobSite
+        fields = ["id", "site_name", "order"]

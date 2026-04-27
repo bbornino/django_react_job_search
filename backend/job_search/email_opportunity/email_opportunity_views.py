@@ -62,7 +62,7 @@ def email_opportunity_list(request):
 
     if request.method == 'GET':
         data = EmailOpportunity.objects.filter(user=request.user)
-        serializer = EmailOpportunitySerializer(data, context={'request': request}, many=True)
+        serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)
 
         return Response(serializer.data)
 
@@ -171,7 +171,7 @@ def email_opportunity_active(request):
 
     # Filter opportunities for the authenticated user and exclude specified statuses
     data = EmailOpportunity.objects.filter(user=request.user).exclude(opportunity_status__in=excluded_statuses).values(
-        'id', 'recruiter_name', 'job_title', 'opportunity_status', 'email_received_at'
+        'id', 'recruiter_name', 'job_title', 'opportunity_status', 'recruiter_company', 'location_city', 'email_received_at'
     )
 
     serializer = EmailOpportunityListSerializer(data, context={'request': request}, many=True)

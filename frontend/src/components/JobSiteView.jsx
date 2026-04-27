@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApiRequest } from '../utils/useApiRequest';
 import { JOB_SITE_API_URL, formatDisplayDateTime, formatDisplayDate } from "../constants";
-import {Button, Container, Row, Col, Card, CardTitle, CardBody} from 'reactstrap';
+import { Button, Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import DataTableBase from './shared/DataTableBase';
@@ -27,13 +27,13 @@ const JobSiteView = () => {
     const hasFetchedJobSite = useRef(false);  // Track if the request has already been made
     const hasFetchedPostings = useRef(false);  // Track if the request has already been made
 
-    const getJobSite = useCallback ( async (jobSiteId) => {
+    const getJobSite = useCallback(async (jobSiteId) => {
         if (hasFetchedJobSite.current) return; // Prevent double fetch
         hasFetchedJobSite.current = true;
 
         if (!jobSiteId) return;
 
-        const data = await apiRequest(`${JOB_SITE_API_URL}${jobSiteId}`, {method:'GET'});
+        const data = await apiRequest(`${JOB_SITE_API_URL}${jobSiteId}`, { method: 'GET' });
         if (!data) return;
         if (data) {
             setState((prevState) => ({
@@ -55,7 +55,7 @@ const JobSiteView = () => {
         hasFetchedPostings.current = true;
 
         if (!jobSiteId) return;
-    
+
         const data = await apiRequest(JOB_SITE_API_URL + jobSiteId + '/postings', { method: 'GET' });
         // console.log("getJobSitePostings response:", data); // Debug log
         if (!data || !Array.isArray(data)) {
@@ -66,7 +66,7 @@ const JobSiteView = () => {
             }));
             return;
         }
-    
+
         setState((prevState) => ({
             ...prevState,
             postings: data,
@@ -76,7 +76,7 @@ const JobSiteView = () => {
     useEffect(() => {
         document.title = "Job Site View - Job Search Tracker";
         const pathArr = window.location.pathname.split('/');
-    
+
         if (pathArr.length > 2 && pathArr[2]) {
             const jobSiteId = pathArr[2];
             setState((prevState) => ({
@@ -84,7 +84,7 @@ const JobSiteView = () => {
                 job_site_id: jobSiteId,
             }));
             Promise.all([getJobSite(jobSiteId), getJobSitePostings(jobSiteId)])
-            .catch((error) => console.error("Error fetching job site data:", error));
+                .catch((error) => console.error("Error fetching job site data:", error));
         }
     }, [getJobSite, getJobSitePostings]);
 
@@ -119,7 +119,7 @@ const JobSiteView = () => {
         navigate('/job-posting-edit/' + row.id);
     };
 
-    const onEditClicked = (r,e) => {
+    const onEditClicked = (r, e) => {
         if (!state.job_site_id) {
             console.error("Job site ID is not defined");
             return;
@@ -147,25 +147,25 @@ const JobSiteView = () => {
                         <Col xl="10" md="9" sm="8" xs="6">
                             <h1>{state.site_name}</h1>
                         </Col>
-                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                        <Col xl="2" md="3" sm="4" xs="6" className="text-end">
                             <Button color="success" type="button"
-                                    className="m-2"
-                                    onClick={onEditClicked}>
+                                className="m-2"
+                                onClick={onEditClicked}>
                                 <FontAwesomeIcon icon={faPencil} /> &nbsp; Edit
                             </Button>
                         </Col>
                     </Row>
                 </CardTitle>
-                
+
                 <CardBody className="bg-white">
                     <Row>
                         <Col lg="3" xs="6">
                             <dl>
                                 <dt>URL</dt>
                                 <dd>
-                                    <Link to='{state.site_url}'>
+                                    <a href={state.site_url} target="_blank" rel="noopener noreferrer">
                                         {state.site_url}
-                                    </Link>
+                                    </a>
                                 </dd>
                             </dl>
                         </Col>
@@ -206,16 +206,16 @@ const JobSiteView = () => {
                     </Row>
                 </CardBody>
             </Card>
-            
+
             <Card className="text-dark bg-light m-3">
                 <CardTitle className="mx-2 my-1">
                     <Row className="m-1">
-                        <Col xl="10" md="9" sm="8" xs="6" >
+                        <Col xs="8" >
                             <h3>Job Site Postings Applied</h3>
                         </Col>
-                        <Col xl="2" md="3" sm="4" xs="6" className="pull-right">
+                        <Col xs="4" className="text-end">
                             <Button color="success" type="button"
-                                    onClick={onNewPostingClicked}>
+                                onClick={onNewPostingClicked}>
                                 <FontAwesomeIcon icon={faSquarePlus} /> &nbsp; Add New
                             </Button>
                         </Col>
@@ -224,7 +224,7 @@ const JobSiteView = () => {
                 <CardBody className="bg-white">
                     <Row>
                         <Col>
-                            <DataTableBase  columns={columns}
+                            <DataTableBase columns={columns}
                                 data={state.postings}
                                 defaultSortFieldId="applied_at"
                                 defaultSortAsc={false}

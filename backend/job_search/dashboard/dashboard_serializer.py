@@ -1,8 +1,11 @@
 """
+FILE: job_search/dashboard/dashboard_serializer.py
+MODULE: dashboard
+
 This module defines the DashboardStatisticsSerializer, which provides a structured representation
 of job posting statistics data for use in a dashboard.
 
-The serializer processes and formats data related to job postings, including the total count of postings, 
+The serializer processes and formats data related to job postings, including the total count of postings,
 the number of postings with responses, and the date information in both raw and formatted forms.
 
 Attributes:
@@ -15,13 +18,14 @@ Attributes:
 Methods:
     to_representation(instance):
         Converts the raw_date field from a string in YYYY-MM-DD format to a Python date object for accurate representation.
-        
+
     create(validated_data):
         Raises NotImplementedError since object creation is not supported for this serializer.
 """
 
 from datetime import datetime
 from rest_framework import serializers
+from job_search.dashboard.dashboard_report import DashboardReportSegment
 
 
 class DashboardStatisticsSerializer(serializers.Serializer):
@@ -40,16 +44,20 @@ class DashboardStatisticsSerializer(serializers.Serializer):
         to_representation(instance):
             Converts the raw_date field to a Python date object for accurate representation.
     """
+
     total_count = serializers.IntegerField()
     response_count = serializers.IntegerField()
     raw_date = serializers.DateField()
     formatted_date = serializers.CharField()
+    label = serializers.CharField(required=False, allow_blank=True)
 
     def to_representation(self, instance):
         # Ensure `raw_date` field is formatted as expected
         representation = super().to_representation(instance)
-        if 'raw_date' in representation:
-            representation['raw_date'] = datetime.strptime(representation['raw_date'], '%Y-%m-%d').date()
+        if "raw_date" in representation:
+            representation["raw_date"] = datetime.strptime(
+                representation["raw_date"], "%Y-%m-%d"
+            ).date()
         return representation
 
     def create(self, validated_data):
@@ -62,4 +70,21 @@ class DashboardStatisticsSerializer(serializers.Serializer):
         Raises:
             NotImplementedError: Always, as object creation is not supported.
         """
-        raise NotImplementedError("DashboardStatisticsSerializer does not support object creation.")
+        raise NotImplementedError(
+            "DashboardStatisticsSerializer does not support object creation."
+        )
+
+
+class DashboardReportSegmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DashboardReportSegment
+        fields = ["id", "name", "start_date", "end_date"]
+
+    def validate(self, data):
+        start = data.get("start_date")
+        end = data.get("end_date")
+
+        if end and start and end < start:
+            raise serializers.ValidationError("End date cannot be before start date.")
+
+        return data

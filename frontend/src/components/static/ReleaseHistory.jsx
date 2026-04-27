@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Container, Row, Col} from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 
 class ReleaseHistory extends Component {
     componentDidMount() {
@@ -17,6 +17,35 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
+                        <h2>April 27, 2026 - Release 6.0</h2>
+                        <ul>
+                            <li>Add Dashboard Report Table soft encoding with configuration page</li>
+                            <li>Add Drop Down Option soft encoding with configuration page</li>
+                            <li>Expand Job Posting List, Opportunity List, and Report Tables and include additional fields</li>
+                            <li>Add export of table data to TSV format</li>
+                            {/* <li>On Save, prevent double saves</li> */}
+                        </ul>
+                        <h2>November 1, 2025 - Release 5.2</h2>
+                        <ul>
+                            <li>Add Opportunity Status to List View</li>
+                            <li>Add Preliminary SSL Certificate Support</li>
+                            <li>Job Posting Edit Field adjustments</li>
+                            <li>Add two new statistics rows to Dashboard</li>
+                            {/* <li>On Save, when navigating to calling page, refresh page data</li> */}
+
+                        </ul>
+                        <h2>April 27, 2025 - Release 5.1</h2>
+                        <ul>
+                            <li>Set Default Report Date to January 1, 2025</li>
+                            <li>Add Opportunity City Location and Recruiter Company to List View</li>
+                            <li>Add Confirmation Modal for Delete and Clear Buttons</li>
+                            {/* <li>On Save, when navigating to calling page, refresh page data</li> */}
+                            {/* <li>Add New Job Posting (no ID) route back to react router</li> */}
+                            {/* <li>Allow Max Job Posting Edit Tech String Length and make text area</li> */}
+                            {/* <li>Email Opportunity List: less data (retrieve only necesary columns)</li> */}
+                            {/* <li>Correct Page Titles (Login, index.html)</li> */}
+                            {/* <li>Show Comments in date acending order</li> */}
+                        </ul>
                         <h2>March 20, 2025 - Release 5</h2>
                         <ul>
                             <li>Docker and Web Server Support (Nginx + Gunicorn)</li>

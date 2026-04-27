@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { REPORT_API_URL } from "../constants";
 
-import {Input, Button, Container, Row, Col, FormGroup} from 'reactstrap';
+import { Input, Button, Container, Row, Col, FormGroup } from 'reactstrap';
 import DataTableBase from './shared/DataTableBase';
 import { useApiRequest } from "../utils/useApiRequest";
 
@@ -18,7 +18,7 @@ import { useApiRequest } from "../utils/useApiRequest";
 
 //     // Attempt to create a date from the value
 //     const date = new Date(value);
-    
+
 //     // Check if the date is valid
 //     return !isNaN(date.getTime()) && date.toString() !== 'Invalid Date';
 // };
@@ -37,7 +37,7 @@ const Reports = () => {
     const getReports = useCallback(async (reportName, reportDate) => {
         setStartDate(reportDate);
 
-        const reportData = await apiRequest(REPORT_API_URL + reportName + '/' + reportDate, {method:'GET'});
+        const reportData = await apiRequest(REPORT_API_URL + reportName + '/' + reportDate, { method: 'GET' });
         if (reportData) {
             var tableColumns = [];
             reportData.report_fields.forEach((fieldInfo) => {
@@ -49,7 +49,7 @@ const Reports = () => {
                         // return isDate(value) ? formatInputFieldDateTime(value) : value;
                         // Back end report now correctly formats the date
                         return value;
-                      },
+                    },
                     sortable: fieldInfo.sortable,
                     sortField: row => row[fieldInfo.field_name],
                 }
@@ -57,14 +57,16 @@ const Reports = () => {
                 tableColumns.push(fieldObj)
             })
 
-            setReport({report_data: reportData.report_data, report_name: reportName,
-                report_columns: tableColumns, report_title: reportData.report_name})
+            setReport({
+                report_data: reportData.report_data, report_name: reportName,
+                report_columns: tableColumns, report_title: reportData.report_name
+            })
         }
     }, [apiRequest])
 
 
     const parseWindowLocationDate = (pathArr) => {
-        var reportDate = '2024-08-01'       // Default Report Date when none set
+        var reportDate = '2026-01-01'       // Default Report Date when none set
         if (pathArr.length > 3) {
             const rDate = new Date(pathArr[3])
             if (!isNaN(rDate)) {
@@ -85,12 +87,12 @@ const Reports = () => {
     }, [getReports])
 
     const onUpdateReport = e => {
-        navigate('/reports/' + report.report_name + '/'+ startDate);
+        navigate('/reports/' + report.report_name + '/' + startDate);
     }
 
 
     return (
-        <Container>
+        <Container fluid className="full-width-page">
             <Row className="m-4">
                 <Col lg="9">
                     <h1>{report.report_title}</h1>
@@ -106,11 +108,12 @@ const Reports = () => {
                 </Col>
                 <Col lg="1">
                     <Button color="primary" className="m2"
-                            onClick={onUpdateReport}>Update</Button>
+                        onClick={onUpdateReport}>Update</Button>
                 </Col>
             </Row>
-            <DataTableBase  columns={report.report_columns}
-                            data={report.report_data} />
+            <DataTableBase enableExport
+                columns={report.report_columns}
+                data={report.report_data} />
         </Container>
     )
 

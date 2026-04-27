@@ -118,11 +118,11 @@ class JobPosting(models.Model):
     outreach_info = models.CharField(max_length=64, default='', blank=True, null=True)
     time_spent = models.IntegerField(default='', blank=True, null=True)
 
-    technology_string = models.CharField(max_length=512, default='', blank=True)
+    technology_string = models.CharField(max_length=1028, default='', blank=True)
     technology_stack = models.JSONField(default=list, blank=True, null=True)
     comments = models.JSONField(default=list, blank=True, null=True)
     posting_application_questions = models.JSONField(default=list, blank=True, null=True)
-    job_description = models.TextField()
+    job_description = models.TextField(default='', blank=True, null=True)
 
     # Explicitly define the manager type for linters
     objects: Type[models.Manager] = models.Manager()

@@ -15,6 +15,18 @@ function Comments({itemComments, onCommentsSave}) {
     const [theComments, setTheComments] = useState([]);   
     const [showComments, setShowComments] = useState(false);
 
+    const compareComments = (a, b)  => {
+        if (a.commented_at < b.commented_at) {
+            return -1
+        }
+
+        if (a.commented_at > b.commented_at) {
+            return 1
+        }
+
+        return 0;
+    }
+
     // Synchronize `theComments` state with `itemComments` prop
     useEffect(() => {
         if (itemComments) {
@@ -25,7 +37,7 @@ function Comments({itemComments, onCommentsSave}) {
     const getCommentIdIndex = (commentId) => {
         // the comment ID is not necessarily the same as the array index
         for (let idIndex = 0; idIndex < theComments.length; idIndex++) {
-            if (theComments[idIndex].id === commentId) {
+            if (parseInt(theComments[idIndex].id) === parseInt(commentId)) {
                 return idIndex;
             }
         }
@@ -42,9 +54,10 @@ function Comments({itemComments, onCommentsSave}) {
         // Load the contents of the particular comment into the edit area
         // if (!e.target.attributes.comment_id.value) console.log("oops")
 
-        var editCommentId = e.target.attributes.comment_id.value;
+        var editCommentId = parseInt(e.target.attributes.comment_id.value);
         setCommentId(editCommentId);
-        var thisComment = theComments[editCommentId];
+
+        var thisComment = theComments[getCommentIdIndex(editCommentId)];
 
         setCommentDateTime(thisComment.commented_at)
         clearDateGroupError()
@@ -110,19 +123,25 @@ function Comments({itemComments, onCommentsSave}) {
         let updatedComments = [];
 
         if (theComments === undefined || theComments === null || theComments.length === 0) {
+            // There are no comments.  We are adding the first one
             comment.id=0;
             updatedComments.push(comment);
             console.log(updatedComments);
             setTheComments(updatedComments);
 
         } else if (commentId === -1) {
+            // There are comments.  This is a NEW comment.
+            // console.log("This is a NEW Comment")
             comment.id = theComments.length
             updatedComments = theComments
             updatedComments.push(comment)
+
             setTheComments(updatedComments);
         } else {
             updatedComments = theComments
-            updatedComments[commentId] = comment
+            const commentIndex = getCommentIdIndex(commentId)
+            updatedComments[commentIndex] = comment
+
             setTheComments(updatedComments);
         }
 
@@ -218,7 +237,7 @@ function Comments({itemComments, onCommentsSave}) {
     
     var commentBlock = '';
     if (theComments !== undefined && theComments !== null && JSON.stringify(theComments) !== '{}' && JSON.stringify(theComments) !== '[]') {
-        commentBlock = theComments.map((comment_row) => (
+        commentBlock = theComments.sort(compareComments).map((comment_row) => (
             <Row key={comment_row.id} comment_row={comment_row.id} className="my-3" >
                 <hr/>
                 <Col md="3">

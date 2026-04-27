@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef   } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Container, Row, Col, Card, CardTitle, CardBody } from 'reactstrap';
 import { DASHBOARD_API_URL, JOB_POSTING_API_URL, JOB_OPPORTUNITY_API_URL } from "../constants";
 import { useApiRequest } from '../utils/useApiRequest'; // Import the hook
-import { formatDisplayDate } from '../constants'; 
+import { formatDisplayDate } from '../constants';
 import DataTableBase from './shared/DataTableBase';
 
 const Dashboard = () => {
@@ -15,26 +15,57 @@ const Dashboard = () => {
     const hasFetchedActiveOpportunities = useRef(false);  // Track if the request has already been made
 
     const getJobHuntStatistics = useCallback(async () => {
-        if (hasFetchedJobHuntStatistics.current) return; // Prevent double fetch
+        if (hasFetchedJobHuntStatistics.current) return;
         hasFetchedJobHuntStatistics.current = true;
-        const response = await apiRequest(`${DASHBOARD_API_URL}`, {method:'GET'});
-        if (response) {
-            const statistics = response.map((statistics_row) => (
-                <Row className="my-1" key={statistics_row.formatted_date}>
-                    <Col>{statistics_row.formatted_date}</Col>
-                    <Col>{statistics_row.total_count}</Col>
-                    <Col>{statistics_row.response_count}</Col>
-                    <Col>{(100 * statistics_row.response_count / statistics_row.total_count).toFixed(1)}%</Col>
-                </Row>
-            ));
-            setStatisticsBlock(statistics);
+
+        const response = await apiRequest(`${DASHBOARD_API_URL}`, { method: 'GET' });
+
+        if (!response || response.length === 0) {
+            setStatisticsBlock(
+                <p className="text-muted">
+                    No report segments configured. Set them in the Reports → Configuration menu to see statistics.
+                </p>
+            );
+            return;
         }
+
+        setStatisticsBlock(
+            <table className="table table-sm table-borderless mb-0">
+                <thead>
+                    <tr>
+                        <th>Date Range</th>
+                        <th>Label</th>
+                        <th className="text-end">Postings Applied</th>
+                        <th className="text-end">Responses</th>
+                        <th className="text-end">Response Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {response.map((statistics_row) => {
+                        const rate =
+                            statistics_row.total_count > 0
+                                ? ((100 * statistics_row.response_count) / statistics_row.total_count).toFixed(1) + '%'
+                                : '—';
+
+                        return (
+                            <tr key={statistics_row.formatted_date}>
+                                <td>{statistics_row.formatted_date}</td>
+                                <td className="text-muted">{statistics_row.label}</td>
+                                <td className="text-end">{statistics_row.total_count}</td>
+                                <td className="text-end">{statistics_row.response_count}</td>
+                                <td className="text-end">{rate}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        );
     }, [apiRequest]);
 
     const getActiveJobPostings = useCallback(async () => {
         if (hasFetchedActiveJobPostings.current) return; // Prevent double fetch
         hasFetchedActiveJobPostings.current = true;
-        const response = await apiRequest(`${JOB_POSTING_API_URL}active`, {method:'GET'});
+        const response = await apiRequest(`${JOB_POSTING_API_URL}active`, { method: 'GET' });
         if (response) {
             setActiveJobPostings(response);
         }
@@ -43,7 +74,7 @@ const Dashboard = () => {
     const getActiveOpportunities = useCallback(async () => {
         if (hasFetchedActiveOpportunities.current) return; // Prevent double fetch
         hasFetchedActiveOpportunities.current = true;
-        const response = await apiRequest(`${JOB_OPPORTUNITY_API_URL}active`, {method:'GET'});
+        const response = await apiRequest(`${JOB_OPPORTUNITY_API_URL}active`, { method: 'GET' });
         if (response) {
             setActiveOpportunities(response);
         }
@@ -119,7 +150,7 @@ const Dashboard = () => {
             selector: row => row.email_received_at,
             cell: row => formatDisplayDate(row.email_received_at),
             sortable: true,
-            id:'email_received_at',
+            id: 'email_received_at',
             width: "150px",
         },
     ];
@@ -138,12 +169,6 @@ const Dashboard = () => {
                 </CardTitle>
                 <CardBody className="bg-white">
                     <p>Data as of {currentDate}</p>
-                    <Row>
-                        <Col></Col>
-                        <Col>Postings Applied </Col>
-                        <Col>Responses</Col>
-                        <Col>Response Rate</Col>
-                    </Row>
                     {statisticsBlock}
                 </CardBody>
             </Card>
@@ -153,7 +178,7 @@ const Dashboard = () => {
                     <strong>Active Job Postings</strong>
                 </CardTitle>
                 <CardBody className="bg-white">
-                    <DataTableBase  
+                    <DataTableBase
                         columns={jobPostingListColumns}
                         data={activeJobPostings}
                         paginationPerPage={20}
@@ -168,7 +193,7 @@ const Dashboard = () => {
                     <strong>Active Opportunities</strong>
                 </CardTitle>
                 <CardBody className="bg-white">
-                    <DataTableBase  
+                    <DataTableBase
                         columns={opportunityListColumns}
                         data={activeOpportunities}
                         paginationPerPage={20}

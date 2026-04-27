@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name job-app-tracker.bornino.net;
+
+    location / {
+        root /app/backend/staticfiles;
+        index index.html index.htm;
+    }
+}
