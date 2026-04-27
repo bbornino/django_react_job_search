@@ -155,7 +155,9 @@ const JobPostingList = () => {
                     </InputGroup>
                 </Col>
             </Row>
-            <DataTableBase columns={columns}
+            <DataTableBase
+                enableExport
+                columns={columns}
                 data={filters.filteredJobPostings}
                 paginationPerPage={100}
                 onRowClicked={onRowClicked} />

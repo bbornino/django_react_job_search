@@ -100,7 +100,7 @@ const OpportunityList = () => {
                     </Link>
                 </Col>
             </Row>
-            <DataTableBase
+            <DataTableBase enableExport
                 columns={columns}
                 data={opportunities}
                 defaultSortFieldId="email_received_at"
