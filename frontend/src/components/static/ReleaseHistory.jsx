@@ -17,6 +17,14 @@ class ReleaseHistory extends Component {
 
                 <Row>
                     <Col>
+                        <h2>April 27, 2026 - Release 6.0</h2>
+                        <ul>
+                            <li>Add Dashboard Report Table soft encoding with configuration page</li>
+                            <li>Add Drop Down Option soft encoding with configuration page</li>
+                            <li>Expand Job Posting List, Opportunity List, and Report Tables and include additional fields</li>
+                            <li>Add export of table data to TSV format</li>
+                            {/* <li>On Save, prevent double saves</li> */}
+                        </ul>
                         <h2>November 1, 2025 - Release 5.2</h2>
                         <ul>
                             <li>Add Opportunity Status to List View</li>
